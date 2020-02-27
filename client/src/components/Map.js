@@ -37,16 +37,27 @@ export class MapContainer extends Component {
     return (
       <Map
         google={this.props.google}
-        zoom={14}
+        zoom={12}
         style={mapStyles}
         initialCenter={{
           lat: 47.6062,
           lng: -122.3321
         }}
       >
+        <Marker
+          onClick={this.onMarkerClick}
+          name={`Downtown Seattle`}
+          position={{
+            lat: 47.6062,
+            lng: -122.3321
+          }}
+        />
         <Marker 
           onClick={this.onMarkerClick}
-          name={`Seattle`}
+          name={`Cherry Hill Seattle`}
+          position={{
+            lat: 47.6062,
+            lng: -122.3 }}
         />
         <InfoWindow
           marker={this.state.activeMarker}
