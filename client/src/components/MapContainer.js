@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import CurrentLocation from '../Map'
 
 export class MapContainer extends Component {
@@ -31,7 +31,7 @@ export class MapContainer extends Component {
 
   render() {
     return (
-      <CurrentLocation
+      <CurrentLocation 
         centerAroundCurrentLocation
         google={this.props.google}
       >
