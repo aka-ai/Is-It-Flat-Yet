@@ -1,27 +1,18 @@
 import React, { Component } from 'react'
-import fakeData from '../fakeData.js'
+import fakeData from '../fakeData'
+
+
 class Data extends Component {
+
   render() {
     return (
       <div>
-        {fakeData.map((data) => (
-          <div key={data.Id}>
-            <h1>{data.Country}</h1>
-            <div>
-              {data.RegionalData.map((region) => (
-                <div>
-                  <h2>{region.Region}</h2>
-                    <div>
-                      {region.Confirmed.map((dailyCase) => (
-                        <div>
-                          <p>{dailyCase.date}</p>
-                          <p>{dailyCase.dailyTotal}</p>
-                        </div>
-                      ))}
-                    </div>
-                </div>
-              ))}
-            </div>
+        {fakeData.map(data => (
+          <div>
+            <h3>{data["Province/State"]} {data["Country/Region"]}</h3>
+            <p>Confirmed: {data.Confirmed}</p>
+            <p>Deaths: {data.Deaths}</p>
+            <p>Recovered: {data.Recovered}</p>
           </div>
         ))}
       </div>
