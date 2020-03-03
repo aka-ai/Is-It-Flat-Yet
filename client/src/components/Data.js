@@ -13,6 +13,7 @@ class Data extends Component {
         <h3>{location}, {country}</h3>
         <h4>Active: {active}</h4>
         <p>Infected: {confirmed}</p>
+        <p>Recovered: {recovered}</p>
         <p>Death: {deaths}</p>
       </div>
     )
