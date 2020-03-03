@@ -12,7 +12,7 @@ class App extends Component {
     }
   }
 
-  callbackFunction = (childData) => {
+  gotDataFromChild = (childData) => {
     this.setState({ clickedIndex: childData })
   }
 
@@ -24,7 +24,7 @@ class App extends Component {
         </header>
         <div className="Main-container">
           <Countries />
-          <MapContainer parentCallback={this.callbackFunction}/>
+          <MapContainer sendDataToParent={this.gotDataFromChild}/>
           <Data clickedLocation={this.state.clickedIndex} />
         </div>
       </div>

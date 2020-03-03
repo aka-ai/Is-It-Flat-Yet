@@ -16,7 +16,7 @@ export class MapContainer extends Component {
   }
 
   sendData = () => {
-    this.props.parentCallback(this.state.selectedPlace);
+    this.props.sendDataToParent(this.state.selectedPlace);
   }
 
   onClick = (props, marker, e) => {
