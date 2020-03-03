@@ -5,15 +5,18 @@ import fakeData from '../fakeData'
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
-import homeIcon from '../mapIcons/home.png'
 export class MapContainer extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       showingInfoWindow: false,  //Hides or the shows the infoWindow
       activeMarker: {},          //Shows the active marker upon click
       selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
     }
+  }
+
+  sendData = () => {
+    this.props.parentCallback(this.state.selectedPlace);
   }
 
   onClick = (props, marker, e) => {
@@ -22,6 +25,7 @@ export class MapContainer extends Component {
       activeMarker: marker,
       showingInfoWindow: true
     })
+    this.sendData()
   }
 
   onClose = props => {
@@ -43,7 +47,6 @@ export class MapContainer extends Component {
     }
   }
   render() {
-    const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
       <Map
         centerAroundCurrentLocation
@@ -63,6 +66,7 @@ export class MapContainer extends Component {
             key={idx}
             onClick={this.onClick}
             location={data["Province/State"]}
+            country={data["Country/Region"]}
             confirmed={data["Confirmed"]}
             deaths={data["Deaths"]}
             recovered={data["Recovered"]}

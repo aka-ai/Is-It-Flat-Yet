@@ -1,22 +1,19 @@
 import React, { Component } from 'react'
-import fakeData from '../fakeData'
-
 
 class Data extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   render() {
-
+    const { location, confirmed, deaths, recovered, country } = this.props.clickedLocation
+    const active = confirmed - deaths - recovered
     return (
       <div>
-        {fakeData.map((data, idx) => (
-          <div key={idx}>
-            <h3>{data["Province/State"]} {data["Country/Region"]}</h3>
-            <p>Confirmed: {data.Confirmed}</p>
-            <p>Deaths: {data.Deaths}</p>
-            <p>Recovered: {data.Recovered}</p>
-            <p>Active: {data["Confirmed"]-data["Recovered"]-data["Deaths"]}</p>
-          </div>
-        ))}
+        <h3>{location}, {country}</h3>
+        <h4>Active: {active}</h4>
+        <p>Infected: {confirmed}</p>
+        <p>Death: {deaths}</p>
       </div>
     )
   }
