@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import CurrentLocation from '../Map'
+import fakeData from '../fakeData'
 export class MapContainer extends Component {
   constructor() {
     super()
@@ -11,7 +12,7 @@ export class MapContainer extends Component {
     }
   }
 
-  onMarkerClick = (props, marker, e) => {
+  onHover = (props, marker, e) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -32,34 +33,32 @@ export class MapContainer extends Component {
     // console.log(this.props.google.maps)
     const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
-      <CurrentLocation 
+      <CurrentLocation
         centerAroundCurrentLocation
         google={this.props.google}
       >
-        <Marker 
-        //pulled location from browser's current location
-          onMouseover={this.onMarkerClick} 
-          name={'current location'}
-        />
-
         <Marker
-          onMouseover={this.onMarkerClick}
-          name={`Downtown Seattle`}
-          position={{
-            lat: 47.6062,
-            lng: -122.3321
-          }}
+          //pulled location from browser's current location
+          onMouseover={this.onHover}
+          name={'you are here'}
           icon={{
             url: image
           }}
         />
-        <Marker 
-          onMouseover={this.onMarkerClick}
-          name={`Cherry Hill Seattle`}
-          position={{
-            lat: 47.6062,
-            lng: -122.3 }}
-        />
+        {fakeData.map((data, idx) => (
+          <Marker
+            key={idx}
+            onMouseover={this.onHover}
+            name={data["Province/State"]}
+            position={{
+              lat: data.Lat,
+              lng: data.Long
+            }}
+            icon={{
+              url: image
+            }}
+          />
+        ))}
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
