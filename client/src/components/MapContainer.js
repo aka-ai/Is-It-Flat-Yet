@@ -51,10 +51,9 @@ export class MapContainer extends Component {
       >
         <Marker
           //pulled location from browser's current location
-          // onClick={this.onClick}
           // location={'you are here'}
           icon={{
-            url: ''
+            url: ' '
           }}
         />
         {fakeData.map((data, idx) => {

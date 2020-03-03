@@ -5,6 +5,7 @@ import fakeData from '../fakeData'
 class Data extends Component {
 
   render() {
+
     return (
       <div>
         {fakeData.map((data, idx) => (
