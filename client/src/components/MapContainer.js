@@ -12,7 +12,7 @@ export class MapContainer extends Component {
     }
   }
 
-  onHover = (props, marker, e) => {
+  onClick = (props, marker, e) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -30,7 +30,6 @@ export class MapContainer extends Component {
   }
 
   render() {
-    // console.log(this.props.google.maps)
     const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
       <CurrentLocation
@@ -39,7 +38,7 @@ export class MapContainer extends Component {
       >
         <Marker
           //pulled location from browser's current location
-          onMouseover={this.onHover}
+          onClick={this.onClick}
           name={'you are here'}
           icon={{
             url: image
@@ -48,7 +47,7 @@ export class MapContainer extends Component {
         {fakeData.map((data, idx) => (
           <Marker
             key={idx}
-            onMouseover={this.onHover}
+            onClick={this.onClick}
             name={data["Province/State"]}
             position={{
               lat: data.Lat,
