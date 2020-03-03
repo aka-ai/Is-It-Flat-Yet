@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import Map from '../Map'
 import fakeData from '../fakeData'
-import mildIcon from '../mapIcons/1.png'
-import mediumIcon from '../mapIcons/2.png'
-import severeIcon from '../mapIcons/3.png'
+import mildIcon from '../mapIcons/yellow.png'
+import mediumIcon from '../mapIcons/orange.png'
+import severeIcon from '../mapIcons/red.png'
+import homeIcon from '../mapIcons/home.png'
 export class MapContainer extends Component {
   constructor() {
     super()
@@ -50,8 +51,11 @@ export class MapContainer extends Component {
       >
         <Marker
           //pulled location from browser's current location
-          onClick={this.onClick}
-          name={'you are here'}
+          // onClick={this.onClick}
+          // location={'you are here'}
+          icon={{
+            url: ''
+          }}
         />
         {fakeData.map((data, idx) => {
           const thisIcon = this.setIcon(data["Confirmed"])
@@ -59,7 +63,10 @@ export class MapContainer extends Component {
           <Marker
             key={idx}
             onClick={this.onClick}
-            name={data["Province/State"]}
+            location={data["Province/State"]}
+            confirmed={data["Confirmed"]}
+            deaths={data["Deaths"]}
+            recovered={data["Recovered"]}
             position={{
               lat: data.Lat,
               lng: data.Long
@@ -75,7 +82,11 @@ export class MapContainer extends Component {
           onClose={this.onClose}
         >
           <div>
-            <h4>{this.state.selectedPlace.name}</h4>
+            <h4>{this.state.selectedPlace.location}</h4>
+            {this.state.selectedPlace.confirmed ?
+            <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
+            :<p></p>
+          }
           </div>
         </InfoWindow>
       </Map>

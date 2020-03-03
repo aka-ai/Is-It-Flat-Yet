@@ -5,7 +5,7 @@ const fakeData = [
     "Lat": 47.6062 ,
     "Long": -122.3321,
     "Confirmed": 2,
-    "Deaths": 2,
+    "Deaths": 0,
     "Recovered": 1,
     "Deltas": {
       3: 0.08,

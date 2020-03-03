@@ -111,7 +111,7 @@ export class Map extends React.Component {
 export default Map
 
 Map.defaultProps = {
-  zoom: 12,
+  zoom: 4,
   initialCenter: {
     lat: 47.6062,
     lng: -122.3321
