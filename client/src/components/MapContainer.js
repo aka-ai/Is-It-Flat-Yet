@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
-import CurrentLocation from '../Map'
+import Map from '../Map'
 import fakeData from '../fakeData'
 export class MapContainer extends Component {
   constructor() {
@@ -32,7 +32,7 @@ export class MapContainer extends Component {
   render() {
     const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
-      <CurrentLocation
+      <Map
         centerAroundCurrentLocation
         google={this.props.google}
       >
@@ -67,7 +67,7 @@ export class MapContainer extends Component {
             <h4>{this.state.selectedPlace.name}</h4>
           </div>
         </InfoWindow>
-      </CurrentLocation>
+      </Map>
     );
   }
 }

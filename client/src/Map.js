@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-export class CurrentLocation extends React.Component {
+export class Map extends React.Component {
   constructor(props) {
     super(props)
 
@@ -108,9 +108,9 @@ export class CurrentLocation extends React.Component {
   }
 }
 
-export default CurrentLocation
+export default Map
 
-CurrentLocation.defaultProps = {
+Map.defaultProps = {
   zoom: 12,
   initialCenter: {
     lat: 47.6062,
