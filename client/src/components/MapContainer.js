@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import CurrentLocation from '../Map'
-
 export class MapContainer extends Component {
   constructor() {
     super()
@@ -30,6 +29,8 @@ export class MapContainer extends Component {
   }
 
   render() {
+    // console.log(this.props.google.maps)
+    const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
       <CurrentLocation 
         centerAroundCurrentLocation
@@ -37,20 +38,23 @@ export class MapContainer extends Component {
       >
         <Marker 
         //pulled location from browser's current location
-          onClick={this.onMarkerClick} 
+          onMouseover={this.onMarkerClick} 
           name={'current location'}
         />
 
         <Marker
-          onClick={this.onMarkerClick}
+          onMouseover={this.onMarkerClick}
           name={`Downtown Seattle`}
           position={{
             lat: 47.6062,
             lng: -122.3321
           }}
+          icon={{
+            url: image
+          }}
         />
         <Marker 
-          onClick={this.onMarkerClick}
+          onMouseover={this.onMarkerClick}
           name={`Cherry Hill Seattle`}
           position={{
             lat: 47.6062,
