@@ -28,7 +28,7 @@ const fakeData = [
     }
   },
   {
-    "Province/State": "",
+    "Province/State": "Thailand",
     "Country/Region": "Thailand",
       "Lat": 15,
       "Long": 101,
