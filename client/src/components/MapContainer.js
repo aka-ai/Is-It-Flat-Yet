@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import Map from '../Map'
 import fakeData from '../fakeData'
+import mildIcon from '../mapIcons/1.png'
+import mediumIcon from '../mapIcons/2.png'
+import severeIcon from '../mapIcons/3.png'
 export class MapContainer extends Component {
   constructor() {
     super()
@@ -29,6 +32,15 @@ export class MapContainer extends Component {
     }
   }
 
+  setIcon = confirmed => {
+    if (confirmed > 10) {
+      return severeIcon
+    } else if (confirmed < 3) {
+      return mildIcon
+    } else {
+      return mediumIcon
+    }
+  }
   render() {
     const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
     return (
@@ -40,11 +52,10 @@ export class MapContainer extends Component {
           //pulled location from browser's current location
           onClick={this.onClick}
           name={'you are here'}
-          icon={{
-            url: image
-          }}
         />
-        {fakeData.map((data, idx) => (
+        {fakeData.map((data, idx) => {
+          const thisIcon = this.setIcon(data["Confirmed"])
+          return (
           <Marker
             key={idx}
             onClick={this.onClick}
@@ -54,10 +65,10 @@ export class MapContainer extends Component {
               lng: data.Long
             }}
             icon={{
-              url: image
+              url: thisIcon
             }}
           />
-        ))}
+        )})}
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}

@@ -4,7 +4,7 @@ const fakeData = [
     "Country/Region": "United States",
     "Lat": 47.6062 ,
     "Long": -122.3321,
-    "Confirmed": 10,
+    "Confirmed": 2,
     "Deaths": 2,
     "Recovered": 1,
     "Deltas": {
