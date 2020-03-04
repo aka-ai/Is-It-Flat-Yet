@@ -69,13 +69,16 @@ export class Map extends React.Component {
       const center = new maps.LatLng(lat, lng)
       const mapConfig = Object.assign(
         {},
+        //source: https://developers.google.com/maps/documentation/javascript/reference/map
         {
-          zoom: zoom,
+          center: this.state.CurrentLocation,
+          zoom: 4,
           maxZoom: 9,
           minZoom: 2,
           streetViewControl: false,
           mapTypeControl: false,
-
+          backgroundColor: "white",
+          fullscreenControl: false,
         }
       )
 
