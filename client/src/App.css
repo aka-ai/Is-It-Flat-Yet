@@ -45,9 +45,9 @@
 }
 
 .Map-container {
-  position: relative;
+  /* position: center; */
   width: 1100px;
-  height: 700px;
+  height: 605px;
 }
 
 @keyframes App-logo-spin {
