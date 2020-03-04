@@ -73,7 +73,10 @@ export class Map extends React.Component {
           center: center,
           zoom: zoom,
           maxZoom: 9,
-          minZoom: 2
+          minZoom: 2,
+          streetViewControl: false,
+          mapTypeControl: false,
+
         }
       )
 
