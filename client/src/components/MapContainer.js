@@ -19,17 +19,39 @@ export class MapContainer extends Component {
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
+  onMouseover = (props, marker, e) => {
+    if (!this.state.showingInfoWindow) {
+      this.setState({
+        selectedPlace: props,
+        activeMarker: marker,
+        showingInfoWindow: true
+      })
+      // this.sendData()
+    }
+  }
+
+  onMouseout = (props, marker, e) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        selectedPlace: {},
+        activeMarker: null,
+        showingInfoWindow: false
+      })
+    }
+  }
+
   onClick = (props, marker, e) => {
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    })
+    // this.setState({
+    //   selectedPlace: props,
+    //   activeMarker: marker,
+    //   showingInfoWindow: true
+    // })
     this.sendData()
   }
 
   onClose = props => {
     if (this.state.showingInfoWindow) {
+      console.log('onclose')
       this.setState({
         showingInfoWindow: false,
         activeMarker: null
@@ -52,33 +74,36 @@ export class MapContainer extends Component {
         centerAroundCurrentLocation
         google={this.props.google}
       >
-        <Marker
+        {/* <Marker
           //pulled location from browser's current location
           // location={'you are here'}
           icon={{
             url: ' '
           }}
-        />
+        /> */}
         {fakeData.map((data, idx) => {
           const thisIcon = this.setIcon(data["Confirmed"])
           return (
-          <Marker
-            key={idx}
-            onClick={this.onClick}
-            location={data["Province/State"]}
-            country={data["Country/Region"]}
-            confirmed={data["Confirmed"]}
-            deaths={data["Deaths"]}
-            recovered={data["Recovered"]}
-            position={{
-              lat: data.Lat,
-              lng: data.Long
-            }}
+            <Marker
+              key={idx}
+              onClick={this.onClick}
+              onMouseover={this.onMouseover}
+              onMouseout={this.onMouseout}
+              location={data["Province/State"]}
+              country={data["Country/Region"]}
+              confirmed={data["Confirmed"]}
+              deaths={data["Deaths"]}
+              recovered={data["Recovered"]}
+              position={{
+                lat: data.Lat,
+                lng: data.Long
+              }}
             icon={{
               url: thisIcon
             }}
-          />
-        )})}
+            />
+          )
+        })}
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
@@ -87,9 +112,9 @@ export class MapContainer extends Component {
           <div>
             <h4>{this.state.selectedPlace.location}</h4>
             {this.state.selectedPlace.confirmed ?
-            <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
-            :<p></p>
-          }
+              <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
+              : <p></p>
+            }
           </div>
         </InfoWindow>
       </Map>
