@@ -70,7 +70,6 @@ export class Map extends React.Component {
       const mapConfig = Object.assign(
         {},
         {
-          center: center,
           zoom: zoom,
           maxZoom: 9,
           minZoom: 2,
