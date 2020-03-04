@@ -26,7 +26,6 @@ export class MapContainer extends Component {
         activeMarker: marker,
         showingInfoWindow: true
       })
-      // this.sendData()
     }
   }
 
@@ -41,11 +40,6 @@ export class MapContainer extends Component {
   }
 
   onClick = (props, marker, e) => {
-    // this.setState({
-    //   selectedPlace: props,
-    //   activeMarker: marker,
-    //   showingInfoWindow: true
-    // })
     this.sendData()
   }
 
