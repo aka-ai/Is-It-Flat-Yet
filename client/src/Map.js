@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
 export class Map extends React.Component {
   constructor(props) {
@@ -55,7 +56,6 @@ export class Map extends React.Component {
 
   loadMap() {
     if (this.props && this.props.google) {
-      //checks if google is available
       const { google } = this.props
       const maps = google.maps
 
@@ -71,7 +71,9 @@ export class Map extends React.Component {
         {},
         {
           center: center,
-          zoom: zoom
+          zoom: zoom,
+          maxZoom: 9,
+          minZoom: 2
         }
       )
 
