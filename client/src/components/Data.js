@@ -20,7 +20,7 @@ class Data extends Component {
     }
 
     return (
-      <div>
+      <div className="side-box">
         {!location ? <h3>{country}</h3>
           : <h3>{location}, {country}</h3>
           }

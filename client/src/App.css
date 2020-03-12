@@ -48,6 +48,11 @@
   /* position: center; */
   width: 1100px;
   height: 605px;
+  margin-top: 15px;
+}
+
+.side-box {
+  margin: 15px
 }
 
 @keyframes App-logo-spin {
