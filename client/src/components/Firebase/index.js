@@ -25,7 +25,8 @@ class Firebase {
 
   getData = async () => {
     const data = await this.db.collection('All').get()
-    return data.docs
+
+    return data.docs.map(doc => doc.data());
   }
 }
 
