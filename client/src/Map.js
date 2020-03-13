@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 export class Map extends React.Component {
   constructor(props) {
@@ -64,9 +64,9 @@ export class Map extends React.Component {
       //reference to the actual DOM element
       const node = ReactDOM.findDOMNode(mapRef)
 
-      let { zoom } = this.props
-      const { lat, lng } = this.state.CurrentLocation
-      const center = new maps.LatLng(lat, lng)
+      // let { zoom } = this.props
+      // const { lat, lng } = this.state.CurrentLocation
+      // const center = new maps.LatLng(lat, lng)
       const mapConfig = Object.assign(
         {},
         //source: https://developers.google.com/maps/documentation/javascript/reference/map
