@@ -3,6 +3,8 @@ import './App.css';
 import MapContainer from './components/MapContainer'
 import Countries from './components/Countries'
 import Data from './components/Data'
+import Firebase from './components/Firebase';
+const firebase = new Firebase()
 
 class App extends Component {
   constructor(props) {
@@ -10,8 +12,9 @@ class App extends Component {
     this.state = {
       clickedIndex: ''
     }
-  }
 
+  }
+  
   gotDataFromChild = (childData) => {
     this.setState({ clickedIndex: childData })
   }
@@ -23,9 +26,9 @@ class App extends Component {
           <h1 className="App-title">Welcome to Coronavirus.show</h1>
         </header>
         <div className="Main-container">
-          <Countries />
+          <Countries firebase={firebase} />
           <MapContainer sendDataToParent={this.gotDataFromChild}/>
-          <Data clickedLocation={this.state.clickedIndex} />
+          <Data clickedLocation={this.state.clickedIndex}  />
         </div>
       </div>
     )

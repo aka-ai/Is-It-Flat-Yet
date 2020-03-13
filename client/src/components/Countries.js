@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-
+import Firebase from './Firebase';
 class Countries extends Component {
-  constructor() {
-    super()
-    this.state = {items: ''}
+  constructor(props) {
+    super(props)
+    this.state = {data: []}
   }
 
-  render () {
+  async componentDidMount() {
+    const data = await this.props.firebase.getData()
+    this.setState({data: data})
+  }
+  render() {
     return (
       <div className="side-box">
-        <h1>countries list</h1>
+        {this.state.data.map(region => (
+          <p>{region.countryOrRegion}</p>
+        ))}
       </div>
     )
   }
