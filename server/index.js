@@ -9,9 +9,9 @@ admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 
 const CATEGORIES = {
-  confirmed: 'Confirmed',
-  deaths: 'Deaths',
-  recovered: 'Recovered'
+  confirmed: 'confirmed',
+  deaths: 'deaths',
+  recovered: 'recovered'
 };
 
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
@@ -94,9 +94,9 @@ const updateDB = async (category, csvData) => {
 
     // Setup the new document attrs to merge in
     const defaultDeltas = {
-      Confirmed: {},
-      Deaths: {},
-      Recovered: {}
+      confirmed: {},
+      deaths: {},
+      recovered: {}
     };
     const update = {
       countryOrRegion: countryOrRegion,
