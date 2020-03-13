@@ -45,7 +45,6 @@ export class MapContainer extends Component {
 
   onClose = props => {
     if (this.state.showingInfoWindow) {
-      console.log('onclose')
       this.setState({
         showingInfoWindow: false,
         activeMarker: null
@@ -54,9 +53,9 @@ export class MapContainer extends Component {
   }
 
   setIcon = confirmed => {
-    if (confirmed > 10) {
+    if (confirmed > 1000) {
       return severeIcon
-    } else if (confirmed < 3) {
+    } else if (confirmed < 100) {
       return mildIcon
     } else {
       return mediumIcon
@@ -76,21 +75,21 @@ export class MapContainer extends Component {
           }}
         /> */}
         {fakeData.map((data, idx) => {
-          const thisIcon = this.setIcon(data["Confirmed"])
+          const thisIcon = this.setIcon(parseInt(data["Confirmed"]))
           return (
             <Marker
               key={idx}
               onClick={this.onClick}
               onMouseover={this.onMouseover}
               onMouseout={this.onMouseout}
-              location={data["Province/State"]}
-              country={data["Country/Region"]}
+              location={data["stateOrProvince"]+'\n'+data["countryOrRegion"]}
+              country={data["countryOrRegion"]}
               confirmed={data["Confirmed"]}
               deaths={data["Deaths"]}
               recovered={data["Recovered"]}
               position={{
-                lat: data.Lat,
-                lng: data.Long
+                lat: data.lat,
+                lng: data.lon
               }}
             icon={{
               url: thisIcon
@@ -106,6 +105,7 @@ export class MapContainer extends Component {
           <div>
             <h4>{this.state.selectedPlace.location}</h4>
             {this.state.selectedPlace.confirmed ?
+            
               <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
               : <p></p>
             }
