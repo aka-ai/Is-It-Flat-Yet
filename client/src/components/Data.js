@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 
 
 class Data extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     let location, confirmed, deaths, recovered, country, active 
     
