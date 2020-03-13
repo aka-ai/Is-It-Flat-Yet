@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Firebase from './Firebase';
+// import Firebase from './Firebase';
+import fakeData from '../fakeData.js'
 class Countries extends Component {
   constructor(props) {
     super(props)
@@ -7,7 +8,8 @@ class Countries extends Component {
   }
 
   async componentDidMount() {
-    const data = await this.props.firebase.getData()
+    // const data = await this.props.firebase.getData()
+    const data = fakeData
     this.setState({ data: data })
   }
   render() {
@@ -15,16 +17,18 @@ class Countries extends Component {
     return (
       <div className="side-box">
         {this.state.data.map((region, idx) => (
-          <div >
+          <div key={idx}>
             {region.stateOrProvince ?
-              <div key={idx}>
+              <div>
                 <p>{region.countryOrRegion + '/' + region.stateOrProvince}</p>
               </div>
               :
-              <div key={idx}>
+              <div>
                 <p>{region.countryOrRegion}</p>
               </div>
             }
+            <p>{region.Confirmed} confirmed cases</p>
+            <p>---</p>
 
           </div>
         ))}
@@ -34,3 +38,4 @@ class Countries extends Component {
 }
 
 export default Countries
+
