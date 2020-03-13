@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class Countries extends Component {
+  constructor() {
+    super()
+    this.state = {items: ''}
+  }
+
   render () {
     return (
       <div className="side-box">
