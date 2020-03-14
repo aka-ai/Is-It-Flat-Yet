@@ -76,6 +76,7 @@ export class MapContainer extends Component {
         /> */}
         {fakeData.map((data, idx) => {
           const thisIcon = this.setIcon(parseInt(data["Confirmed"]))
+          const active = (data["Confirmed"] - data["Deaths"] - data["Recovered"]).toString()
           return (
             <Marker
               key={idx}
@@ -91,10 +92,11 @@ export class MapContainer extends Component {
                 lat: data.lat,
                 lng: data.lon
               }}
-              label={{text:data["Confirmed"],
-                      color: "black",
-                      fontSize: "5",
+              label={{text:active,
+                color: "#0f07f7",
+                      fontSize: "3",
                 fontFamily: "roboto",
+                fontWeight: "bold"
             }}
               icon={{
                 url: thisIcon
