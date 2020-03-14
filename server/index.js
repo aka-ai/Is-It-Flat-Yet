@@ -17,10 +17,17 @@ const CATEGORIES = {
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
 exports.reportService = async (req, res) => {
   console.log('Started reportService')
-  for (const category of Object.values(CATEGORIES)) {
-    await fetchDataAndUpdateDB(category)
+  try {
+    for (const category of Object.values(CATEGORIES)) {
+      await fetchDataAndUpdateDB(category);
+    }
+    console.log("Finished reportService");
+    res.sendStatus(200);
+  } catch (e) {
+    res.sendStatus(500, 'reportService internal error')
+    console.error(`reportService error: ${e.message}`);
+    console.error(e.stack)
   }
-  console.log('Finished reportService')
 };
 
 const fetchDataAndUpdateDB = async (category) => {
