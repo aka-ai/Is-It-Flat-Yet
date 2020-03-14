@@ -5,7 +5,7 @@
     "lint": "eslint .",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run shell",
+    "start": "functions-framework --target=reportService --signature-type=event --port=8000",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },

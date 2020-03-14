@@ -73,22 +73,17 @@ const updateDB = async (category, csvData) => {
     if (cityStateOrProvince) cityStateOrProvinceId += `-${cityStateOrProvince}`;
 
     // Setup the new document attrs to merge in
-    const defaultDeltas = {
-      confirmed: {},
-      deaths: {},
-      recovered: {}
-    };
     const update = {
       countryOrRegion: countryOrRegion,
       stateOrProvince: cityStateOrProvince,
       lat: Math.round(row["Lat"] * 100) / 100,
       lon: Math.round(row["Long"] * 100) / 100,
-      deltas: defaultDeltas
+      deltas: {}
     };
 
     const { mostRecent, lastUpdated, newDeltas } = helpers.getStats(row);
     update.deltas[category] = newDeltas;
-    update[category] = mostRecent;
+    update[category] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
     docRef = collectionRef.doc(cityStateOrProvinceId);
