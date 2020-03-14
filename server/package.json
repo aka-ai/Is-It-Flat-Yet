@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "gcloud functions deploy reportService --trigger-http --runtime nodejs8 --memory 1024MB --region us-west1 --project coronavirus-show",
+    "deploy": "gcloud functions deploy reportService --trigger-http --runtime nodejs8 --memory 1024MB --project coronavirus-show",
     "start": "node node_modules/@google-cloud/functions-framework --target=reportService"
   },
   "author": "",
