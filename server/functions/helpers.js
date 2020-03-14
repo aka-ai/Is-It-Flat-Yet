@@ -11,7 +11,7 @@ module.exports = {
     const today = dayjs().format("M/D/YY");
     // get latest date and its value
     let latestDay = today;
-    while (!!!row[latestDay]) {
+    while (!row[latestDay]) {
       latestDay = dayjs(latestDay)
         .subtract(1, "days")
         .format("M/D/YY");
