@@ -15,20 +15,20 @@ const CATEGORIES = {
 }
 
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
-exports.reportService = async (req, res) => {
-  console.log('Started reportService')
-  try {
-    for (const category of Object.values(CATEGORIES)) {
-      await fetchDataAndUpdateDB(category);
+exports.reportService = functions.pubsub.schedule('1 0 * * *')
+  .onRun(async context => {
+    console.log('Started reportService with context: ', context)
+    try {
+      for (const category of Object.values(CATEGORIES)) {
+        await fetchDataAndUpdateDB(category)
+      }
+      console.log('Finished reportService successfully')
+    } catch (e) {
+      res.sendStatus(500, 'reportService internal error')
+      console.error(`reportService error: ${e.message}`)
+      console.error(e.stack)
     }
-    console.log("Finished reportService");
-    res.sendStatus(200);
-  } catch (e) {
-    res.sendStatus(500, 'reportService internal error')
-    console.error(`reportService error: ${e.message}`);
-    console.error(e.stack)
-  }
-};
+  })
 
 const fetchDataAndUpdateDB = async (category) => {
   console.log('calling fetch from github with category: ', category)
@@ -39,23 +39,13 @@ const fetchDataAndUpdateDB = async (category) => {
   }
 
   let githubResponse = ''
-  try {
-    githubResponse = await axios(options)
-  } catch (e) {
-    console.error(`error during api call: ${e.message}`)
-    console.error(e.stack)
-  }
+  githubResponse = await axios(options)
 
   if (githubResponse.status !== 200 || githubResponse.data === '') {
-    console.error('Error or Empty response from Github!: ', githubResponse);
+    console.error('Error or Empty response from Github!: ', githubResponse)
   } else {
     const data = githubResponse.data
-    try {
-      await updateDB(category, data)
-    } catch (e) {
-      console.error(`error while updating DB: ${e.message}`)
-      console.error(e.stack)
-    }
+    await updateDB(category, data)
   }
 }
 
@@ -90,8 +80,8 @@ const updateDB = async (category, csvData) => {
     const update = {
       countryOrRegion: countryOrRegion,
       stateOrProvince: cityStateOrProvince,
-      lat: Math.round(row["Lat"] * 100) / 100,
-      lon: Math.round(row["Long"] * 100) / 100,
+      lat: Math.round(row['Lat'] * 100) / 100,
+      lon: Math.round(row['Long'] * 100) / 100,
       deltas: defaultDeltas
     }
     
@@ -105,12 +95,6 @@ const updateDB = async (category, csvData) => {
   }
 
   // Perform the batch write
-  try {
-    console.log('attempting batch commit')
-    batch.commit()
-  } catch (e) {
-    console.error('Error during write to db: ', e.message)
-    console.error(e.stack)
-    throw new Error(e.message)
-  }
+  console.log('attempting batch commit')
+  batch.commit()
 }
