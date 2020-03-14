@@ -82,7 +82,7 @@ export class MapContainer extends Component {
               onClick={this.onClick}
               onMouseover={this.onMouseover}
               onMouseout={this.onMouseout}
-              location={data["stateOrProvince"]+'\n'+data["countryOrRegion"]}
+              location={data["stateOrProvince"] + '\n' + data["countryOrRegion"]}
               country={data["countryOrRegion"]}
               confirmed={data["Confirmed"]}
               deaths={data["Deaths"]}
@@ -91,9 +91,14 @@ export class MapContainer extends Component {
                 lat: data.lat,
                 lng: data.lon
               }}
-            icon={{
-              url: thisIcon
+              label={{text:data["Confirmed"],
+                      color: "black",
+                      fontSize: "5",
+                fontFamily: "roboto",
             }}
+              icon={{
+                url: thisIcon
+              }}
             />
           )
         })}
@@ -105,7 +110,7 @@ export class MapContainer extends Component {
           <div>
             <h4>{this.state.selectedPlace.location}</h4>
             {this.state.selectedPlace.confirmed ?
-            
+
               <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
               : <p></p>
             }
