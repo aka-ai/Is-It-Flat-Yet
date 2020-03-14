@@ -73,8 +73,8 @@ export class Map extends React.Component {
         {
           center: this.state.CurrentLocation,
           zoom: 4,
-          maxZoom: 9,
-          minZoom: 2,
+          maxZoom: 7,
+          minZoom: 2.5,
           streetViewControl: false,
           mapTypeControl: false,
           backgroundColor: "white",
@@ -118,7 +118,7 @@ export class Map extends React.Component {
 export default Map
 
 Map.defaultProps = {
-  zoom: 4,
+  zoom: 9,
   initialCenter: {
     lat: 47.6062,
     lng: -122.3321
