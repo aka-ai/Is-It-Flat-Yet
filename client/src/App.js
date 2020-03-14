@@ -22,12 +22,12 @@ class App extends Component {
   render() {
     return (
       < div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to Coronavirus.show</h1>
+        <header className="header">
+          <h1>Welcome to Coronavirus.show</h1>
         </header>
-        <div className="Main-container">
-          <Countries firebase={firebase} />
           <MapContainer sendDataToParent={this.gotDataFromChild}/>
+        <div className="footer">
+          <Countries firebase={firebase} />
           <Data clickedLocation={this.state.clickedIndex}  />
         </div>
       </div>
