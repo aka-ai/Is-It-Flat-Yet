@@ -9,10 +9,10 @@ admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 
 const CATEGORIES = {
-  confirmed: 'confirmed',
-  deaths: 'deaths',
-  recovered: 'recovered'
-};
+  confirmed: 'Confirmed',
+  deaths: 'Deaths',
+  recovered: 'Recovered'
+}
 
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
 exports.reportService = async (req, res) => {
@@ -24,12 +24,14 @@ exports.reportService = async (req, res) => {
 };
 
 const fetchDataAndUpdateDB = async (category) => {
+  console.log('calling fetch from github with category: ', category)
   const options = {
-    baseURL: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/',
-    url: `/time_series_19-covid-${category}.csv`
-  };
+    url:
+      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/' +
+      `csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-${category}.csv`
+  }
 
-  let githubResponse = '';
+  let githubResponse = ''
   try {
     githubResponse = await axios(options)
   } catch (e) {
@@ -39,19 +41,19 @@ const fetchDataAndUpdateDB = async (category) => {
 
   if (githubResponse.status !== 200 || githubResponse.data === '') {
     console.error('Error or Empty response from Github!: ', githubResponse);
-    throw new Error('Non-200 received from GitHub')
   } else {
-    const data = githubResponse.data;
+    const data = githubResponse.data
     try {
-      await updateDB(category, data);
+      await updateDB(category, data)
     } catch (e) {
       console.error(`error while updating DB: ${e.message}`)
-      console.error(e.stack);
+      console.error(e.stack)
     }
   }
 }
 
 const updateDB = async (category, csvData) => {
+  category = category.toLowerCase()
   console.log('Updating DB for category: ', category)
   let batch = db.batch()
 
@@ -59,61 +61,40 @@ const updateDB = async (category, csvData) => {
   const updateData = parse(csvData, {
     columns: true,
     skip_empty_lines: true
-  });
+  })
 
-  const collectionRef = db.collection('All');
+  const collectionRef = db.collection('All')
 
   // iterate over each object and put into db as appropriate
-  // TODO: refactor this to happen in parallel for each row
+  // if writes need to be optimized later, we can refactor this to happen in parallel for each row
   for (const row of updateData) {
     const countryOrRegion = helpers.formatName(row['Country/Region'])
     const cityStateOrProvince = helpers.formatName(row['Province/State'])
     let cityStateOrProvinceId = countryOrRegion
     if (cityStateOrProvince) 
       cityStateOrProvinceId += `-${cityStateOrProvince}`
-    let current = {};
-
-    console.log('countryOrRegion: ' + countryOrRegion);
-    console.log('cityStateOrProvince: ' + cityStateOrProvince);
-
-    // Get the current document
-    let docRef
-    try {
-      docRef = collectionRef.doc(cityStateOrProvinceId)
-      const doc = await docRef.get()
-      if (doc.exists) {
-        console.log('doc exists: ', doc.data())
-        current = doc.data()
-      }
-      console.log('got current: ', current)
-    } catch (e) {
-      console.error('Error getting document: ', e.message)
-      console.error(e.stack)
-      throw new Error(e.message)
-    }
 
     // Setup the new document attrs to merge in
     const defaultDeltas = {
       confirmed: {},
       deaths: {},
       recovered: {}
-    };
+    }
     const update = {
       countryOrRegion: countryOrRegion,
       stateOrProvince: cityStateOrProvince,
       lat: Math.round(row["Lat"] * 100) / 100,
       lon: Math.round(row["Long"] * 100) / 100,
-      deltas: current.deltas || defaultDeltas
-    };
+      deltas: defaultDeltas
+    }
     
-    const { mostRecent, lastUpdated, newDeltas } = helpers.getStats(row);
-    console.log('newDeltas for category: ', category, newDeltas)
-    update.deltas[category] = newDeltas;
-    update[category] = mostRecent;
-    update.lastUpdated = lastUpdated;
+    const { mostRecent, lastUpdated, newDeltas } = helpers.getStats(row)
+    update.deltas[category] = newDeltas
+    update[category] = mostRecent
+    update.lastUpdated = lastUpdated
     
-    console.log('setting update for batch: ', update)
-    batch.set(docRef, update, {merge: true}); // TODO: find in docs how merge works with batch write
+    docRef = collectionRef.doc(cityStateOrProvinceId)
+    batch.set(docRef, update, {merge: true})
   }
 
   // Perform the batch write

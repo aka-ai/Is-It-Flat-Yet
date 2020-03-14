@@ -8,11 +8,13 @@ const DELTA_PERIODS = {
 
 module.exports = {
   getStats: row => {
-    const today = dayjs().format('M/D/YY');
+    const today = dayjs().format("M/D/YY");
     // get latest date and its value
-    let latestDay = today
+    let latestDay = today;
     while (!!!row[latestDay]) {
-      latestDay = dayjs(latestDay).subtract(1, 'days').format('M/D/YY')
+      latestDay = dayjs(latestDay)
+        .subtract(1, "days")
+        .format("M/D/YY");
     }
 
     const ret = {
@@ -23,21 +25,24 @@ module.exports = {
 
     // calculate deltas
     for (const [k, v] of Object.entries(DELTA_PERIODS)) {
-      const targetDay = dayjs(latestDay).subtract(v, 'days').format('M/D/YY')
-      const targetVal = parseInt(row[targetDay])
-      const latestDayVal = parseInt(row[latestDay])
-      const divisor = targetVal === 0 ? 1 : targetVal
+      const targetDay = dayjs(latestDay)
+        .subtract(v, "days")
+        .format("M/D/YY");
+      const targetVal = parseInt(row[targetDay]);
+      const latestDayVal = parseInt(row[latestDay]);
+      const divisor = targetVal === 0 ? 1 : targetVal;
       const delta = (latestDayVal - targetVal) / divisor;
       ret.newDeltas[k] = Math.round(delta * 10000) / 100;
     }
     return ret;
   },
 
-  formatName: name => name
-                      .toLowerCase()
-                      .trim()
-                      .replace(/,/g, '')
-                      .replace(/\s/g, '-')
-}
+  formatName: name =>
+    name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s/g, '-')
+};
 
 
