@@ -21,14 +21,11 @@ class Firebase {
   constructor() {
     app.initializeApp(config)
     this.db = app.firestore()
-    // this.getData = this.getData.bind(this)
   }
 
-  data = () => {
-    this.db.collection('testing').get().then(querySnapshot => {
-      const data = querySnapshot.docs.map(doc => doc.data())
-      console.log(data)
-    })
+  getData = async () => {
+    const docRef = await this.db.collection('Summary').doc('all').get()
+    return docRef.data()
   }
 }
 

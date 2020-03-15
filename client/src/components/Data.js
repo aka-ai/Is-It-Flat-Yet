@@ -1,14 +1,11 @@
+/*
 import React, { Component } from 'react'
 
 
 class Data extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
-    let location, confirmed, deaths, recovered, country, active 
-    
+    let location, confirmed, deaths, recovered, country, active
+
     if (!this.props.clickedLocation.confirmed) {
       country = "World Wide"
       confirmed = 2000
@@ -37,3 +34,4 @@ class Data extends Component {
 export default Data
 
 
+*/

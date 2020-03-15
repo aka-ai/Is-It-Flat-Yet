@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
-import Map from '../Map'
-import fakeData from '../fakeData'
+import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
@@ -9,13 +7,18 @@ export class MapContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showingInfoWindow: false,  //Hides or the shows the infoWindow
-      activeMarker: {},          //Shows the active marker upon click
-      selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
+      // Hides or the shows the infoWindow
+      showingInfoWindow: false,
+      // Shows the active marker upon click
+      activeMarker: {},
+      // Shows the infoWindow to the selected place upon a marker
+      selectedPlace: {},
+      data: []
     }
   }
 
-  sendData = () => {
+  /*
+  onClick = (props, marker, e) => {
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -38,14 +41,11 @@ export class MapContainer extends Component {
       })
     }
   }
+  */
 
-  onClick = (props, marker, e) => {
-    this.sendData()
-  }
 
-  onClose = props => {
+  onClose = () => {
     if (this.state.showingInfoWindow) {
-      console.log('onclose')
       this.setState({
         showingInfoWindow: false,
         activeMarker: null
@@ -53,65 +53,100 @@ export class MapContainer extends Component {
     }
   }
 
-  setIcon = confirmed => {
-    if (confirmed > 10) {
+  setIcon = active => {
+    if (active > 1000) {
       return severeIcon
-    } else if (confirmed < 3) {
+    } else if (active < 100) {
       return mildIcon
     } else {
       return mediumIcon
     }
   }
+
+  // async componentDidMount() {
+  //   const data = this.props.data
+  //   this.setState({ data: data })
+  // }
+
+  renderMarker(key, idx) {
+    const data = this.props.data[key]
+    const {
+      confirmed,
+      deaths,
+      recovered,
+      countryOrRegion,
+      stateOrProvince
+    } = data
+    const active = (
+      confirmed - deaths - recovered
+    ).toString()
+    if (parseInt(active) === 0) return
+    const thisIcon = this.setIcon(parseInt(active))
+    return (
+      <Marker
+        key={idx}
+        // onClick={this.onClick}
+        // onMouseover={this.onMouseover}
+        // onMouseout={this.onMouseout}
+        location={stateOrProvince + '\n' + countryOrRegion}
+        country={countryOrRegion}
+        confirmed={confirmed}
+        deaths={deaths}
+        recovered={recovered}
+        position={{
+          lat: data.lat,
+          lng: data.lon
+        }}
+        label={{
+          text: active,
+          color: "#0f07f7",
+          fontSize: "3",
+          fontFamily: "roboto",
+          fontWeight: "bold"
+        }}
+        icon={{
+          url: thisIcon
+        }}
+      />
+    )
+  }
+
   render() {
     return (
-      <Map
-        centerAroundCurrentLocation
-        google={this.props.google}
-      >
-        {/* <Marker
-          //pulled location from browser's current location
-          // location={'you are here'}
-          icon={{
-            url: ' '
-          }}
-        /> */}
-        {fakeData.map((data, idx) => {
-          const thisIcon = this.setIcon(data["Confirmed"])
-          return (
-            <Marker
-              key={idx}
-              onClick={this.onClick}
-              onMouseover={this.onMouseover}
-              onMouseout={this.onMouseout}
-              location={data["Province/State"]}
-              country={data["Country/Region"]}
-              confirmed={data["Confirmed"]}
-              deaths={data["Deaths"]}
-              recovered={data["Recovered"]}
-              position={{
-                lat: data.Lat,
-                lng: data.Long
-              }}
-            icon={{
-              url: thisIcon
-            }}
-            />
-          )
-        })}
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
+      <div className="Map-container">
+        <Map
+          google={this.props.google}
+          zoom={4}
+          maxZoom={7}
+          minZoom={2.5}
+          streetViewControl={false}
+          mapTypeControl={false}
+          backgroundColor={"white"}
+          fullscreenControl={false}
         >
-          <div>
-            <h4>{this.state.selectedPlace.location}</h4>
-            {this.state.selectedPlace.confirmed ?
-              <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.deaths - this.state.selectedPlace.recovered} active case(s)</p>
-              : <p></p>
-            }
-          </div>
-        </InfoWindow>
-      </Map>
+          {
+            Object.keys(this.props.data).map((key, idx) => {
+              return this.renderMarker(key, idx)
+            })
+          }
+          {/*
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onClose={this.onClose}
+          >
+            <div>
+              <h4>{this.state.selectedPlace.location}</h4>
+              {this.state.selectedPlace.confirmed ?
+
+                <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.Deaths - this.state.selectedPlace.Recovered} active case(s)</p>
+                : <p></p>
+              }
+            </div>
+          </InfoWindow>
+            */}
+        </Map >
+      </div>
     );
   }
 }
