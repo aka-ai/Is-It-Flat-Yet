@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: rgb(39, 41, 40);
 }
 
 .App-logo {
@@ -14,14 +15,23 @@
 }
 
 .header {
-  background-color: rgb(24, 85, 59);
-  max-height: 15vh;
+  background-color: rgb(39, 41, 40);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: roboto;
   font-size: calc(3px + 1vmin);
+  color: white;
+  line-height: 70%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* margin: 0;
+  position: fixed;
+  top: 0; */
+}
+
+a {
   color: white;
 }
 
@@ -31,7 +41,7 @@
   align-items: center;
   justify-content: space-around;
   margin-left: 7%;
-  margin-right: 7%
+  margin-right: 7%;
 }
 
 .App-link {
@@ -45,13 +55,13 @@
   justify-content: space-between;
 }
 
-.Map-container {
-  width: 100%;
-  height: 605px;
-}
+/* .Map-container {
+  width: 80px;
+  height: 70px;
+} */
 
 .side-box {
-  margin: 15px
+  margin: 15px;
 }
 
 @keyframes App-logo-spin {
