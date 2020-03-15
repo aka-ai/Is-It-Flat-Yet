@@ -62,7 +62,10 @@ const updateDB = async (category, csvData) => {
     skip_empty_lines: true
   });
 
-  const collectionRef = db.collection("All");
+  const allCollectionRef = db.collection("All");
+  const summaryCollectionRef = db.collection("Summary");
+
+  const summaryUpdate = {}
 
   // iterate over each object and put into db as appropriate
   // if writes need to be optimized later, we can refactor this to happen in parallel for each row
@@ -71,6 +74,9 @@ const updateDB = async (category, csvData) => {
     const cityStateOrProvince = helpers.formatName(row["Province/State"]);
     let cityStateOrProvinceId = countryOrRegion;
     if (cityStateOrProvince) cityStateOrProvinceId += `-${cityStateOrProvince}`;
+
+    // Get updated numbers
+    const { mostRecent, lastUpdated, newDeltas } = helpers.getStats(row);
 
     // Setup the new document attrs to merge in
     const update = {
@@ -81,16 +87,23 @@ const updateDB = async (category, csvData) => {
       deltas: {}
     };
 
-    const { mostRecent, lastUpdated, newDeltas } = helpers.getStats(row);
     update.deltas[category] = newDeltas;
     update[category] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
-    docRef = collectionRef.doc(cityStateOrProvinceId);
+    docRef = allCollectionRef.doc(cityStateOrProvinceId);
     batch.set(docRef, update, { merge: true });
+
+    // setup summary update
+    summaryUpdate[cityStateOrProvinceId] = update;
+    delete summaryUpdate.deltas
   }
 
+  // Update the summary doc
+  console.log('updating summary collection')
+  summaryCollectionRef.doc('all').set(summaryUpdate, { merge: true })
+
   // Perform the batch write
-  console.log("attempting batch commit");
+  console.log("batch committing to 'all' collection");
   batch.commit();
 };
