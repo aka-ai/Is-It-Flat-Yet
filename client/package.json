@@ -13,7 +13,7 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "start": "firebase serve",
+    "start": "react-scripts start",
     "deploy": "firebase deploy",
     "build": "react-scripts build",
     "test": "react-scripts test",
