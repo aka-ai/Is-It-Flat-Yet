@@ -116,6 +116,7 @@ export class MapContainer extends Component {
       <div className="Map-container">
         <Map
           google={this.props.google}
+          center={USLocation}
           zoom={4}
           maxZoom={7}
           minZoom={2.5}
@@ -149,6 +150,11 @@ export class MapContainer extends Component {
       </div>
     );
   }
+}
+
+const USLocation = {
+  lat: 37.0902,
+  lng: -95.7129
 }
 
 export default GoogleApiWrapper({
