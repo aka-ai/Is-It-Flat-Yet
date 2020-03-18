@@ -37,12 +37,12 @@ class App extends Component {
           <h3>Coronavirus current cases (confirmed - deaths - recovered)</h3>
           <p>source: <a href="https://github.com/CSSEGISandData/COVID-19/">Johns Hopkins</a></p>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <img alt="redPin" src={redPin} />
-            <p>more than 10,000 cases</p>
-            <img alt="orangePin" src={orangePin} />
-            <p>between 100 - 9,999 cases</p>
             <img alt="yellowPin" src={yellowPin} />
             <p>less than 100 cases</p>
+            <img alt="orangePin" src={orangePin} />
+            <p>between 100 - 999 cases</p>
+            <img alt="redPin" src={redPin} />
+            <p>more than 1,000 cases</p>
           </div>
         </header>
         <MapContainer
