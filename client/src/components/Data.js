@@ -1,8 +1,8 @@
-/*
 import React, { Component } from 'react'
 
 
 class Data extends Component {
+
   render() {
     let location, confirmed, deaths, recovered, country, active
 
@@ -18,10 +18,10 @@ class Data extends Component {
     }
 
     return (
-      <div className="side-box">
+      <div className="Data">
         {!location ? <h3>{country}</h3>
           : <h3>{location}, {country}</h3>
-          }
+        }
         <h4>Active: {active}</h4>
         <p>Infected: {confirmed}</p>
         <p>Recovered: {recovered}</p>
@@ -33,5 +33,3 @@ class Data extends Component {
 
 export default Data
 
-
-*/
