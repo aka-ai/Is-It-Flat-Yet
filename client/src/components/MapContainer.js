@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
@@ -9,10 +9,10 @@ export class MapContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showingInfoWindow: false,
+      clicked: false,
       activeMarker: {},
       selectedPlace: {},
-      data: []
+      data: [],
     }
   }
 
@@ -20,38 +20,9 @@ export class MapContainer extends Component {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
-      showingInfoWindow: true
+      clicked: true
     })
     this.props.sendDataToParent(this.state.selectedPlace);
-  }
-
-  // onMouseover = (props, marker, e) => {
-  //   if (!this.state.showingInfoWindow) {
-  //     this.setState({
-  //       selectedPlace: props,
-  //       activeMarker: marker,
-  //       showingInfoWindow: true
-  //     })
-  //   }
-  // }
-
-  // onMouseout = (props, marker, e) => {
-  //   if (this.state.showingInfoWindow) {
-  //     this.setState({
-  //       selectedPlace: {},
-  //       activeMarker: null,
-  //       showingInfoWindow: false
-  //     })
-  //   }
-  // }
-
-  onClose = () => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      })
-    }
   }
 
   setIcon = active => {
@@ -62,22 +33,6 @@ export class MapContainer extends Component {
     } else {
       return mediumIcon
     }
-  }
-  displayInfoWindow = () => {
-    const { location, confirmed, deaths, recovered } = this.state.selectedPlace
-    return (<InfoWindow
-      marker={this.state.activeMarker}
-      visible={this.state.showingInfoWindow}
-      onClose={this.onClose}
-    >
-      <div>
-        <h4>{location}</h4>
-        {confirmed ?
-          <p>{confirmed - deaths - recovered} active case(s)</p>
-          : <p></p>
-        }
-      </div>
-    </InfoWindow>)
   }
 
   renderMarker(key, idx) {
@@ -120,6 +75,10 @@ export class MapContainer extends Component {
       />
     )
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('nextProps', nextProps.data,'nextState', nextState.selectedPlace)
+    return !!!nextState.clicked
+  }
 
   render() {
     return (
@@ -142,7 +101,6 @@ export class MapContainer extends Component {
               return this.renderMarker(key, idx)
             })
           }
-          {this.displayInfoWindow()}
         </Map >
       </div>
     );
