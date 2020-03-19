@@ -5,7 +5,7 @@ import Countries from './components/Countries'
 import Data from './components/Data'
 import Firebase from './components/Firebase';
 import Header from './components/header'
-
+import Hamburger from './components/Hamburger'
 const firebase = new Firebase()
 
 class App extends Component {
@@ -29,6 +29,7 @@ class App extends Component {
   render() {
     return (
       < div className="App">
+        <Hamburger data={this.state.data} />
         <Header />
         <MapContainer
           sendDataToParent={this.gotDataFromChild}
