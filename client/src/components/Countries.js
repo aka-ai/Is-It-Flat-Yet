@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 // import Firebase from './Firebase';
 import fakeData from '../fakeData.js'
+import { object } from 'prop-types';
 class Countries extends Component {
   constructor(props) {
     super(props)
     this.state = { data: [] }
   }
   render() {
+    const sumData = {countryLevel: {}, stateLevel: {}, decendingSortedCountryLevel: [], globalTotalConfirmed: 0}
+    Object.keys(this.props.data).map((key, idx) => {
+      const data = this.props.data[key]
+      if (!sumData["countryLevel"][data.countryOrRegion]) {
+        sumData["countryLevel"][data.countryOrRegion] = data.confirmed
+      } else {
+        sumData["countryLevel"][data.countryOrRegion] += data.confirmed
+        sumData["globalTotalConfirmed"] += data.confirmed
+      }
+    })
+ 
     return (
       <div>
-        <h1>Countires Data</h1>
+        <h1>Total Global Confirmed Cases  {sumData["globalTotalConfirmed"]}</h1>
         {/* {Object.keys(this.props.data).map((key, idx) => {
           const data = this.props.data[key]
           const {
