@@ -110,11 +110,14 @@ export class MapContainer extends Component {
   //   return !!!nextState.clicked
   // }
 
-  capFirstLetter = (word) => {
-    return word.charAt(0).toUppercase() + word.slice(1)
-  }
+  // capFirstLetter = (word) => {
+
+  //   return word.charAt(0).toUppercase() + word.slice(1)
+  // }
   displayInfoWindow = () => {
-    const { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
+    let { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
+    if (country) country = country.toUpperCase()
+    if (location) location = location.toUpperCase()
     return (<InfoWindow
       marker={this.state.activeMarker}
       visible={this.state.showingInfoWindow}
