@@ -47,16 +47,7 @@ export class MapContainer extends Component {
     }
   }
 
-  renderMarker(key, idx) {
-    const data = this.props.data[key]
-    const {
-      confirmed,
-      deaths,
-      recovered,
-      countryOrRegion,
-      stateOrProvince
-    } = data
-
+  isBlackList = (stateOrProvince, countryOrRegion) => {
     if (countryOrRegion === "guam" ||
       stateOrProvince === "diamond-princess" ||
       stateOrProvince === "grand-princess" ||
@@ -69,7 +60,19 @@ export class MapContainer extends Component {
       countryOrRegion === "republic-of-the-congo" ||
       countryOrRegion === "congo-brazzaville" ||
       (countryOrRegion === "netherlands" && stateOrProvince === "")
-      ) return
+    ) return true
+  }
+  renderMarker(key, idx) {
+    const data = this.props.data[key]
+    const {
+      confirmed,
+      deaths,
+      recovered,
+      countryOrRegion,
+      stateOrProvince
+    } = data
+
+    if (this.isBlackList(stateOrProvince, countryOrRegion)) return
     const active = (
       confirmed - deaths - recovered
     ).toString()
