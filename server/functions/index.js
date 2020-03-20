@@ -26,7 +26,6 @@ exports.reportService = functions.pubsub
       }
       console.log("Finished reportService successfully");
     } catch (e) {
-      res.sendStatus(500, "reportService internal error");
       console.error(`reportService error: ${e.message}`);
       console.error(e.stack);
     }
