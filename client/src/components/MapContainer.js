@@ -109,11 +109,6 @@ export class MapContainer extends Component {
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !!!nextState.clicked
   // }
-
-  // capFirstLetter = (word) => {
-
-  //   return word.charAt(0).toUppercase() + word.slice(1)
-  // }
   displayInfoWindow = () => {
     let { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
     if (country) country = country.toUpperCase()
@@ -127,13 +122,13 @@ export class MapContainer extends Component {
           :
           <h4>{location} {country}</h4>}
         {confirmed ?
-          <p>{confirmed - deaths - recovered} active cases</p>
+          <p>{confirmed - deaths - recovered} Active Cases</p>
           : <p></p>
         }
-        <p>{confirmed} total confirmed</p>
-        <p>{recovered} recovered</p>
+        <p>{confirmed} Total Confirmed</p>
+        <p>{recovered} Recovered</p>
 
-        <p>{deaths} {deaths === 1 ? "death" : "deaths"}</p>
+        <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
       </div>
     </InfoWindow>)
   }
