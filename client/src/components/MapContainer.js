@@ -65,7 +65,10 @@ export class MapContainer extends Component {
       (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
       stateOrProvince === "united-states-virgin-islands" ||
       stateOrProvince === "virgin-islands" ||
-      countryOrRegion === "greenland" 
+      countryOrRegion === "greenland" ||
+      countryOrRegion === "republic-of-the-congo" ||
+      countryOrRegion === "congo-brazzaville" ||
+      (countryOrRegion === "netherlands" && stateOrProvince === "")
       ) return
     const active = (
       confirmed - deaths - recovered
