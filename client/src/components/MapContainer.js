@@ -92,7 +92,6 @@ export class MapContainer extends Component {
     return word.charAt(0).toUppercase() + word.slice(1)
   }
   displayInfoWindow = () => {
-console.log(this.state.selectedPlace)
     const { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
     return (<InfoWindow
       marker={this.state.activeMarker}

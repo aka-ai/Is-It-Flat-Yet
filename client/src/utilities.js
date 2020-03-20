@@ -66,7 +66,6 @@ const sumData = (data) => {
     let dataOfEachRegion
     let regionName
     total[countryName] = {}
-    // console.log(total)
     //regionals at idx0, regionals.Region = 'Seattle, WA'
     country.RegionalData.forEach(region => {
       regionName = region.Region
