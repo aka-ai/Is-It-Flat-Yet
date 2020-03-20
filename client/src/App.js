@@ -29,7 +29,7 @@ class App extends Component {
   render() {
     return (
       < div className="App">
-        <Hamburger data={this.state.data} />
+        {/* <Hamburger data={this.state.data} /> */}
         <Header />
         <MapContainer
           sendDataToParent={this.gotDataFromChild}

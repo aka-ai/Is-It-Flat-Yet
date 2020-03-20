@@ -18,7 +18,6 @@ export class MapContainer extends Component {
   }
 
   onClick = (props, marker, e) => {
-    console.log('before', this.state)
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -26,7 +25,6 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     })
     this.displayInfoWindow()
-    console.log('after', this.state)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -90,20 +88,29 @@ export class MapContainer extends Component {
       return mediumIcon
     }
   }
+  capFirstLetter = (word) => {
+    return word.charAt(0).toUppercase() + word.slice(1)
+  }
   displayInfoWindow = () => {
-
-    const { location, confirmed, deaths, recovered } = this.state.selectedPlace
+console.log(this.state.selectedPlace)
+    const { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
     return (<InfoWindow
       marker={this.state.activeMarker}
       visible={this.state.showingInfoWindow}
       onClose={this.onClose}
     >
       <div>
-        <h4>{location}</h4>
+        {!location ? <h4>{country}</h4>
+        :
+        <h4>{location} {country}</h4>}
         {confirmed ?
-          <p>{confirmed - deaths - recovered} active case(s)</p>
+          <p>{confirmed - deaths - recovered} active cases</p>
           : <p></p>
         }
+        <p>{confirmed} total confirmed</p>
+        <p>{recovered} recovered</p>
+
+        <p>{deaths} {deaths === 1 ? "death" : "deaths"}</p>
       </div>
     </InfoWindow>)
   }
