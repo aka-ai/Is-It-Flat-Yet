@@ -1,3 +1,4 @@
+/*
 const fakeData = [
   {
     Confirmed: "7",
@@ -380,3 +381,4 @@ const fakeData = [
 ]
 
 export default fakeData
+*/

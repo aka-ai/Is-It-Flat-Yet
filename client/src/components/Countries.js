@@ -1,44 +1,60 @@
-/*
 import React, { Component } from 'react';
 // import Firebase from './Firebase';
 import fakeData from '../fakeData.js'
+import { object } from 'prop-types';
 class Countries extends Component {
   constructor(props) {
     super(props)
     this.state = { data: [] }
   }
-
-  // async componentDidMount() {
-  //   const data = this.props.data
-  //   this.setState({ data: data })
-  // }
   render() {
+    const sumData = {countryLevel: {}, stateLevel: {}, decendingSortedCountryLevel: [], globalTotalConfirmed: 0}
+    Object.keys(this.props.data).map((key, idx) => {
+      const data = this.props.data[key]
+      if (!sumData["countryLevel"][data.countryOrRegion]) {
+        sumData["countryLevel"][data.countryOrRegion] = data.confirmed
+      } else {
+        sumData["countryLevel"][data.countryOrRegion] += data.confirmed
+        sumData["globalTotalConfirmed"] += data.confirmed
+      }
+    })
+ 
     return (
-      <div className="side-box">
-        {Object.keys(this.props.data).map((key, idx) => {
-          const region = this.props.key
+      <div>
+        <h1>Total Global Confirmed Cases  {sumData["globalTotalConfirmed"]}</h1>
+        {/* {Object.keys(this.props.data).map((key, idx) => {
+          const data = this.props.data[key]
+          const {
+            confirmed,
+            deaths,
+            recovered,
+            countryOrRegion,
+            stateOrProvince
+          } = data
+
           return (
             <div key={idx}>
-              {region.stateOrProvince ?
+              {stateOrProvince ?
                 <div>
-                  <p>{region.countryOrRegion + '/' + region.stateOrProvince}</p>
+                  <p>{countryOrRegion + '/' + stateOrProvince}</p>
                 </div>
                 :
                 <div>
-                  <p>{region.countryOrRegion}</p>
+                  <p>{countryOrRegion}</p>
                 </div>
               }
-              <p>{parseInt(region.confirmed)} confirmed cases</p>
+              <p>{confirmed} confirms</p>
+              <p>{deaths} deaths</p>
+              <p>{recovered} recovered</p>
+
               <p>---</p>
 
             </div>
           )
-        })}
+        })} */}
       </div>
     )
   }
 }
 
 export default Countries
-
-*/

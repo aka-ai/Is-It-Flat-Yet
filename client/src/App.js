@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 import MapContainer from './components/MapContainer'
-// import Countries from './components/Countries'
-// import Data from './components/Data'
+import Countries from './components/Countries'
+import Data from './components/Data'
 import Firebase from './components/Firebase';
-import redPin from './mapIcons/red.png'
-import orangePin from './mapIcons/orange.png'
-import yellowPin from './mapIcons/yellow.png'
-
+import Header from './components/header'
+import Hamburger from './components/Hamburger'
 const firebase = new Firebase()
 
 class App extends Component {
@@ -17,7 +15,6 @@ class App extends Component {
       clickedIndex: '',
       data: {}
     }
-
   }
 
   gotDataFromChild = (childData) => {
@@ -32,25 +29,13 @@ class App extends Component {
   render() {
     return (
       < div className="App">
-        <header className="header">
-          <h1>Welcome to Coronavirus.show</h1>
-          <h3>Coronavirus current cases (confirmed - deaths - recovered)</h3>
-          <p>source: <a href="https://github.com/CSSEGISandData/COVID-19/">Johns Hopkins</a></p>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <img alt="redPin" src={redPin} />
-            <p>more than 10,000 cases</p>
-            <img alt="orangePin" src={orangePin} />
-            <p>between 100 - 9,999 cases</p>
-            <img alt="yellowPin" src={yellowPin} />
-            <p>less than 100 cases</p>
-          </div>
-        </header>
+        {/* <Hamburger data={this.state.data} /> */}
+        <Header />
         <MapContainer
-          className="Map-container"
           sendDataToParent={this.gotDataFromChild}
           data={this.state.data}
         />
-        {/* <div className="footer"> }
+        {/* <div className="footer">
           <Countries data={this.state.data} />
           <Data clickedLocation={this.state.clickedIndex} data={this.state.data} />
         </div> */}

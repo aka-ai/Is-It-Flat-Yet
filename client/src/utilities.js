@@ -1,3 +1,4 @@
+/*
 // *** this is just a note ***
 totalSumData =
   {
@@ -92,3 +93,4 @@ const sumData = (data) => {
   })
   return total
 }
+*/

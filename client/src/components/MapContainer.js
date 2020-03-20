@@ -3,54 +3,29 @@ import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
+import mapStyle, { USLocation } from './mapUtilities'
+
 export class MapContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      // Hides or the shows the infoWindow
       showingInfoWindow: false,
-      // Shows the active marker upon click
-      activeMarker: {},
-      // Shows the infoWindow to the selected place upon a marker
       selectedPlace: {},
-      data: []
+      clicked: false,
+      activeMarker: {},
+      data: [],
     }
   }
 
-  /*
   onClick = (props, marker, e) => {
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      clicked: true,
+      showingInfoWindow: true
+    })
+    this.displayInfoWindow()
     this.props.sendDataToParent(this.state.selectedPlace);
-  }
-
-  onMouseover = (props, marker, e) => {
-    if (!this.state.showingInfoWindow) {
-      this.setState({
-        selectedPlace: props,
-        activeMarker: marker,
-        showingInfoWindow: true
-      })
-    }
-  }
-
-  onMouseout = (props, marker, e) => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        selectedPlace: {},
-        activeMarker: null,
-        showingInfoWindow: false
-      })
-    }
-  }
-  */
-
-
-  onClose = () => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      })
-    }
   }
 
   setIcon = active => {
@@ -62,11 +37,6 @@ export class MapContainer extends Component {
       return mediumIcon
     }
   }
-
-  // async componentDidMount() {
-  //   const data = this.props.data
-  //   this.setState({ data: data })
-  // }
 
   renderMarker(key, idx) {
     const data = this.props.data[key]
@@ -85,10 +55,10 @@ export class MapContainer extends Component {
     return (
       <Marker
         key={idx}
-        // onClick={this.onClick}
-        // onMouseover={this.onMouseover}
-        // onMouseout={this.onMouseout}
-        location={stateOrProvince + '\n' + countryOrRegion}
+        onClick={this.onClick}
+        onMouseout={this.onMouseout}
+        onMouseover={this.onMouseover}
+        location={stateOrProvince}
         country={countryOrRegion}
         confirmed={confirmed}
         deaths={deaths}
@@ -110,41 +80,63 @@ export class MapContainer extends Component {
       />
     )
   }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !!!nextState.clicked
+  // }
+  onClose = () => {
+    if (this.state.showingInfoWindow) {
+      return mediumIcon
+    }
+  }
+  capFirstLetter = (word) => {
+    return word.charAt(0).toUppercase() + word.slice(1)
+  }
+  displayInfoWindow = () => {
+console.log(this.state.selectedPlace)
+    const { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
+    return (<InfoWindow
+      marker={this.state.activeMarker}
+      visible={this.state.showingInfoWindow}
+      onClose={this.onClose}
+    >
+      <div>
+        {!location ? <h4>{country}</h4>
+        :
+        <h4>{location} {country}</h4>}
+        {confirmed ?
+          <p>{confirmed - deaths - recovered} active cases</p>
+          : <p></p>
+        }
+        <p>{confirmed} total confirmed</p>
+        <p>{recovered} recovered</p>
+
+        <p>{deaths} {deaths === 1 ? "death" : "deaths"}</p>
+      </div>
+    </InfoWindow>)
+  }
 
   render() {
     return (
       <div className="Map-container">
         <Map
           google={this.props.google}
+          center={USLocation}
           zoom={4}
-          maxZoom={7}
+          maxZoom={9}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}
-          backgroundColor={"white"}
+          backgroundColor={"black"}
           fullscreenControl={false}
+          styles={mapStyle}
+          gestureHandling={"greedy"}
         >
           {
             Object.keys(this.props.data).map((key, idx) => {
               return this.renderMarker(key, idx)
             })
           }
-          {/*
-          <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
-            onClose={this.onClose}
-          >
-            <div>
-              <h4>{this.state.selectedPlace.location}</h4>
-              {this.state.selectedPlace.confirmed ?
-
-                <p>{this.state.selectedPlace.confirmed - this.state.selectedPlace.Deaths - this.state.selectedPlace.Recovered} active case(s)</p>
-                : <p></p>
-              }
-            </div>
-          </InfoWindow>
-            */}
+          {this.displayInfoWindow()}
         </Map >
       </div>
     );
