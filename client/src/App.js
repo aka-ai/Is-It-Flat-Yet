@@ -35,10 +35,10 @@ class App extends Component {
           sendDataToParent={this.gotDataFromChild}
           data={this.state.data}
         />
-        <div className="footer">
+        {/* <div className="footer">
           <Countries data={this.state.data} />
           <Data clickedLocation={this.state.clickedIndex} data={this.state.data} />
-        </div>
+        </div> */}
       </div>
     )
   }

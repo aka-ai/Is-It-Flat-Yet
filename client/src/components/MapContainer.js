@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
@@ -9,19 +9,24 @@ export class MapContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      showingInfoWindow: false,
+      selectedPlace: {},
       clicked: false,
       activeMarker: {},
-      selectedPlace: {},
       data: [],
     }
   }
 
   onClick = (props, marker, e) => {
+    console.log('before', this.state)
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
-      clicked: true
+      clicked: true,
+      showingInfoWindow: true
     })
+    this.displayInfoWindow()
+    console.log('after', this.state)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -53,7 +58,9 @@ export class MapContainer extends Component {
       <Marker
         key={idx}
         onClick={this.onClick}
-        location={stateOrProvince + '\n' + countryOrRegion}
+        onMouseout={this.onMouseout}
+        onMouseover={this.onMouseover}
+        location={stateOrProvince}
         country={countryOrRegion}
         confirmed={confirmed}
         deaths={deaths}
@@ -75,9 +82,30 @@ export class MapContainer extends Component {
       />
     )
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log('nextProps', nextProps.data,'nextState', nextState.selectedPlace)
-    return !!!nextState.clicked
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !!!nextState.clicked
+  // }
+  onClose = () => {
+    if (this.state.showingInfoWindow) {
+      return mediumIcon
+    }
+  }
+  displayInfoWindow = () => {
+
+    const { location, confirmed, deaths, recovered } = this.state.selectedPlace
+    return (<InfoWindow
+      marker={this.state.activeMarker}
+      visible={this.state.showingInfoWindow}
+      onClose={this.onClose}
+    >
+      <div>
+        <h4>{location}</h4>
+        {confirmed ?
+          <p>{confirmed - deaths - recovered} active case(s)</p>
+          : <p></p>
+        }
+      </div>
+    </InfoWindow>)
   }
 
   render() {
@@ -101,6 +129,7 @@ export class MapContainer extends Component {
               return this.renderMarker(key, idx)
             })
           }
+          {this.displayInfoWindow()}
         </Map >
       </div>
     );
