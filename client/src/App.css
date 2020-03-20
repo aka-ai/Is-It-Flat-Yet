@@ -57,6 +57,16 @@ a {
   overflow: hidden;
 }
 
+.gm-style .gm-style-iw {
+  font-family: roboto;
+  font-size: calc(3px + 1vmin);
+  display: block;
+  color: white;
+  background-color:rgb(39, 41, 40);
+}
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track, .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece, .gm-style .gm-style-iw-t::after {
+    background: rgb(39, 41, 40);
+}
 
 /* hamburger */
 /* SOURCE: https://github.com/negomi/react-burger-menu#styling */
