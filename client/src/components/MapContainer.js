@@ -56,6 +56,17 @@ export class MapContainer extends Component {
       countryOrRegion,
       stateOrProvince
     } = data
+
+    if (countryOrRegion === "guam" ||
+      stateOrProvince === "diamond-princess" ||
+      stateOrProvince === "grand-princess" ||
+      stateOrProvince === "mayotte" ||
+      (stateOrProvince === "guadeloupe" && countryOrRegion === "france") ||
+      (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
+      stateOrProvince === "united-states-virgin-islands" ||
+      stateOrProvince === "virgin-islands" ||
+      countryOrRegion === "greenland" 
+      ) return
     const active = (
       confirmed - deaths - recovered
     ).toString()
@@ -104,8 +115,8 @@ export class MapContainer extends Component {
     >
       <div>
         {!location ? <h4>{country}</h4>
-        :
-        <h4>{location} {country}</h4>}
+          :
+          <h4>{location} {country}</h4>}
         {confirmed ?
           <p>{confirmed - deaths - recovered} active cases</p>
           : <p></p>
@@ -125,7 +136,7 @@ export class MapContainer extends Component {
           google={this.props.google}
           center={USLocation}
           zoom={4}
-          maxZoom={9}
+          maxZoom={30}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}
