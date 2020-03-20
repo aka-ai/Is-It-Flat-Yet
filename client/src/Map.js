@@ -1,3 +1,4 @@
+/*
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -125,3 +126,4 @@ Map.defaultProps = {
   centerAroundCurrentLocation: true,
   visible: true
 }
+*/
