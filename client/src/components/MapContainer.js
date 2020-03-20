@@ -92,11 +92,7 @@ export class MapContainer extends Component {
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !!!nextState.clicked
   // }
-  onClose = () => {
-    if (this.state.showingInfoWindow) {
-      return mediumIcon
-    }
-  }
+
   capFirstLetter = (word) => {
     return word.charAt(0).toUppercase() + word.slice(1)
   }
@@ -105,7 +101,6 @@ export class MapContainer extends Component {
     return (<InfoWindow
       marker={this.state.activeMarker}
       visible={this.state.showingInfoWindow}
-      onClose={this.onClose}
     >
       <div>
         {!location ? <h4>{country}</h4>
