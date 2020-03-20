@@ -11,21 +11,30 @@ export class MapContainer extends Component {
     this.state = {
       showingInfoWindow: false,
       selectedPlace: {},
-      clicked: false,
       activeMarker: {},
       data: [],
     }
+    this.onMarkerClick = this.onMarkerClick.bind(this)
+    this.onMapClick = this.onMapClick.bind(this)
   }
 
-  onClick = (props, marker, e) => {
+  onMarkerClick = (props, marker, e) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
-      clicked: true,
       showingInfoWindow: true
     })
     this.displayInfoWindow()
     this.props.sendDataToParent(this.state.selectedPlace);
+  }
+
+  onMapClick = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      })
+    }
   }
 
   setIcon = active => {
@@ -47,6 +56,20 @@ export class MapContainer extends Component {
       countryOrRegion,
       stateOrProvince
     } = data
+
+    if (countryOrRegion === "guam" ||
+      stateOrProvince === "diamond-princess" ||
+      stateOrProvince === "grand-princess" ||
+      stateOrProvince === "mayotte" ||
+      (stateOrProvince === "guadeloupe" && countryOrRegion === "france") ||
+      (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
+      stateOrProvince === "united-states-virgin-islands" ||
+      stateOrProvince === "virgin-islands" ||
+      countryOrRegion === "greenland" ||
+      countryOrRegion === "republic-of-the-congo" ||
+      countryOrRegion === "congo-brazzaville" ||
+      (countryOrRegion === "netherlands" && stateOrProvince === "")
+      ) return
     const active = (
       confirmed - deaths - recovered
     ).toString()
@@ -55,7 +78,7 @@ export class MapContainer extends Component {
     return (
       <Marker
         key={idx}
-        onClick={this.onClick}
+        onClick={this.onMarkerClick}
         onMouseout={this.onMouseout}
         onMouseover={this.onMouseover}
         location={stateOrProvince}
@@ -83,11 +106,7 @@ export class MapContainer extends Component {
   // shouldComponentUpdate(nextProps, nextState) {
   //   return !!!nextState.clicked
   // }
-  onClose = () => {
-    if (this.state.showingInfoWindow) {
-      return mediumIcon
-    }
-  }
+
   capFirstLetter = (word) => {
     return word.charAt(0).toUppercase() + word.slice(1)
   }
@@ -96,12 +115,11 @@ export class MapContainer extends Component {
     return (<InfoWindow
       marker={this.state.activeMarker}
       visible={this.state.showingInfoWindow}
-      onClose={this.onClose}
     >
       <div>
         {!location ? <h4>{country}</h4>
-        :
-        <h4>{location} {country}</h4>}
+          :
+          <h4>{location} {country}</h4>}
         {confirmed ?
           <p>{confirmed - deaths - recovered} active cases</p>
           : <p></p>
@@ -121,7 +139,7 @@ export class MapContainer extends Component {
           google={this.props.google}
           center={USLocation}
           zoom={4}
-          maxZoom={9}
+          maxZoom={30}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}
@@ -129,6 +147,7 @@ export class MapContainer extends Component {
           fullscreenControl={false}
           styles={mapStyle}
           gestureHandling={"greedy"}
+          onClick={this.onMapClick}
         >
           {
             Object.keys(this.props.data).map((key, idx) => {
