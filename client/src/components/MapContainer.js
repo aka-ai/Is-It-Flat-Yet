@@ -11,21 +11,30 @@ export class MapContainer extends Component {
     this.state = {
       showingInfoWindow: false,
       selectedPlace: {},
-      clicked: false,
       activeMarker: {},
       data: [],
     }
+    this.onMarkerClick = this.onMarkerClick.bind(this)
+    this.onMapClick = this.onMapClick.bind(this)
   }
 
-  onClick = (props, marker, e) => {
+  onMarkerClick = (props, marker, e) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
-      clicked: true,
       showingInfoWindow: true
     })
     this.displayInfoWindow()
     this.props.sendDataToParent(this.state.selectedPlace);
+  }
+
+  onMapClick = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      })
+    }
   }
 
   setIcon = active => {
@@ -55,7 +64,7 @@ export class MapContainer extends Component {
     return (
       <Marker
         key={idx}
-        onClick={this.onClick}
+        onClick={this.onMarkerClick}
         onMouseout={this.onMouseout}
         onMouseover={this.onMouseover}
         location={stateOrProvince}
@@ -129,6 +138,7 @@ export class MapContainer extends Component {
           fullscreenControl={false}
           styles={mapStyle}
           gestureHandling={"greedy"}
+          onClick={this.onMapClick}
         >
           {
             Object.keys(this.props.data).map((key, idx) => {
