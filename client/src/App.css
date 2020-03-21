@@ -63,9 +63,14 @@ a {
   display: block;
   color: white;
   background-color:rgb(39, 41, 40);
+  font-weight: 400;
+  letter-spacing: 0.12vh
 }
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track, .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece, .gm-style .gm-style-iw-t::after {
     background: rgb(39, 41, 40);
+}
+.gm-style h4 {
+  color: rgb(255, 98, 0);
 }
 
 /* hamburger */

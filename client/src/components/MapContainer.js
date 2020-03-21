@@ -4,6 +4,7 @@ import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
 import mapStyle, { USLocation } from './mapUtilities'
+import ClickedMarker from './ClickedMarker'
 
 export class MapContainer extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     })
     this.displayInfoWindow()
+    // console.log('FROM MAPCONTAINER', this.state.selectedPlace.position)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -47,16 +49,7 @@ export class MapContainer extends Component {
     }
   }
 
-  renderMarker(key, idx) {
-    const data = this.props.data[key]
-    const {
-      confirmed,
-      deaths,
-      recovered,
-      countryOrRegion,
-      stateOrProvince
-    } = data
-
+  isBlackList = (stateOrProvince, countryOrRegion) => {
     if (countryOrRegion === "guam" ||
       stateOrProvince === "diamond-princess" ||
       stateOrProvince === "grand-princess" ||
@@ -69,7 +62,19 @@ export class MapContainer extends Component {
       countryOrRegion === "republic-of-the-congo" ||
       countryOrRegion === "congo-brazzaville" ||
       (countryOrRegion === "netherlands" && stateOrProvince === "")
-      ) return
+    ) return true
+  }
+  renderMarker(key, idx) {
+    const data = this.props.data[key]
+    const {
+      confirmed,
+      deaths,
+      recovered,
+      countryOrRegion,
+      stateOrProvince
+    } = data
+
+    if (this.isBlackList(stateOrProvince, countryOrRegion)) return
     const active = (
       confirmed - deaths - recovered
     ).toString()
@@ -104,14 +109,12 @@ export class MapContainer extends Component {
     )
   }
   // shouldComponentUpdate(nextProps, nextState) {
-  //   return !!!nextState.clicked
-  // }
-
-  capFirstLetter = (word) => {
-    return word.charAt(0).toUppercase() + word.slice(1)
-  }
+  //     return !nextState.showingInfoWindow
+  //   }
   displayInfoWindow = () => {
-    const { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
+    let { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
+    if (country) country = country.toUpperCase()
+    if (location) location = location.toUpperCase()
     return (<InfoWindow
       marker={this.state.activeMarker}
       visible={this.state.showingInfoWindow}
@@ -121,13 +124,13 @@ export class MapContainer extends Component {
           :
           <h4>{location} {country}</h4>}
         {confirmed ?
-          <p>{confirmed - deaths - recovered} active cases</p>
+          <p>{confirmed - deaths - recovered} Active Cases</p>
           : <p></p>
         }
-        <p>{confirmed} total confirmed</p>
-        <p>{recovered} recovered</p>
+        <p>{confirmed} Total Confirmed</p>
+        <p>{recovered} Recovered</p>
 
-        <p>{deaths} {deaths === 1 ? "death" : "deaths"}</p>
+        <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
       </div>
     </InfoWindow>)
   }
@@ -154,7 +157,9 @@ export class MapContainer extends Component {
               return this.renderMarker(key, idx)
             })
           }
-          {this.displayInfoWindow()}
+          <ClickedMarker selectedPlace={this.state.selectedPlace} />
+        {this.displayInfoWindow()}
+
         </Map >
       </div>
     );
