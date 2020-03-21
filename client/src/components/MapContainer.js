@@ -4,6 +4,7 @@ import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
 import mapStyle, { USLocation } from './mapUtilities'
+import ClickedMarker from './ClickedMarker'
 
 export class MapContainer extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     })
     this.displayInfoWindow()
+    console.log('FROM MAPCONTAINER', this.state.selectedPlace.position)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -107,8 +109,8 @@ export class MapContainer extends Component {
     )
   }
   // shouldComponentUpdate(nextProps, nextState) {
-  //   return !!!nextState.clicked
-  // }
+  //     return !nextState.showingInfoWindow
+  //   }
   displayInfoWindow = () => {
     let { country, location, confirmed, deaths, recovered } = this.state.selectedPlace
     if (country) country = country.toUpperCase()
@@ -155,7 +157,9 @@ export class MapContainer extends Component {
               return this.renderMarker(key, idx)
             })
           }
-          {this.displayInfoWindow()}
+          <ClickedMarker selectedPlace={this.state.selectedPlace} />
+        {this.displayInfoWindow()}
+
         </Map >
       </div>
     );
