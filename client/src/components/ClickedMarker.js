@@ -4,7 +4,7 @@ import greenIcon from '../mapIcons/green.png'
 
 export default class ClickedMarker extends Component {
   render () {
-    console.log('HERE', this.props.selectedPlace.position)
+    // console.log('HERE', this.props.selectedPlace.position)
     return (
       <Marker
         position={this.props.selectedPlace.position}

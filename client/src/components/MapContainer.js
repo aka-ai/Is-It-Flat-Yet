@@ -26,7 +26,7 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     })
     this.displayInfoWindow()
-    console.log('FROM MAPCONTAINER', this.state.selectedPlace.position)
+    // console.log('FROM MAPCONTAINER', this.state.selectedPlace.position)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
