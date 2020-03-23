@@ -3,8 +3,9 @@ import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import mildIcon from '../mapIcons/yellow.png'
 import mediumIcon from '../mapIcons/orange.png'
 import severeIcon from '../mapIcons/red.png'
-import mapStyle, { USLocation } from './mapUtilities'
+import mapStyle, { USLocation, isBlackList } from './mapUtilities'
 import ClickedMarker from './ClickedMarker'
+
 
 export class MapContainer extends Component {
   constructor(props) {
@@ -26,7 +27,6 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     })
     this.displayInfoWindow()
-    // console.log('FROM MAPCONTAINER', this.state.selectedPlace.position)
     this.props.sendDataToParent(this.state.selectedPlace);
   }
 
@@ -49,21 +49,6 @@ export class MapContainer extends Component {
     }
   }
 
-  isBlackList = (stateOrProvince, countryOrRegion) => {
-    if (countryOrRegion === "guam" ||
-      stateOrProvince === "diamond-princess" ||
-      stateOrProvince === "grand-princess" ||
-      stateOrProvince === "mayotte" ||
-      (stateOrProvince === "guadeloupe" && countryOrRegion === "france") ||
-      (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
-      stateOrProvince === "united-states-virgin-islands" ||
-      stateOrProvince === "virgin-islands" ||
-      countryOrRegion === "greenland" ||
-      countryOrRegion === "republic-of-the-congo" ||
-      countryOrRegion === "congo-brazzaville" ||
-      (countryOrRegion === "netherlands" && stateOrProvince === "")
-    ) return true
-  }
   renderMarker(key, idx) {
     const data = this.props.data[key]
     const {
@@ -74,7 +59,7 @@ export class MapContainer extends Component {
       stateOrProvince
     } = data
 
-    if (this.isBlackList(stateOrProvince, countryOrRegion)) return
+    if (isBlackList(stateOrProvince, countryOrRegion)) return
     const active = (
       confirmed - deaths - recovered
     ).toString()

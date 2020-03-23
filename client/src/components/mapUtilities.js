@@ -3,6 +3,21 @@ export const USLocation = {
   lng: -95.7129
 }
 
+export const isBlackList = (stateOrProvince, countryOrRegion) => {
+  if (countryOrRegion === "guam" ||
+    stateOrProvince === "diamond-princess" ||
+    stateOrProvince === "grand-princess" ||
+    stateOrProvince === "mayotte" ||
+    (stateOrProvince === "guadeloupe" && countryOrRegion === "france") ||
+    (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
+    stateOrProvince === "united-states-virgin-islands" ||
+    stateOrProvince === "virgin-islands" ||
+    countryOrRegion === "greenland" ||
+    countryOrRegion === "republic-of-the-congo" ||
+    countryOrRegion === "congo-brazzaville" ||
+    (countryOrRegion === "netherlands" && stateOrProvince === "")
+  ) return true
+}
 //source: https://mapstyle.withgoogle.com/
 const mapStyle = [
   {
