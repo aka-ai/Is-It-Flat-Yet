@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 // import Firebase from './Firebase';
-import fakeData from '../fakeData.js'
 import { object } from 'prop-types';
 class Countries extends Component {
   constructor(props) {

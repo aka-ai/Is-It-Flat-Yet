@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
-import './App.css';
-import MapContainer from './components/MapContainer'
-import Countries from './components/Countries'
-import Data from './components/Data'
+import './Index.css';
 import Firebase from './components/Firebase';
 import Header from './components/header'
-import Hamburger from './components/Hamburger'
+import BaseMap from './components/Map/BaseMap'
 const firebase = new Firebase()
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      clickedIndex: '',
+      showingInfoWindow: false,
+      selectedPlace: {},
+      activeMarker: {},
       data: {}
     }
-  }
-
-  gotDataFromChild = (childData) => {
-    this.setState({ clickedIndex: childData })
   }
 
   async componentDidMount() {
@@ -29,16 +24,11 @@ class App extends Component {
   render() {
     return (
       < div className="App">
-        {/* <Hamburger data={this.state.data} /> */}
         <Header />
-        <MapContainer
+        <BaseMap
           sendDataToParent={this.gotDataFromChild}
           data={this.state.data}
         />
-        {/* <div className="footer">
-          <Countries data={this.state.data} />
-          <Data clickedLocation={this.state.clickedIndex} data={this.state.data} />
-        </div> */}
       </div>
     )
   }
