@@ -14,6 +14,7 @@
 
 body {
   background-color: rgb(39, 41, 40);
+  font-family: roboto;
 }
 
 .header {
@@ -22,7 +23,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: roboto;
   font-size: calc(3px + 1vmin);
   color: white;
   line-height: 70%;
