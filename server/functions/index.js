@@ -102,7 +102,7 @@ const updateDB = async (category, csvData) => {
   console.log('updating summary collection')
   summaryCollectionRef.doc('all').set(summaryUpdate, { merge: true })
 
-  // Perform the batch write
-  console.log("batch committing to 'all' collection");
-  batch.commit();
+  // Perform the batch write - uncomment if we want to use the all collection
+  // console.log("batch committing to 'all' collection");
+  // batch.commit();
 };
