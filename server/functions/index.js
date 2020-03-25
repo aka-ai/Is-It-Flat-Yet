@@ -17,7 +17,7 @@ const CATEGORIES = {
 
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
 exports.reportService = functions.pubsub
-  .schedule("0 12 * * *")
+  .schedule("0 * * * *")
   .onRun(async context => {
     console.log("Started reportService with context: ", context);
     try {
