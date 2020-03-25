@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import mapStyle, { USLocation } from '../../helpers/mapUtilities'
 import MarkerW from './MarkerW'
-import InfoWindowData from './InfoWindowData'
 import { isBlackList } from '../../helpers/mapUtilities'
 
 import mildIcon from '../../mapIcons/yellow.png'
@@ -15,6 +14,7 @@ export class BaseMap extends Component {
     this.state = {
       showingInfoWindow: false,
       activeMarker: null,
+      clickedMarkerKey: null,
     }
   }
 
@@ -22,7 +22,6 @@ export class BaseMap extends Component {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
-        activeMarker: null
       })
     }
   }
@@ -38,10 +37,10 @@ export class BaseMap extends Component {
   }
 
   onMarkerClick = (props, marker, e) => {
-    console.log('onMarkerClick called: ', marker)
     this.setState({
       activeMarker: marker,
-      showingInfoWindow: true
+      showingInfoWindow: true,
+      clickedMarkerKey: props
     })
   }
 
@@ -55,7 +54,6 @@ export class BaseMap extends Component {
         countryOrRegion,
         stateOrProvince
       } = data
-
       if (isBlackList(stateOrProvince, countryOrRegion)) return
       const active = (
         confirmed - deaths - recovered
@@ -81,29 +79,30 @@ export class BaseMap extends Component {
           icon={{
             url: thisIcon
           }}
+          location={stateOrProvince}
+          country={countryOrRegion}
+          confirmed={confirmed}
+          deaths={deaths}
+          recovered={recovered}
         />
       )
     })
   }
 
-  displayInfoWindow = () => {
-    console.log('displayInfoWindow called, current state:', this.state)
-    if (this.state.activeMarker === null) return
-    let { country, location, confirmed, deaths, recovered } = this.state.activeMarker
-    if (country) country = country.toUpperCase()
-    if (location) location = location.toUpperCase()
-    return (
-      <InfoWindow
-        marker={this.state.activeMarker}
-        visible={this.state.showingInfoWindow}
-      >
-        <InfoWindowData
-          marker={this.state.activeMarker}
-        />
-      </InfoWindow>)
-  }
-
   render() {
+    let location, country, confirmed,
+      deaths, recovered
+
+    if (this.state.clickedMarkerKey) {
+      location = this.state.clickedMarkerKey.location
+      country = this.state.clickedMarkerKey.country
+      confirmed = this.state.clickedMarkerKey.confirmed
+      deaths = this.state.clickedMarkerKey.deaths
+      recovered = this.state.clickedMarkerKey.recovered
+      if (country) country = country.toUpperCase()
+      if (location) location = location.toUpperCase()
+    }
+
     return (
       <div className="Map-container">
         <Map
@@ -118,10 +117,26 @@ export class BaseMap extends Component {
           fullscreenControl={false}
           styles={mapStyle}
           gestureHandling={"greedy"}
-        // onClick={this.onMapClick}
+          onClick={this.onMapClick}
         >
           {this.renderMarkers()}
-          {this.displayInfoWindow()}
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+          >
+            <div>
+              {!location ? <h4>{country}</h4>
+                :
+                <h4>{location} {country}</h4>}
+              {confirmed ?
+                <p>{confirmed - deaths - recovered} Active Cases</p>
+                : <p></p>
+              }
+              <p>{confirmed} Total Confirmed</p>
+              <p>{recovered} Recovered</p>
+              <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
+            </div>
+          </InfoWindow>
         </Map>
       </div>
     );

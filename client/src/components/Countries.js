@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 // import Firebase from './Firebase';
 import { object } from 'prop-types';
@@ -7,7 +8,7 @@ class Countries extends Component {
     this.state = { data: [] }
   }
   render() {
-    const sumData = {countryLevel: {}, stateLevel: {}, decendingSortedCountryLevel: [], globalTotalConfirmed: 0}
+    const sumData = { countryLevel: {}, stateLevel: {}, decendingSortedCountryLevel: [], globalTotalConfirmed: 0 }
     Object.keys(this.props.data).map((key, idx) => {
       const data = this.props.data[key]
       if (!sumData["countryLevel"][data.countryOrRegion]) {
@@ -17,7 +18,7 @@ class Countries extends Component {
         sumData["globalTotalConfirmed"] += data.confirmed
       }
     })
- 
+
     return (
       <div>
         <h1>Total Global Confirmed Cases  {sumData["globalTotalConfirmed"]}</h1>
