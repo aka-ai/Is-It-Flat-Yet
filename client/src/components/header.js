@@ -7,9 +7,7 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        <h1>Welcome to Coronavirus.show</h1>
-        <h3>Coronavirus current cases (confirmed - deaths - recovered)</h3>
-        <p>source: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a></p>
+        <h1>Coronavirus Active Cases</h1>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <img alt="yellowPin" src={yellowPin} />
           <p>less than 100 cases</p>

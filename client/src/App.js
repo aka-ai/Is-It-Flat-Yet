@@ -29,6 +29,15 @@ class App extends Component {
           sendDataToParent={this.gotDataFromChild}
           data={this.state.data}
         />
+        <div className="footer">
+          <div>
+            <p>
+              Active = Confirmed - Deaths - Recovered
+            </p>
+            <p>source: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a></p>
+            <p>made by <a target="_blank" href="https://twitter.com/aicooks">@aicooks</a> and <a target="_blank" href="https://twitter.com/kahdojay">@kahdojay</a></p>
+          </div>
+        </div>
       </div>
     )
   }

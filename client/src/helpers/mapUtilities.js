@@ -1,6 +1,6 @@
 export const USLocation = {
-  lat: 37.0902,
-  lng: -95.7129
+  lat: 39.0119,
+  lng: -98.4842
 }
 
 export const isBlackList = (stateOrProvince, countryOrRegion) => {

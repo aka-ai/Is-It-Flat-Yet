@@ -102,14 +102,13 @@ export class BaseMap extends Component {
       if (country) country = country.toUpperCase()
       if (location) location = location.toUpperCase()
     }
-
     return (
       <div className="Map-container">
         <Map
           google={this.props.google}
-          center={USLocation}
+          initialCenter={USLocation}
           zoom={4}
-          maxZoom={30}
+          maxZoom={6}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}

@@ -26,10 +26,12 @@ body {
   font-size: calc(3px + 1vmin);
   color: white;
   line-height: 70%;
+  margin: 2vh;
 }
 
 a {
   color: white;
+  text-decoration: none;
 }
 
 .footer {
@@ -40,6 +42,7 @@ a {
   color: white;
   overflow: hidden;
   background-color: rgb(39, 41, 40);
+  margin: 1.5vh;
 }
 
 .App-link {
@@ -48,7 +51,7 @@ a {
 
 .Map-container {
   position: relative;
-  height: 80vh;
+  height: 72vh;
   width: auto;
   overflow: hidden;
 }
@@ -62,12 +65,14 @@ a {
   font-size: calc(3px + 1vmin);
   display: block;
   color: white;
-  background-color:rgb(39, 41, 40);
+  background-color: rgb(39, 41, 40);
   font-weight: 400;
-  letter-spacing: 0.12vh
+  letter-spacing: 0.12vh;
 }
-.gm-style .gm-style-iw-d::-webkit-scrollbar-track, .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece, .gm-style .gm-style-iw-t::after {
-    background: rgb(39, 41, 40);
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+.gm-style .gm-style-iw-t::after {
+  background: rgb(39, 41, 40);
 }
 .gm-style h4 {
   color: rgb(255, 98, 0);
