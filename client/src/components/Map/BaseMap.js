@@ -27,9 +27,9 @@ export class BaseMap extends Component {
   }
 
   setIcon = active => {
-    if (active > 1000) {
+    if (active >= 10000) {
       return severeIcon
-    } else if (active < 100) {
+    } else if (active < 1000) {
       return mildIcon
     } else {
       return mediumIcon
@@ -50,13 +50,12 @@ export class BaseMap extends Component {
       const {
         confirmed,
         deaths,
-        recovered,
         countryOrRegion,
         stateOrProvince
       } = data
       if (isBlackList(stateOrProvince, countryOrRegion)) return
       const active = (
-        confirmed - deaths - recovered
+        confirmed - deaths
       ).toString()
 
       if (parseInt(active) === 0) return
@@ -83,7 +82,6 @@ export class BaseMap extends Component {
           country={countryOrRegion}
           confirmed={confirmed}
           deaths={deaths}
-          recovered={recovered}
         />
       )
     })
@@ -91,14 +89,13 @@ export class BaseMap extends Component {
 
   render() {
     let location, country, confirmed,
-      deaths, recovered
+      deaths
 
     if (this.state.clickedMarkerKey) {
       location = this.state.clickedMarkerKey.location
       country = this.state.clickedMarkerKey.country
       confirmed = this.state.clickedMarkerKey.confirmed
       deaths = this.state.clickedMarkerKey.deaths
-      recovered = this.state.clickedMarkerKey.recovered
       if (country) country = country.toUpperCase()
       if (location) location = location.toUpperCase()
     }
@@ -127,12 +124,7 @@ export class BaseMap extends Component {
               {!location ? <h4>{country}</h4>
                 :
                 <h4>{location} {country}</h4>}
-              {confirmed ?
-                <p>{confirmed - deaths - recovered} Active Cases</p>
-                : <p></p>
-              }
               <p>{confirmed} Total Confirmed</p>
-              <p>{recovered} Recovered</p>
               <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
             </div>
           </InfoWindow>

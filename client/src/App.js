@@ -32,7 +32,7 @@ class App extends Component {
         <div className="footer">
           <div>
             <p>
-              Active = Confirmed - Deaths - Recovered
+              Confirmed Active = Confirmed - Deaths
             </p>
             <p>source: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a></p>
             <p>made by <a target="_blank" href="https://twitter.com/aicooks">@aicooks</a> and <a target="_blank" href="https://twitter.com/kahdojay">@kahdojay</a></p>
