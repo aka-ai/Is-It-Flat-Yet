@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import './Index.css';
 import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
@@ -26,7 +26,6 @@ class App extends Component {
       <div className="App">
         <Header />
         <BaseMap
-          sendDataToParent={this.gotDataFromChild}
           data={this.state.data}
         />
         <div className="footer">
