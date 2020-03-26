@@ -24,11 +24,11 @@ class Firebase {
   }
 
   getData = async () => {
-    const globalData = await this.db.collection('Summary').doc('all').get()
-    const usData = await this.db.collection('Summary').doc('ctp').get()
-    const global = globalData.data()
-    const us = usData.data()
-    return {globalData: global, usData: us}
+    const data = await Promise.all([
+      this.db.collection('Summary').doc('all').get(),
+      this.db.collection('Summary').doc('ctp').get()
+    ])
+    return { globalData: data[0].data(), usData: data[1].data() }
   }
 }
 
