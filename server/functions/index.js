@@ -10,9 +10,8 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
 const CATEGORIES = {
-  confirmed: "Confirmed",
-  deaths: "Deaths",
-  recovered: "Recovered"
+  CONFIRMED: "confirmed",
+  DEATHS: "deaths"
 };
 
 // reportService calls CSSE data from GitHub every hour and updates our database with updated statistics
@@ -34,9 +33,7 @@ exports.reportService = functions.pubsub
 const fetchDataAndUpdateDB = async category => {
   console.log("calling fetch from github with category: ", category);
   const options = {
-    url:
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/" +
-      `csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-${category}.csv`
+    url: `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${category}_global.csv`
   };
 
   let githubResponse = "";
