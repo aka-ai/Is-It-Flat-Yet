@@ -2,6 +2,27 @@ export const USLocation = {
   lat: 39.0119,
   lng: -98.4842
 }
+export const getConstantsForInfoWindow = (clickedMarkerKey) => {
+  let location, country, confirmed,
+    deaths, hospitalized, percapitaPercentage, population, totalTestResults
+
+    location = clickedMarkerKey.location
+    country = clickedMarkerKey.country
+    confirmed = clickedMarkerKey.confirmed
+    deaths = clickedMarkerKey.deaths
+
+  if (clickedMarkerKey.country === "US") {
+    hospitalized = clickedMarkerKey.hospitalized
+    percapitaPercentage = Number.parseFloat(clickedMarkerKey.percapitaPercentage).toFixed(3)
+    population = clickedMarkerKey.population
+    totalTestResults = clickedMarkerKey.totalTestResults
+  }
+  
+  return {
+    location, country, confirmed,
+    deaths, hospitalized, percapitaPercentage, population, totalTestResults
+  }
+}
 
 export const changeLatLong = (data) => {
   const { countryOrRegion } = data
