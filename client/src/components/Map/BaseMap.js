@@ -36,7 +36,6 @@ export class BaseMap extends Component {
   }
 
   onMarkerClick = (props, marker, e) => {
-    console.log(props)
     this.setState({
       activeMarker: marker,
       showingInfoWindow: true,
@@ -157,7 +156,6 @@ export class BaseMap extends Component {
       deaths = this.state.clickedMarkerKey.deaths
     }
     if (this.state.clickedMarkerKey && country === "US") {
-      console.log(this.props.data.usData.states)
       hospitalized = this.state.clickedMarkerKey.hospitalized
       negative = this.state.clickedMarkerKey.negative
       pending = this.state.clickedMarkerKey.pending
