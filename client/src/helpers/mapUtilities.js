@@ -2,14 +2,15 @@ export const USLocation = {
   lat: 39.0119,
   lng: -98.4842
 }
+
 export const getConstantsForInfoWindow = (clickedMarkerKey) => {
   let location, country, confirmed,
     deaths, hospitalized, percapitaPercentage, population, totalTestResults
 
-    location = clickedMarkerKey.location
-    country = clickedMarkerKey.country
-    confirmed = clickedMarkerKey.confirmed
-    deaths = clickedMarkerKey.deaths
+  location = clickedMarkerKey.location
+  country = clickedMarkerKey.country
+  confirmed = clickedMarkerKey.confirmed
+  deaths = clickedMarkerKey.deaths
 
   if (clickedMarkerKey.country === "US") {
     hospitalized = clickedMarkerKey.hospitalized
@@ -17,7 +18,7 @@ export const getConstantsForInfoWindow = (clickedMarkerKey) => {
     population = clickedMarkerKey.population
     totalTestResults = clickedMarkerKey.totalTestResults
   }
-  
+
   return {
     location, country, confirmed,
     deaths, hospitalized, percapitaPercentage, population, totalTestResults
@@ -59,25 +60,52 @@ export const isBlackList = (key) => {
 //source: https://mapstyle.withgoogle.com/
 const mapStyle = [
   {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels",
+    "featureType": "administrative",
+    "elementType": "labels.text.fill",
     "stylers": [
       {
-        "visibility": "off"
+        "color": "#444444"
+      }
+    ]
+  },
+  // {
+  //   "featureType": 'administrative.province',
+  //   "elementType": 'geometry.stroke',
+  //   "stylers": [{ "visibility": '#off' }]
+  // },
+  {
+    "featureType": "landscape",
+    "elementType": "all",
+    "stylers": [
+      {
+        "color": "000000"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "all",
+    "stylers": [
+      {
+        "color": "#46bcec"
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#A4BFC3",
       }
     ]
   },
   {
     "featureType": "poi",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.business",
+    "elementType": "all",
     "stylers": [
       {
         "visibility": "off"
@@ -86,6 +114,19 @@ const mapStyle = [
   },
   {
     "featureType": "road",
+    "elementType": "all",
+    "stylers": [
+      {
+        "saturation": -100
+      },
+      {
+        "lightness": 45
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "all",
     "stylers": [
       {
         "visibility": "off"
@@ -93,7 +134,7 @@ const mapStyle = [
     ]
   },
   {
-    "featureType": "road",
+    "featureType": "road.arterial",
     "elementType": "labels.icon",
     "stylers": [
       {
@@ -102,16 +143,8 @@ const mapStyle = [
     ]
   },
   {
-    "featureType": "road.local",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "transit",
+    "elementType": "all",
     "stylers": [
       {
         "visibility": "off"

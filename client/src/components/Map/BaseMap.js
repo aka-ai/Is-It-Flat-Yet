@@ -6,6 +6,8 @@ import { isBlackList, changeLatLong } from '../../helpers/mapUtilities'
 import mildIcon from '../../mapIcons/yellow.png'
 import mediumIcon from '../../mapIcons/orange.png'
 import severeIcon from '../../mapIcons/red.png'
+import numeral from 'numeral';
+
 
 export class BaseMap extends Component {
   constructor(props) {
@@ -72,7 +74,7 @@ export class BaseMap extends Component {
             }}
             label={{
               text: active,
-              color: "#0f07f7",
+              color: "#002D72",
               fontSize: "3",
               fontFamily: "roboto",
               fontWeight: "bold"
@@ -121,7 +123,7 @@ export class BaseMap extends Component {
             }}
             label={{
               text: active,
-              color: "#0f07f7",
+              color: "#002D72",
               fontSize: "3",
               fontFamily: "roboto",
               fontWeight: "bold"
@@ -152,16 +154,16 @@ export class BaseMap extends Component {
     if (this.state.clickedMarkerKey) {
       location = this.state.clickedMarkerKey.location
       country = this.state.clickedMarkerKey.country
-      confirmed = this.state.clickedMarkerKey.confirmed
+      confirmed = numeral(this.state.clickedMarkerKey.confirmed).format('0,0')
       deaths = this.state.clickedMarkerKey.deaths
     }
     if (this.state.clickedMarkerKey && country === "US") {
-      hospitalized = this.state.clickedMarkerKey.hospitalized
+      hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0')
       negative = this.state.clickedMarkerKey.negative
       pending = this.state.clickedMarkerKey.pending
       percapitaPercentage = Number.parseFloat(this.state.clickedMarkerKey.percapitaPercentage).toFixed(3)
-      population = this.state.clickedMarkerKey.population
-      totalTestResults = this.state.clickedMarkerKey.totalTestResults
+      population = numeral(this.state.clickedMarkerKey.population).format('0.0a')
+      totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
     return (
       <div className="Map-container">
@@ -169,10 +171,11 @@ export class BaseMap extends Component {
           google={this.props.google}
           initialCenter={USLocation}
           zoom={4}
-          maxZoom={6}
+          maxZoom={5}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}
+          zoomControl={false}
           backgroundColor={"black"}
           fullscreenControl={false}
           styles={mapStyle}
@@ -185,25 +188,25 @@ export class BaseMap extends Component {
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
-            {country === "US" ? 
-              <div>
-                <h4>{location} {country}</h4>
+            {country === "US" ?
+              <div className="infoWindow">
+                <h3 style={{ textAlign: 'center' }}>{location} {country}</h3>
+                <p>Total Confirmed: {confirmed}</p>
+                <p>{deaths === 1 ? "Death" : "Deaths"}: {deaths}</p>
+                {hospitalized !== "n/a" ? <p>Hospitalized: {hospitalized}</p> : <p></p>}
+                <p>Total Test Results: {totalTestResults}</p>
+                <p>Total Population: {population}</p>
+                {/* <p>{percapitaPercentage}% Per Capita</p> */}
+              </div>
+              :
+              <div className="infoWindow">
+                {!location ? <h3>{country}</h3>
+                  :
+                  <h3>{location} {country}</h3>}
                 <p>{confirmed} Total Confirmed</p>
                 <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
-                {hospitalized !== "n/a" ? <p>{hospitalized} Hospitalized</p> : <p></p>}
-                <p>{totalTestResults} Total Test Results</p>
-                <p>{population} Total Population</p>
-                <p>{percapitaPercentage}% Per Capita</p>
               </div>
-            :
-            <div>
-              {!location ? <h4>{country}</h4>
-                :
-                <h4>{location} {country}</h4>}
-              <p>{confirmed} Total Confirmed</p>
-              <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
-            </div>
-          }
+            }
           </InfoWindow>
         </Map>
       </div>
