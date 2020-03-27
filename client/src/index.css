@@ -7,8 +7,9 @@ body {
 }
 
 .header {
-  background: #a4bfc3;
-  opacity: 0.8;
+  /* background: #a4bfc3; */
+  background: linear-gradient(191deg, rgba(164,191,195,0.9205883036808473) 26%, rgba(190, 222, 227, 0.762) 100%);
+  opacity: 0.95;
   z-index: 2;
   position: fixed;
   top: 0;
@@ -21,7 +22,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: calc(1.2vh);
-  color: #3f3549;
+  color: #22162e;
   line-height: 70%;
 }
 
@@ -31,21 +32,22 @@ a {
 }
 
 .footer {
-  background: #a4bfc3;
-  opacity: 0.8;
+  /* background: #a4bfc3; */
+  background: linear-gradient(191deg, rgba(164,191,195,0.9205883036808473) 26%, rgba(190, 222, 227, 0.762) 100%);
+  opacity: 0.9;
   z-index: 2;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 13vh;
+  height: 10vh;
   padding: 10px 0px 10px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(1.2vh);
-  color: #3f3549;
+  color: #22162e;
   line-height: 70%;
 }
 
