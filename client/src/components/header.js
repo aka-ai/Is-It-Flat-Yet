@@ -16,6 +16,7 @@ class Header extends Component {
           <img alt="redPin" src={redPin} />
           <p>more than 10,000 cases</p>
         </div>
+          <p>Last Updated: {this.props.lastUpdated}</p>
       </div>
     )
   }
