@@ -3,6 +3,7 @@ import './Index.css';
 import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
+
 const firebase = new Firebase()
 
 class App extends Component {
@@ -22,19 +23,18 @@ class App extends Component {
   }
 
   render() {
+    let lastUpdated
+    if (this.state.data.globalData) lastUpdated = this.state.data.globalData[Object.keys(this.state.data.globalData)[0]]["lastUpdated"]
     return (
       <div className="App">
-        <Header />
+        <Header lastUpdated={lastUpdated} />
         <BaseMap
           data={this.state.data}
         />
         <div className="footer">
           <div>
-            <p>
-              Confirmed Active = Confirmed - Deaths
-            </p>
-            <p>source: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a></p>
-            <p>made by <a target="_blank" href="https://twitter.com/aicooks">@aicooks</a> and <a target="_blank" href="https://twitter.com/kahdojay">@kahdojay</a></p>
+            <p>SOURCES: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a>, <a rel="noopener noreferrer" href="https://covidtracking.com/" target="_blank">The COVID Tracking Project</a></p>
+            <p>MADE BY <a target="_blank" href="https://twitter.com/aicooks">@aicooks</a> and <a target="_blank" href="https://twitter.com/kahdojay">@kahdojay</a></p>
           </div>
         </div>
       </div>
