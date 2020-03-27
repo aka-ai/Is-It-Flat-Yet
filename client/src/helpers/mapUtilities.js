@@ -3,19 +3,36 @@ export const USLocation = {
   lng: -98.4842
 }
 
-export const isBlackList = (stateOrProvince, countryOrRegion) => {
-  if (countryOrRegion === "guam" ||
-    stateOrProvince === "diamond-princess" ||
-    stateOrProvince === "grand-princess" ||
-    stateOrProvince === "mayotte" ||
-    (stateOrProvince === "guadeloupe" && countryOrRegion === "france") ||
-    (stateOrProvince === "aruba" && countryOrRegion === "netherlands") ||
-    stateOrProvince === "united-states-virgin-islands" ||
-    stateOrProvince === "virgin-islands" ||
-    countryOrRegion === "greenland" ||
-    countryOrRegion === "republic-of-the-congo" ||
-    countryOrRegion === "congo-brazzaville" ||
-    (countryOrRegion === "netherlands" && stateOrProvince === "")
+export const changeLatLong = (data) => {
+  const { countryOrRegion } = data
+  if (countryOrRegion === 'Belize') {
+    data.lat = 17.1899
+    data.lon = -88.4976
+  }
+  if (countryOrRegion === 'Barbados') {
+    data.lat = 13.1939
+    data.lon = -59.5432
+  }
+  if (countryOrRegion === 'Malaysia') {
+    data.lat = 4.2105
+    data.lon = 101.9758
+  }
+}
+
+export const isBlackList = (key) => {
+  if (
+    key === "us" ||
+    key === "guam" ||
+    key === "diamond-princess" ||
+    key === "grand-princess" ||
+    key === "mayotte" ||
+    key === "france-guadeloupe" ||
+    key === "virgin-islands" ||
+    key === "greenland" ||
+    key === "republic-of-the-congo" ||
+    key === "congo-brazzaville" ||
+    key === "canada-grand-princess" ||
+    key === "canada-diamond-princess"
   ) return true
 }
 //source: https://mapstyle.withgoogle.com/
