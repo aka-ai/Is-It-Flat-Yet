@@ -16,7 +16,10 @@ export class BaseMap extends Component {
       showingInfoWindow: false,
       activeMarker: null,
       clickedMarkerKey: null,
+      lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
+      centerAround: { lat: USLocation.lat, lng: USLocation.lng }
     }
+    this.limitVerticalPan = this.limitVerticalPan.bind(this)
   }
 
   onMapClick = (props) => {
@@ -147,6 +150,26 @@ export class BaseMap extends Component {
     }
   }
 
+  limitVerticalPan(mapProps, map) {
+    if (map.center.lat() > 78 || map.center.lat() < -70) {
+      this.setState({ lastValidPan: this.state.lastValidPan })
+    } else if (!this.state.lastValidPan) {
+      this.setState({
+        lastValidPan: {
+          lat: map.center.lat(),
+          lng: map.center.lng()
+        }
+      })
+    } else {
+      this.setState({
+        lastValidPan: {
+          lat: map.center.lat(),
+          lng: map.center.lng()
+        }
+      })
+    }
+  }
+
   render() {
     let location, country, confirmed,
       deaths, hospitalized, negative, pending, percapitaPercentage, population, totalTestResults
@@ -165,6 +188,7 @@ export class BaseMap extends Component {
       population = numeral(this.state.clickedMarkerKey.population).format('0.0a')
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
+
     return (
       <div className="Map-container">
         <Map
@@ -181,6 +205,11 @@ export class BaseMap extends Component {
           styles={mapStyle}
           gestureHandling={"greedy"}
           onClick={this.onMapClick}
+          onDragend={this.limitVerticalPan}
+          center={{
+            lat: this.state.lastValidPan.lat,
+            lng: this.state.lastValidPan.lng
+          }}
         >
           {this.renderGlobalMarkers()}
           {this.renderUSMarkers()}
