@@ -36,7 +36,7 @@ const fetchDataAndUpdateDB = async () => {
   // get github data
   for (const category of Object.values(CATEGORIES)) {
     options.url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${category}_global.csv`
-    githubResponse = await axios(options);
+    const githubResponse = await axios(options);
     if (githubResponse.status !== 200 || githubResponse.data === "") {
       console.error("Error or Empty response from Github!: ", githubResponse);
     } else {
@@ -47,7 +47,7 @@ const fetchDataAndUpdateDB = async () => {
 
   // get ctp data
   options.url = "https://covidtracking.com/api/states"
-  ctpResponse = await axios(options)
+  const ctpResponse = await axios(options)
 
   if (ctpResponse.status !== 200 || ctpResponse.data === "") {
     console.error("Error or Empty response from Github!: ", ctpResponse);

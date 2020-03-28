@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "coronavirus-show"
+    "prod": "coronavirus-show",
+    "staging": "coronavirus-show-staging"
   }
 }
