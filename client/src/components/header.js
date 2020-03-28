@@ -8,7 +8,7 @@ class Header extends Component {
     return (
       <div className="header">
         <h1>Coronavirus Confirmed Active Cases</h1>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="headerInfo">
           <img className="responsive" alt="yellowPin" src={yellowPin} />
           <p>{"< 1000 cases"}</p>
           <img className="responsive" alt="orangePin" src={orangePin} />
@@ -16,7 +16,6 @@ class Header extends Component {
           <img className="responsive" alt="redPin" src={redPin} />
           <p>{"> 10,000 cases"}</p>
         </div>
-          <p>Last Updated: {this.props.lastUpdated}</p>
       </div>
     )
   }

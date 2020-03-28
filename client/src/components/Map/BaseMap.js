@@ -151,8 +151,20 @@ export class BaseMap extends Component {
   }
 
   limitVerticalPan(mapProps, map) {
-    if (map.center.lat() > 78 || map.center.lat() < -70) {
-      this.setState({ lastValidPan: this.state.lastValidPan })
+    if (map.center.lat() > 76) {
+      this.setState({
+        lastValidPan: {
+          lat: 76,
+          lng: this.state.lastValidPan.lng
+        }
+      })
+    } else if (map.center.lat() < -70) {
+      this.setState({
+        lastValidPan: {
+          lat: -70,
+          lng: this.state.lastValidPan.lng
+        }
+      })
     } else if (!this.state.lastValidPan) {
       this.setState({
         lastValidPan: {
@@ -219,20 +231,20 @@ export class BaseMap extends Component {
           >
             {country === "US" ?
               <div className="infoWindow">
-                <h3 style={{ textAlign: 'center' }}>{location} {country}</h3>
-                <p>Total Confirmed: {confirmed}</p>
+                <h3 className="infoWindowTitle">{location} {country}</h3>
+                <p>Confirmed: {confirmed}</p>
                 <p>{deaths === 1 ? "Death" : "Deaths"}: {deaths}</p>
                 {hospitalized !== "n/a" ? <p>Hospitalized: {hospitalized}</p> : <p></p>}
-                <p>Total Test Results: {totalTestResults}</p>
-                <p>Total Population: {population}</p>
+                <p>Test Results: {totalTestResults}</p>
+                <p>Population: {population}</p>
                 {/* <p>{percapitaPercentage}% Per Capita</p> */}
               </div>
               :
               <div className="infoWindow">
-                {!location ? <h3>{country}</h3>
+                {!location ? <h3 className="infoWindowTitle">{country}</h3>
                   :
-                  <h3>{location} {country}</h3>}
-                <p>{confirmed} Total Confirmed</p>
+                  <h3 className="infoWindowTitle">{location} {country}</h3>}
+                <p>{confirmed} Confirmed</p>
                 <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
               </div>
             }

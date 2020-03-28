@@ -7,23 +7,44 @@ body {
 }
 
 .header {
-  /* background: #a4bfc3; */
-  background: linear-gradient(191deg, rgba(164,191,195,0.9205883036808473) 26%, rgba(190, 222, 227, 0.762) 100%);
-  opacity: 0.95;
+  background: -webkit-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
+  background: -moz-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
+  background: linear-gradient(to top, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
   z-index: 2;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 13vh;
-  padding: 10px 0px 10px 0px;
+  padding: 2vh 0px 2vh 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(1.2vh);
-  color: #22162e;
+  font-size: calc(3px + 1vw);
+  color: rgb(56, 56, 56);
+  text-shadow: 1px 1px 1px white;
   line-height: 70%;
+}
+
+.header p {
+  opacity: 1;
+}
+
+.header h1 {
+  font-size: calc(.75vw + 2vh);
+}
+
+.headerInfo {
+  font-size: calc(7px + 1vw);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+p.headerInfo {
+  font-style: italic;
+  font-size: calc(13px + .2vw);
 }
 
 a {
@@ -32,8 +53,9 @@ a {
 }
 
 .footer {
-  /* background: #a4bfc3; */
-  background: linear-gradient(191deg, rgba(164,191,195,0.9205883036808473) 26%, rgba(190, 222, 227, 0.762) 100%);
+  background: -webkit-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
+  background: -moz-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
+  background: linear-gradient(to bottom, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
   opacity: 0.9;
   z-index: 2;
   position: fixed;
@@ -46,14 +68,13 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(1.2vh);
+  font-size: calc(1.7vh);
   color: #22162e;
-  line-height: 70%;
+  line-height: 20%;
 }
 
-
 .responsive {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
 }
 
@@ -70,6 +91,10 @@ a {
 
 .infoWindow {
   text-align: justify;
+}
+
+.infoWindowTitle {
+  text-align: center;
 }
 
 .Data {

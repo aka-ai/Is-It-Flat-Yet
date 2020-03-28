@@ -99,7 +99,7 @@ const mapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#A4BFC3",
+        "color": "#87bbc1",
       }
     ]
   },
