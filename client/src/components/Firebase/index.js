@@ -1,26 +1,6 @@
-import app from 'firebase/app'
-import 'firebase/analytics'
+import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/analytics'
-// import * as firebase from 'firebase';
-// import fbcli from 'firebase-tools';
-// import fs from 'fs'
-
-// by default, uses the current project and logged in user
-// fbcli.setup.web().then(config => {
-//   fs.writeFileSync(
-//     'build/initFirebase.js',
-//     `firebase.initializeApp(${JSON.stringify(config)});`
-//   );
-// });
-// alternative:
-// fetch('/__/firebase/init.json').then(async response => {
-//   app.initializeApp(await response.json());
-// });
-
-// fetch('/__/firebase/init.json').then(async response => {
-//   app.initializeApp(await response.json());
-// });
 
 
 class Firebase {
@@ -49,9 +29,9 @@ class Firebase {
         measurementId: "G-FD6RKX0PE2"
       };
     }
-    app.initializeApp(config)
-    app.analytics()
-    this.db = app.firestore()
+    firebase.initializeApp(config)
+    firebase.analytics()
+    this.db = firebase.firestore()
   }
 
   getData = async () => {
