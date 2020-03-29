@@ -17,7 +17,7 @@ export class BaseMap extends Component {
       activeMarker: null,
       clickedMarkerKey: null,
       lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
-      centerAround: { lat: USLocation.lat, lng: USLocation.lng }
+      valid: true
     }
     this.limitVerticalPan = this.limitVerticalPan.bind(this)
   }
@@ -152,32 +152,19 @@ export class BaseMap extends Component {
 
   limitVerticalPan(mapProps, map) {
     if (map.center.lat() > 76) {
-      this.setState({
-        lastValidPan: {
-          lat: 76,
-          lng: this.state.lastValidPan.lng
-        }
+      map.setCenter({
+        lat: 76,
+        lng: map.center.lng()
       })
     } else if (map.center.lat() < -70) {
-      this.setState({
-        lastValidPan: {
-          lat: -70,
-          lng: this.state.lastValidPan.lng
-        }
-      })
-    } else if (!this.state.lastValidPan) {
-      this.setState({
-        lastValidPan: {
-          lat: map.center.lat(),
-          lng: map.center.lng()
-        }
+      map.setCenter({
+        lat: -70,
+        lng: map.center.lng()
       })
     } else {
-      this.setState({
-        lastValidPan: {
-          lat: map.center.lat(),
-          lng: map.center.lng()
-        }
+      map.setCenter({
+        lat: map.center.lat(),
+        lng: map.center.lng()
       })
     }
   }
@@ -218,10 +205,6 @@ export class BaseMap extends Component {
           gestureHandling={"greedy"}
           onClick={this.onMapClick}
           onDragend={this.limitVerticalPan}
-          center={{
-            lat: this.state.lastValidPan.lat,
-            lng: this.state.lastValidPan.lng
-          }}
         >
           {this.renderGlobalMarkers()}
           {this.renderUSMarkers()}
