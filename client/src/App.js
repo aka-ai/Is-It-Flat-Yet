@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Index.css';
+import './index.css';
 import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
