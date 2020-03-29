@@ -18,6 +18,11 @@ import 'firebase/analytics'
 //   app.initializeApp(await response.json());
 // });
 
+// fetch('/__/firebase/init.json').then(async response => {
+//   app.initializeApp(await response.json());
+// });
+
+
 class Firebase {
   constructor() {
     let config = {}
