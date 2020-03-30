@@ -1,83 +1,71 @@
 body {
   font-family: Domine;
-  background-color: #e1dcdc;
-}
-
-body {
+  background-color: #a0c0c4;
   margin: 0;
+  padding: 0;
 }
 
 .header {
-  /* background: -webkit-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
-  background: -moz-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
-  background: linear-gradient(to top, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81)); */
-  background-color: #e1dcdc;
+  background-color: #dddfdf;
   z-index: 2;
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
-  height: 13vh;
-  padding: 2.5vh 2.5vh 2.5vh 2.5vh;
+  height: 9vh;
+  padding-top: calc(2.5vw + 0vh);
+  padding-bottom: calc(1.5vw + 0.7vh);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(3px + 0.5vw);
-  color: rgb(56, 56, 56);
-  /* text-shadow: 1px 1px 1px white; */
+  color: rgb(41, 41, 41);
   line-height: 70%;
 }
 
-/* .header p {
-  opacity: 1;
-} */
-
 .header h1 {
-  font-size: calc(.75vw + 1.7vh);
+  font-size: calc(0.75vw + 1.5vh);
 }
 
 .headerInfo {
-  font-size: calc(7px + .4vw);
+  font-size: calc(7px + 0.3vw);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* p.headerInfo {
-  font-style: italic;
-  font-size: calc(13px + .5vw);
-} */
-
-a {
-  color: rgb(27, 90, 167);
-  text-decoration: none;
+.Map-container {
+  height: 80vh;
+  width: auto;
+  position: relative;
 }
-
 .footer {
-  /* background: -webkit-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
-  background: -moz-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
-  background: linear-gradient(to bottom, rgba(135, 188, 193, 0.3), rgba(247, 186, 81)); */
-  /* background-color: #e1dcdc; */
-  /* opacity: 0.4; */
+  background-color: #a0c0c4;
   z-index: 2;
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 4vh;
+  height: 2vh;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: calc(1.5vh);
   color: #22162e;
+  padding-top: 0.7vh;
 }
 
 .innerFooter {
-  padding: 3vh;
+  padding-left: 3vh;
+  padding-right: 3vh;
 }
 
+a {
+  color: rgb(27, 90, 167);
+  text-decoration: none;
+}
 .responsive {
   max-width: 50%;
   height: auto;
@@ -85,13 +73,6 @@ a {
 
 .App-link {
   color: #61dafb;
-}
-
-.Map-container {
-  position: relative;
-  height: 100vh;
-  width: auto;
-  overflow: hidden;
 }
 
 .infoWindowTitle {
@@ -107,9 +88,7 @@ a {
 
 .infoWindowDetails {
   margin-left: 1em;
-  buffer-left: 1em;
   margin-right: 1em;
-  buffer-right: 1em;
 }
 
 .Data {
@@ -130,13 +109,7 @@ a {
 .gm-style .gm-style-iw-t::after {
   background: rgb(39, 41, 40);
 }
-/* .gm-style h3 {
-  color: rgb(255, 98, 0);
-} */
 
-/* hamburger */
-/* SOURCE: https://github.com/negomi/react-burger-menu#styling */
-/* Position and sizing of burger button */
 .bm-burger-button {
   position: fixed;
   width: 36px;
