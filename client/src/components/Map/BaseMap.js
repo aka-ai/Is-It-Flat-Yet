@@ -30,21 +30,21 @@ export class BaseMap extends Component {
     }
   }
 
-  setIcon = active => {
-    if (active >= 10000) {
+  setIcon = deaths => {
+    if (deaths >= 1000) {
       return severeIcon
-    } else if (active < 1000) {
+    } else if (deaths < 100) {
       return mildIcon
     } else {
       return mediumIcon
     }
   }
 
-  onMarkerClick = (props, marker, e) => {
+  onMarkerClick = (markerProps, marker, e) => {
     this.setState({
       activeMarker: marker,
       showingInfoWindow: true,
-      clickedMarkerKey: props
+      clickedMarkerKey: markerProps
     })
   }
 
@@ -61,12 +61,7 @@ export class BaseMap extends Component {
           stateOrProvince
         } = data
 
-        const active = (
-          confirmed - deaths
-        ).toString()
-
-        if (parseInt(active) === 0) return
-        const thisIcon = this.setIcon(parseInt(active))
+        if (deaths === 0) return;
         return (
           <MarkerW
             key={idx}
@@ -76,14 +71,14 @@ export class BaseMap extends Component {
               lng: data.lon
             }}
             label={{
-              text: active,
+              text: deaths.toString(),
               color: "#002D72",
               fontSize: "3",
               fontFamily: "roboto",
               fontWeight: "bold"
             }}
             icon={{
-              url: thisIcon
+              url: this.setIcon(deaths)
             }}
             location={stateOrProvince}
             country={countryOrRegion}
@@ -110,12 +105,7 @@ export class BaseMap extends Component {
           totalTestResults
         } = data
 
-        const active = (
-          confirmed - deaths
-        ).toString()
-
-        if (parseInt(active) === 0) return
-        const thisIcon = this.setIcon(parseInt(active))
+        if (deaths === 0) return
         return (
           <MarkerW
             key={idx}
@@ -125,14 +115,14 @@ export class BaseMap extends Component {
               lng: data.lng
             }}
             label={{
-              text: active,
+              text: deaths.toString(),
               color: "#002D72",
               fontSize: "3",
               fontFamily: "roboto",
               fontWeight: "bold"
             }}
             icon={{
-              url: thisIcon
+              url: this.setIcon(deaths)
             }}
             location={stateOrProvince}
             country={countryOrRegion}
@@ -145,7 +135,7 @@ export class BaseMap extends Component {
             population={population}
             totalTestResults={totalTestResults}
           />
-        )
+        );
       })
     }
   }
@@ -180,7 +170,7 @@ export class BaseMap extends Component {
       deaths = this.state.clickedMarkerKey.deaths
     }
     if (this.state.clickedMarkerKey && country === "US") {
-      hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0')
+      hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0') // n/a gets converted to zero
       negative = this.state.clickedMarkerKey.negative
       pending = this.state.clickedMarkerKey.pending
       percapitaPercentage = Number.parseFloat(this.state.clickedMarkerKey.percapitaPercentage).toFixed(3)
@@ -212,25 +202,47 @@ export class BaseMap extends Component {
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
-            {country === "US" ?
+            {country === "US" ? (
               <div className="infoWindow">
-                <h3 className="infoWindowTitle">{location} {country}</h3>
-                <p>Confirmed: {confirmed}</p>
-                <p>{deaths === 1 ? "Death" : "Deaths"}: {deaths}</p>
-                {hospitalized !== "n/a" ? <p>Hospitalized: {hospitalized}</p> : <p></p>}
-                <p>Test Results: {totalTestResults}</p>
-                <p>Population: {population}</p>
-                {/* <p>{percapitaPercentage}% Per Capita</p> */}
+                <div className="infoWindowTitle">
+                  <h3>
+                    {location}
+                  </h3>
+                  <p>{population}</p>
+                </div>
+                <div className="infoWindowDetails">
+                  <p>
+                    {deaths} {deaths === 1 ? "Death" : "Deaths"}
+                  </p>
+                  <p>{confirmed} Confirmed</p>
+                  {hospitalized === 0 ? (
+                    <p>{hospitalized} Hospitalized</p>
+                  ) : (
+                    <p></p>
+                  )}
+                  <p>{totalTestResults} Tests</p>
+                  {/* <p>{percapitaPercentage}% Per Capita</p> */}
+                </div>
               </div>
-              :
+            ) : (
               <div className="infoWindow">
-                {!location ? <h3 className="infoWindowTitle">{country}</h3>
-                  :
-                  <h3 className="infoWindowTitle">{location} {country}</h3>}
-                <p>{confirmed} Confirmed</p>
-                <p>{deaths} {deaths === 1 ? "Death" : "Deaths"}</p>
+                <div className="infoWindowTitle">
+                  {!location ? (
+                    <h3>{country}</h3>
+                  ) : (
+                    <h3>
+                      {location} {country}
+                    </h3>
+                  )}
+                </div>
+                <div className="infoWindowDetails">
+                  <p>{confirmed} Confirmed</p>
+                  <p>
+                    {deaths} {deaths === 1 ? "Death" : "Deaths"}
+                  </p>
+                </div>
               </div>
-            }
+            )}
           </InfoWindow>
         </Map>
       </div>

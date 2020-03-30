@@ -89,12 +89,22 @@ a {
   overflow: hidden;
 }
 
-.infoWindow {
-  text-align: justify;
-}
-
 .infoWindowTitle {
   text-align: center;
+  color: rgb(255, 98, 0);
+  line-height: 50%;
+  margin-bottom: 2em;
+}
+
+.infoWindowTitle p {
+  color: grey;
+}
+
+.infoWindowDetails {
+  margin-left: 1em;
+  buffer-left: 1em;
+  margin-right: 1em;
+  buffer-right: 1em;
 }
 
 .Data {
@@ -115,9 +125,9 @@ a {
 .gm-style .gm-style-iw-t::after {
   background: rgb(39, 41, 40);
 }
-.gm-style h3 {
+/* .gm-style h3 {
   color: rgb(255, 98, 0);
-}
+} */
 
 /* hamburger */
 /* SOURCE: https://github.com/negomi/react-burger-menu#styling */

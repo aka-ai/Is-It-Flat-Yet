@@ -7,14 +7,14 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-        <h1>Coronavirus Confirmed Active Cases</h1>
+        <h1>Coronavirus Confirmed Deaths</h1>
         <div className="headerInfo">
           <img className="responsive" alt="yellowPin" src={yellowPin} />
-          <p>{"< 1000 cases"}</p>
+          <p>{"< 100 deaths"}</p>
           <img className="responsive" alt="orangePin" src={orangePin} />
-          <p>1000 - 10,000 cases</p>
+          <p>100 - 1,000 deaths</p>
           <img className="responsive" alt="redPin" src={redPin} />
-          <p>{"> 10,000 cases"}</p>
+          <p>{"> 1,000 deaths"}</p>
         </div>
       </div>
     )
