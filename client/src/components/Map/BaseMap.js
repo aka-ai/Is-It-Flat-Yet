@@ -141,9 +141,9 @@ export class BaseMap extends Component {
   }
 
   limitVerticalPan(mapProps, map) {
-    if (map.center.lat() > 76) {
+    if (map.center.lat() > 74) {
       map.setCenter({
-        lat: 76,
+        lat: 74,
         lng: map.center.lng()
       })
     } else if (map.center.lat() < -70) {
@@ -184,7 +184,7 @@ export class BaseMap extends Component {
           google={this.props.google}
           initialCenter={USLocation}
           zoom={4}
-          maxZoom={5}
+          maxZoom={7}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}
