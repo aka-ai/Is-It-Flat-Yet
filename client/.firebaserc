@@ -1,6 +1,0 @@
-{
-  "projects": {
-    "staging": "coronavirus-show-staging",
-    "prod": "coronavirus-show"
-  }
-}
