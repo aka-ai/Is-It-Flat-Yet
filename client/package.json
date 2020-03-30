@@ -18,6 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "firebase use staging && npm run build && firebase serve --only hosting",
     "test": "react-scripts test",
     "deploy:staging": "npm run build && firebase use staging && firebase deploy --only hosting",
     "deploy:prod": "npm run build && firebase use prod && firebase deploy --only hosting"

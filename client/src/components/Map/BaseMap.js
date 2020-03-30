@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
-import mapStyle, { USLocation } from '../../helpers/mapUtilities'
+import { mapStyle, USLocation } from "./BaseMapConstants";
 import MarkerW from './MarkerW'
-import { isBlackList, changeLatLong } from '../../helpers/mapUtilities'
-import mildIcon from '../../mapIcons/yellow.png'
-import mediumIcon from '../../mapIcons/orange.png'
-import severeIcon from '../../mapIcons/red.png'
+import { isBlackList, changeLatLong } from './BaseMapHelper'
+import { mildIcon, mediumIcon, severeIcon } from './MapIcons'
 import numeral from 'numeral';
 
 
@@ -48,94 +46,60 @@ export class BaseMap extends Component {
     })
   }
 
-  renderGlobalMarkers = () => {
-    if (this.props.data.globalData) {
-      return Object.keys(this.props.data.globalData).map((key, idx) => {
-        if (isBlackList(key)) return
-        const data = this.props.data.globalData[key]
-        changeLatLong(data)
+  renderMarkers = (data) => {
+    if (data) {
+      return data.map((entity, idx) => {
+        if (isBlackList(entity)) return
         const {
+          lat,
+          lng,
           confirmed,
           deaths,
           countryOrRegion,
-          stateOrProvince
-        } = data
-
-        if (deaths === 0) return;
-        return (
-          <MarkerW
-            key={idx}
-            onClick={this.onMarkerClick}
-            position={{
-              lat: data.lat,
-              lng: data.lon
-            }}
-            label={{
-              text: deaths.toString(),
-              color: "#002D72",
-              fontSize: "3",
-              fontFamily: "roboto",
-              fontWeight: "bold"
-            }}
-            icon={{
-              url: this.setIcon(deaths)
-            }}
-            location={stateOrProvince}
-            country={countryOrRegion}
-            confirmed={confirmed}
-            deaths={deaths}
-          />
-        )
-      })
-    }
-  }
-  renderUSMarkers = () => {
-    if (this.props.data.usData) {
-      return this.props.data.usData.states.map((data, idx) => {
-        const {
-          confirmed,
-          deaths,
-          countryOrRegion,
-          stateOrProvince,
+          cityStateOrProvince,
           hospitalized,
           negative,
           pending,
           percapitaPercentage,
           population,
           totalTestResults
-        } = data
+        } = entity
 
-        if (deaths === 0) return
-        return (
-          <MarkerW
-            key={idx}
-            onClick={this.onMarkerClick}
-            position={{
-              lat: data.lat,
-              lng: data.lng
-            }}
-            label={{
-              text: deaths.toString(),
-              color: "#002D72",
-              fontSize: "3",
-              fontFamily: "roboto",
-              fontWeight: "bold"
-            }}
-            icon={{
-              url: this.setIcon(deaths)
-            }}
-            location={stateOrProvince}
-            country={countryOrRegion}
-            confirmed={confirmed}
-            deaths={deaths}
-            hospitalized={hospitalized}
-            negative={negative}
-            pending={pending}
-            percapitaPercentage={percapitaPercentage}
-            population={population}
-            totalTestResults={totalTestResults}
-          />
-        );
+        if (!deaths) {
+          // We are focusing on deaths, don't render markers without deaths for now
+          return;
+        } else {
+          return (
+            <MarkerW
+              key={idx}
+              onClick={this.onMarkerClick}
+              position={{
+                lat: lat,
+                lng: lng
+              }}
+              label={{
+                text: deaths.toString(),
+                color: "#002D72",
+                fontSize: "3",
+                fontFamily: "roboto",
+                fontWeight: "bold"
+              }}
+              icon={{
+                url: this.setIcon(deaths)
+              }}
+              location={cityStateOrProvince}
+              country={countryOrRegion}
+              confirmed={confirmed}
+              deaths={deaths}
+              hospitalized={hospitalized}
+              negative={negative}
+              pending={pending}
+              percapitaPercentage={percapitaPercentage}
+              population={population}
+              totalTestResults={totalTestResults}
+            />
+          );
+        }
       })
     }
   }
@@ -177,6 +141,7 @@ export class BaseMap extends Component {
       population = numeral(this.state.clickedMarkerKey.population).format('0.0a')
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
+    const data = this.props.data
 
     return (
       <div className="Map-container">
@@ -196,8 +161,8 @@ export class BaseMap extends Component {
           onClick={this.onMapClick}
           onDragend={this.limitVerticalPan}
         >
-          {this.renderGlobalMarkers()}
-          {this.renderUSMarkers()}
+          {data.usData && this.renderMarkers(this.props.data.usData.states)}
+          {data.globalData && this.renderMarkers(this.props.data.globalData.countries)}
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
@@ -205,9 +170,7 @@ export class BaseMap extends Component {
             {country === "US" ? (
               <div className="infoWindow">
                 <div className="infoWindowTitle">
-                  <h3>
-                    {location}
-                  </h3>
+                  <h3>{location}</h3>
                   <p>{population}</p>
                 </div>
                 <div className="infoWindowDetails">

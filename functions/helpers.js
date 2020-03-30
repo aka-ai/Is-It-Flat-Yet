@@ -1,10 +1,11 @@
 const dayjs = require('dayjs');
 
-const DELTA_PERIODS = {
-  threeDay: 3,
-  sevenDay: 7,
-  thirtyDay: 30
-};
+const formatName = name => name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s]/g, "")
+    .replace(/\s/g, "-");
+
 
 module.exports = {
   getStats: row => {
@@ -20,29 +21,18 @@ module.exports = {
     const ret = {
       lastUpdated: latestDay,
       mostRecent: row[latestDay],
-      newDeltas: {}
     };
 
-    // calculate deltas
-    for (const [k, v] of Object.entries(DELTA_PERIODS)) {
-      const targetDay = dayjs(latestDay)
-        .subtract(v, "days")
-        .format("M/D/YY");
-      const targetVal = parseInt(row[targetDay]);
-      const latestDayVal = parseInt(row[latestDay]);
-      const divisor = targetVal === 0 ? 1 : targetVal;
-      const delta = (latestDayVal - targetVal) / divisor;
-      ret.newDeltas[k] = Math.round(delta * 10000) / 100;
-    }
     return ret;
   },
 
-  formatName: name =>
-    name
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s]/g, '')
-      .replace(/\s/g, '-')
+  getNormalizedName: entity => {
+    let concatName = entity.countryOrRegion
+    if (entity.cityStateOrProvince) {
+      concatName += `-${entity.cityStateOrProvince}`;
+    } 
+    return formatName(concatName);
+  }
 };
 
 

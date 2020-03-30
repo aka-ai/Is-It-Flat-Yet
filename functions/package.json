@@ -3,11 +3,9 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "functions-framework --target=reportService --signature-type=event --port=8000",
-    "deploy:staging": "firebase use staging && firebase deploy --only functions",
-    "deploy:prod": "firebase use prod && firebase deploy --only functions",
+    "start": "firebase use staging && firebase functions:shell",
+    "deploy:staging": "firebase use staging && firebase deploy --only functions && firebase use",
+    "deploy:prod": "firebase use prod && firebase deploy --only functions && firebase use",
     "logs": "firebase functions:log"
   },
   "engines": {
