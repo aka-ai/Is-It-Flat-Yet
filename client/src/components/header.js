@@ -16,6 +16,7 @@ class Header extends Component {
           <img className="responsive" alt="redPin" src={redPin} />
           <p>{"> 1,000 deaths"}</p>
         </div>
+        <p>Last Updated: {this.props.lastUpdated}</p>
       </div>
     )
   }

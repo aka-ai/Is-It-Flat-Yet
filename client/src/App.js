@@ -3,6 +3,7 @@ import './index.css';
 import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
+import Footer from './components/Footer'
 
 const firebase = new Firebase()
 
@@ -31,11 +32,7 @@ class App extends Component {
         <BaseMap
           data={this.state.data}
         />
-        <div className="footer">
-          <p>Last Updated: {lastUpdated}</p>
-          <p>Sources: <a rel="noopener noreferrer" href="https://github.com/CSSEGISandData/COVID-19/" target="_blank">Johns Hopkins</a>, <a rel="noopener noreferrer" href="https://covidtracking.com/" target="_blank">The COVID Tracking Project</a></p>
-          <p>Made By <a target="_blank" href="https://twitter.com/aicooks">@aicooks</a> and <a target="_blank" href="https://twitter.com/kahdojay">@kahdojay</a></p>
-        </div>
+        <Footer className="footer" />
       </div>
     )
   }
