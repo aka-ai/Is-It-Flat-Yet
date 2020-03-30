@@ -1,14 +1,15 @@
-const functions = require('firebase-functions');
-const admin = require("firebase-admin");
-
 const axios = require("axios");
 const parse = require("csv-parse/lib/sync");
 
-const helpers = require("./helpers");
 
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+
+console.log("initializing firebase-admin with config: ", functions.config(), functions.config().firebase);
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 const summaryCollectionRef = db.collection("Summary");
+const helpers = require("./helpers");
 
 const CATEGORIES = {
   CONFIRMED: "confirmed",

@@ -1,13 +1,18 @@
-## Development
-### Frontend
-- Firebase hosting app is all in `/client/`
-- `npm start` for local development + hot reloading
-- `npm run deploy:staging` will build and deploy your code to (staging.coronavirus.show)
-- `npm run deploy:prod` will _not_ rebuild and deploy whatever is built to prod (coronavirus.show) 
-  - why? expectation is that you just built and deployed to staging, so we want to use the same build in prod
+## Development + Deployment
+### Frontend Development
+- `npm start` from `client/` for local development + hot reloading
 
-### Backend (reportService)
-- reportService function is in `/functions/`
-- TODO setup local development
-- `npm run deploy:staging`
-- `npm run deploy:prod`
+### Frontend Deployment
+- `npm run deploy:staging` from `client/` 
+  - builds and deploys your code to staging (staging.coronavirus.show)
+- `npm run deploy:prod` from `client/` 
+  - builds and deploys your code to prod
+
+### Backend Development
+- `firebase functions:shell` from anywhere in project
+  - starts the functions emulator
+  - call the function name (i.e. `reportService()`) to execute the function
+
+### Backend Deployment
+- `npm run deploy:staging` from `functions/`
+- `npm run deploy:prod` from `functions/`
