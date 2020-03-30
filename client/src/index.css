@@ -10,7 +10,7 @@ body {
   /* background: -webkit-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
   background: -moz-linear-gradient(bottom, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81));
   background: linear-gradient(to top, rgba(135, 188, 193, 0.2), rgba(247, 186, 81, .9), rgba(247, 186, 81)); */
-  background-color: rgba(213, 208, 208, 0.817);
+  background-color: rgb(225, 220, 220);
   z-index: 2;
   position: fixed;
   top: 0;
@@ -57,7 +57,7 @@ a {
   /* background: -webkit-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
   background: -moz-linear-gradient(top, rgba(135, 188, 193, 0.3), rgba(247, 186, 81));
   background: linear-gradient(to bottom, rgba(135, 188, 193, 0.3), rgba(247, 186, 81)); */
-  background-color: rgba(213, 208, 208, 0.817);
+  background-color: rgb(225, 220, 220);
   opacity: 0.9;
   z-index: 2;
   position: fixed;
