@@ -25,7 +25,7 @@ class App extends Component {
 
   render() {
     let lastUpdated
-    if (this.state.data.globalData) lastUpdated = this.state.data.globalData[Object.keys(this.state.data.globalData)[0]]["lastUpdated"]
+    if (this.state.data.globalData) lastUpdated = this.state.data.globalData.countries[0]["lastUpdated"]
     return (
       <div className="App">
         <Header lastUpdated={lastUpdated} />
