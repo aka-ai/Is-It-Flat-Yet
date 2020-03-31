@@ -50,6 +50,7 @@ export class BaseMap extends Component {
     if (data) {
       return data.map((entity, idx) => {
         if (isBlackList(entity)) return
+        changeLatLong(data)
         const {
           lat,
           lng,
