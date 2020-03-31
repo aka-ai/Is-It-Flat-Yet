@@ -39,7 +39,7 @@ export const mapStyle = [
     "elementType": "all",
     "stylers": [
       {
-        "color": "000000"
+        "color": "#e1dcdc"
       }
     ]
   },
