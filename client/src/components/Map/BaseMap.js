@@ -167,7 +167,7 @@ export class BaseMap extends Component {
       location = this.state.clickedMarkerKey.location
       country = this.state.clickedMarkerKey.country
       confirmed = numeral(this.state.clickedMarkerKey.confirmed).format('0,0')
-      deaths = this.state.clickedMarkerKey.deaths
+      deaths = numeral(this.state.clickedMarkerKey.deaths).format('0,0')
     }
     if (this.state.clickedMarkerKey && country === "US") {
       hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0') // n/a gets converted to zero
