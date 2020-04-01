@@ -1,5 +1,6 @@
 const axios = require("axios");
 const parse = require("csv-parse/lib/sync");
+const dayjs = require('dayjs');
 
 const { statesLatLng, statesAndPopulation } = require('./constants')
 
@@ -10,6 +11,7 @@ console.log("initializing firebase-admin with config: ", functions.config(), fun
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 const summaryCollectionRef = db.collection("Summary");
+const historyCollectionRef = db.collection("History")
 const helpers = require("./helpers");
 
 const CATEGORIES = {
@@ -39,7 +41,9 @@ const fetchDataAndUpdateDB = async () => {
   // the two api calls to GitHub race, 
   // so we put the results in a temp map 
   // before converting to a list of entities
-  const temp = {}
+  console.log('getting jhu data')
+  const summaryTemp = {}
+  const historyTemp = {}
   for (const category of Object.values(CATEGORIES)) {
     httpOptions.url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${category}_global.csv`
     const githubResponse = await axios(httpOptions);
@@ -48,27 +52,48 @@ const fetchDataAndUpdateDB = async () => {
       throw new Error("Error calling GitHub API for JHU data")
     } else {
       const jhuData = githubResponse.data;
-      await updateJH(temp, category, jhuData);
+      await updateJH(summaryTemp, historyTemp, category, jhuData);
     }
   }
   // Write temp data to db in the format we want it
-  const countries = Object.values(temp)
+  const countries = Object.values(summaryTemp)
   await summaryCollectionRef.doc("jhu").set({ countries: countries });
 
+  console.log("Batch committing jhu data")
+  const batch = db.batch();
+  Object.values(historyTemp).forEach(entity => {
+    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    batch.set(ref, entity)
+  })
+  batch.commit()
+
   // get ctp data
+  console.log('getting ctp data')
   httpOptions.url = "https://covidtracking.com/api/states"
   const ctpResponse = await axios(httpOptions)
 
   if (ctpResponse.status !== 200 || ctpResponse.data === "") {
     console.error("Error or Empty response from Github!: ", ctpResponse);
+    throw new Error("Error calling CovidTracking API")
   } else {
-    const ctpData = ctpResponse.data;
-    await updateCTP(ctpData);
+    await updateCTPSummaryData(ctpResponse.data);
+  }
+
+
+  //get ctp history data
+  httpOptions.url = 'https://covidtracking.com/api/states/daily'
+  const covidTrackingResponse = await axios(httpOptions)
+
+  if (covidTrackingResponse.status !== 200 || covidTrackingResponse.data === "") {
+    console.error("Error or Empty response from CovidTracking!: ", covidTrackingResponse);
+    throw new Error("Error calling CovidTracking API")
+  } else {
+    await updateCTPHistoryData(covidTrackingResponse.data)
   }
 };
 
 
-const updateJH = async (temp, category, jhuData) => {
+const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
   console.log("Setting temp data for category: ", category);
   const updateData = parse(jhuData, {
     columns: true,
@@ -79,34 +104,80 @@ const updateJH = async (temp, category, jhuData) => {
     const countryOrRegion = row["Country/Region"];
     const cityStateOrProvince = row["Province/State"];
 
+    let cityStateOrProvinceId = helpers.formatName(countryOrRegion)
+    if (cityStateOrProvince) {
+      cityStateOrProvinceId += `-${helpers.formatName(cityStateOrProvince)}`;
+    }
+
     // Setup the new document attrs to merge in
-    const update = {
-      countryOrRegion: countryOrRegion,
-      cityStateOrProvince: cityStateOrProvince,
+    const update = historyTemp[cityStateOrProvinceId] || {
+      cityStateOrProvinceId,
+      countryOrRegion,
+      cityStateOrProvince,
       lat: Math.round(row["Lat"] * 100) / 100,
-      lng: Math.round(row["Long"] * 100) / 100
+      lng: Math.round(row["Long"] * 100) / 100,
+      confirmed: [],
+      newConfirmed: [],
+      deaths: [],
+      newDeaths: []
     };
 
     const { mostRecent, lastUpdated } = helpers.getStats(row);
 
-    update.normalizedName = helpers.getNormalizedName(update);
-    update[category] = parseInt(mostRecent);
+    update[`latest${helpers.capitalize(category)}`] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
-    if (!temp[update.normalizedName]) {
-      temp[update.normalizedName] = update;
+    if (!historyTemp[update.cityStateOrProvinceId]) {
+      historyTemp[update.cityStateOrProvinceId] = update
     } else {
-      temp[update.normalizedName] = Object.assign(
-        temp[update.normalizedName],
+      historyTemp[update.cityStateOrProvinceId] = Object.assign(
+        historyTemp[update.cityStateOrProvinceId],
+        update
+      )
+    }
+
+    // Generate historical data and net new curves
+    Object.keys(row).map(key => {
+      if (key !== "Province/State" &&
+        key !== "Country/Region" &&
+        key !== "Lat" &&
+        key !== "Long"
+      ) {
+        let yesterday = dayjs(dayjs(key).subtract(1, "days")).format("M/D/YY")
+        let delta
+        if (row[yesterday]) {
+          delta = parseInt(row[key]) - parseInt(row[yesterday])
+        }
+        historyTemp[update.cityStateOrProvinceId][category].push(
+          { date: key, val: row[key] }
+        )
+        historyTemp[update.cityStateOrProvinceId][`new${helpers.capitalize(category)}`].push(
+          { date: key, val: delta || '0' }
+        )
+      }
+    })
+
+    // prep update for summary collection; we don't want all the fields
+    // since it gets stuff into a single document
+    const toDelete = ['confirmed', 'newConfirmed', 'hey', 'blah']
+    toDelete.forEach(attr => {
+      delete update[attr]
+    })
+
+    if (!summaryTemp[update.normalizedName]) {
+      summaryTemp[update.normalizedName] = update;
+    } else {
+      summaryTemp[update.normalizedName] = Object.assign(
+        summaryTemp[update.normalizedName],
         update
       );
     }
   }
-  // We return nothing since we are directly mutating the temp object passed in by caller
+  // We return nothing since we are directly mutating the temp objects being passed in
 };
 
 
-const updateCTP = async (data) => {
+const updateCTPSummaryData = async (data) => {
   const gatheredData = []
   data.forEach(st => {
     let obj = {}
@@ -132,6 +203,61 @@ const updateCTP = async (data) => {
 
     gatheredData.push(obj)
   })
-  // return gatheredData
+
+  console.log('writing ctp summary data')
   summaryCollectionRef.doc('ctp').set({ states: gatheredData })
+}
+
+const updateCTPHistoryData = (rawData) => {
+  const ctpTemp = {}
+  for (const row of rawData) {
+    const date = helpers.getDate(row["date"])
+    const { state, positive, negative, hospitalized, death, totalTestResults, fips, deathIncrease, hospitalizedIncrease, negativeIncrease, positiveIncrease, totalTestResultsIncrease } = row
+    const countryOrRegion = 'US';
+    const cityStateOrProvince = state;
+
+    let cityStateOrProvinceId = helpers.formatName(countryOrRegion)
+    if (cityStateOrProvince) {
+      cityStateOrProvinceId += `-${helpers.formatName(cityStateOrProvince)}`;
+    }
+    const update = ctpTemp[cityStateOrProvinceId] || {
+      cityStateOrProvinceId,
+      countryOrRegion,
+      cityStateOrProvince,
+      lat: statesLatLng[state][0],
+      lng: statesLatLng[state][1],
+      positive: [],
+      negative: [],
+      hospitalized: [],
+      death: [],
+      totalTestResults: [],
+      fips: [],
+      deathIncrease: [],
+      hospitalizedIncrease: [],
+      negativeIncrease: [],
+      positiveIncrease: [],
+      totalTestResultsIncrease: []
+    }
+    update["positive"].push({ [date]: positive })
+    update["negative"].push({ [date]: negative })
+    update["hospitalized"].push({ [date]: hospitalized })
+    update["death"].push({ [date]: death })
+    update["totalTestResults"].push({ [date]: totalTestResults })
+    update["fips"].push({ [date]: fips })
+    update["deathIncrease"].push({ [date]: deathIncrease })
+    update["hospitalizedIncrease"].push({ [date]: hospitalizedIncrease })
+    update["negativeIncrease"].push({ [date]: negativeIncrease })
+    update["positiveIncrease"].push({ [date]: positiveIncrease })
+    update["totalTestResultsIncrease"].push({ [date]: totalTestResultsIncrease })
+
+    ctpTemp[cityStateOrProvinceId] = update
+  }
+
+  console.log("Batch writing ctp history data")
+  const batch = db.batch();
+  Object.values(ctpTemp).forEach(entity => {
+    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    batch.set(ref, entity)
+  })
+  batch.commit()
 }
