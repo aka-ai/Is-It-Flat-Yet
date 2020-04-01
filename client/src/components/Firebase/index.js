@@ -29,7 +29,7 @@ class Firebase {
         measurementId: "G-FD6RKX0PE2"
       };
     }
-    firebase.initializeApp(config)
+    firebase.initializeApp(config);
     firebase.analytics()
     this.db = firebase.firestore()
   }
@@ -37,9 +37,14 @@ class Firebase {
   getData = async () => {
     const data = await Promise.all([
       this.db.collection('Summary').doc('jhu').get(),
-      this.db.collection('Summary').doc('ctp').get()
+      this.db.collection('Summary').doc('ctp').get(),
     ])
     return { globalData: data[0].data(), usData: data[1].data() }
+  }
+
+  getHistoryData = async (key) => {
+    const history = await this.db.collection('History').doc(key).get()
+    return history.data()
   }
 }
 
