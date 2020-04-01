@@ -128,12 +128,12 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     update.lastUpdated = lastUpdated;
 
     if (!historyTemp[update.cityStateOrProvinceId]) {
-      historyTemp[update.cityStateOrProvinceId] = update
+      historyTemp[update.cityStateOrProvinceId] = JSON.parse(JSON.stringify(update))
     } else {
       historyTemp[update.cityStateOrProvinceId] = Object.assign(
         historyTemp[update.cityStateOrProvinceId],
-        update
-      )
+        JSON.parse(JSON.stringify(update))
+      );
     }
 
     // Generate historical data and net new curves
@@ -157,22 +157,20 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
       }
     })
 
-    // prep update for summary collection; we don't want all the fields
-    // since it gets stuff into a single document
-    const toDelete = ['confirmed', 'newConfirmed', 'hey', 'blah']
-    toDelete.forEach(attr => {
-      delete update[attr]
-    })
-
-    if (!summaryTemp[update.normalizedName]) {
-      summaryTemp[update.normalizedName] = update;
+    if (!summaryTemp[update.cityStateOrProvinceId]) {
+      summaryTemp[update.cityStateOrProvinceId] = JSON.parse(JSON.stringify(update));
     } else {
-      summaryTemp[update.normalizedName] = Object.assign(
-        summaryTemp[update.normalizedName],
-        update
+      summaryTemp[update.cityStateOrProvinceId] = Object.assign(
+        summaryTemp[update.cityStateOrProvinceId],
+        JSON.parse(JSON.stringify(update))
       );
     }
-    console.log('done setting up summary for ', cityStateOrProvinceId)
+    // prep update for summary collection; we don't want all the fields
+    // since it gets stuff into a single document
+    const toDelete = ['confirmed', 'deltaConfirmed', 'deaths', 'deltaDeaths']
+    toDelete.forEach(attr => {
+      delete summaryTemp[cityStateOrProvinceId][attr]
+    })
   }
   // We return nothing since we are directly mutating the temp objects being passed in
 };
@@ -188,8 +186,8 @@ const updateCTPSummaryData = async (data) => {
     if (!hospitalized) hospitalized = "n/a"
     if (!negative) negative = "n/a"
 
-    obj["confirmed"] = positive
-    obj["deaths"] = death
+    obj["latestConfirmed"] = positive
+    obj["latestDeaths"] = death
     obj["countryOrRegion"] = "US"
     obj["cityStateOrProvince"] = statesAndPopulation[state][0]
     obj["totalTestResults"] = totalTestResults
@@ -227,18 +225,18 @@ const updateCTPHistoryData = (rawData) => {
       cityStateOrProvince,
       lat: statesLatLng[state][0],
       lng: statesLatLng[state][1],
-      positive: [],
+      confirmed: [],
       negative: [],
       hospitalized: [],
-      death: [],
+      deaths: [],
       totalTestResults: [],
       fips: [],
-      deathIncrease: [],
-      hospitalizedIncrease: [],
-      negativeIncrease: [],
-      positiveIncrease: [],
-      totalTestResultsIncrease: []
-    }
+      deltaDeaths: [],
+      deltaHospitalized: [],
+      deltaNegative: [],
+      deltaConfirmed: [],
+      deltaTotalTestResults: []
+    };
     update["confirmed"].push({ [date]: positive })
     update["negative"].push({ [date]: negative })
     update["hospitalized"].push({ [date]: hospitalized })
