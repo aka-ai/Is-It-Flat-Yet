@@ -182,31 +182,31 @@ export class BaseMap extends Component {
                   {hospitalized === 0 ? (
                     <p>{hospitalized} Hospitalized</p>
                   ) : (
-                    <p></p>
-                  )}
+                      <p></p>
+                    )}
                   <p>{totalTestResults} Tests</p>
                   {/* <p>{percapitaPercentage}% Per Capita</p> */}
                 </div>
               </div>
             ) : (
-              <div className="infoWindow">
-                <div className="infoWindowTitle">
-                  {!location ? (
-                    <h3>{country}</h3>
-                  ) : (
-                    <h3>
-                      {location} {country}
-                    </h3>
-                  )}
+                <div className="infoWindow">
+                  <div className="infoWindowTitle">
+                    {!location ? (
+                      <h3>{country}</h3>
+                    ) : (
+                        <h3>
+                          {location} {country}
+                        </h3>
+                      )}
+                  </div>
+                  <div className="infoWindowDetails">
+                    <p>
+                      {deaths} {deaths === 1 ? "Death" : "Deaths"}
+                    </p>
+                    <p>{confirmed} Confirmed</p>
+                  </div>
                 </div>
-                <div className="infoWindowDetails">
-                  <p>{confirmed} Confirmed</p>
-                  <p>
-                    {deaths} {deaths === 1 ? "Death" : "Deaths"}
-                  </p>
-                </div>
-              </div>
-            )}
+              )}
           </InfoWindow>
         </Map>
       </div>

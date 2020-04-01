@@ -61,11 +61,11 @@ const fetchDataAndUpdateDB = async () => {
 
   console.log("Batch committing jhu data")
   const batch = db.batch();
-  historyTemp.forEach(doc => {
-    const ref = historyCollectionRef.doc(cityStateOrProvinceId)
-    batch.set(ref, doc)
+  Object.values(historyTemp).forEach(entity => {
+    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    batch.set(ref, entity)
   })
-  // batch.commit()
+  batch.commit()
 
   // get ctp data
   console.log('getting ctp data')
@@ -108,12 +108,12 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     if (cityStateOrProvince) {
       cityStateOrProvinceId += `-${helpers.formatName(cityStateOrProvince)}`;
     }
-    console.log('updateJH for entity: ', cityStateOrProvinceId)
 
     // Setup the new document attrs to merge in
     const update = historyTemp[cityStateOrProvinceId] || {
-      countryOrRegion: countryOrRegion,
-      cityStateOrProvince: cityStateOrProvince,
+      cityStateOrProvinceId,
+      countryOrRegion,
+      cityStateOrProvince,
       lat: Math.round(row["Lat"] * 100) / 100,
       lng: Math.round(row["Long"] * 100) / 100,
       confirmed: [],
@@ -156,7 +156,6 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
         )
       }
     })
-    console.log('done generating history for: ', cityStateOrProvinceId)
 
     // prep update for summary collection; we don't want all the fields
     // since it gets stuff into a single document
@@ -257,10 +256,9 @@ const updateCTPHistoryData = (rawData) => {
 
   console.log("Batch writing ctp history data")
   const batch = db.batch();
-  ctpTemp.forEach(doc => {
-    // db.collection("cities").doc("NYC");
-    const ref = historyCollectionRef.doc(cityStateOrProvinceId)
-    batch.set(ref, doc)
+  Object.values(ctpTemp).forEach(entity => {
+    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    batch.set(ref, entity)
   })
-  // batch.commit()
+  batch.commit()
 }
