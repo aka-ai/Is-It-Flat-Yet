@@ -117,9 +117,9 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
       lat: Math.round(row["Lat"] * 100) / 100,
       lng: Math.round(row["Long"] * 100) / 100,
       confirmed: [],
-      newConfirmed: [],
+      deltaConfirmed: [],
       deaths: [],
-      newDeaths: []
+      deltaDeaths: []
     };
 
     const { mostRecent, lastUpdated } = helpers.getStats(row);
@@ -151,7 +151,7 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
         historyTemp[update.cityStateOrProvinceId][category].push(
           { date: key, val: row[key] }
         )
-        historyTemp[update.cityStateOrProvinceId][`new${helpers.capitalize(category)}`].push(
+        historyTemp[update.cityStateOrProvinceId][`delta${helpers.capitalize(category)}`].push(
           { date: key, val: delta || '0' }
         )
       }
@@ -238,17 +238,17 @@ const updateCTPHistoryData = (rawData) => {
       positiveIncrease: [],
       totalTestResultsIncrease: []
     }
-    update["positive"].push({ [date]: positive })
+    update["confirmed"].push({ [date]: positive })
     update["negative"].push({ [date]: negative })
     update["hospitalized"].push({ [date]: hospitalized })
-    update["death"].push({ [date]: death })
+    update["deaths"].push({ [date]: death })
     update["totalTestResults"].push({ [date]: totalTestResults })
     update["fips"].push({ [date]: fips })
-    update["deathIncrease"].push({ [date]: deathIncrease })
-    update["hospitalizedIncrease"].push({ [date]: hospitalizedIncrease })
-    update["negativeIncrease"].push({ [date]: negativeIncrease })
-    update["positiveIncrease"].push({ [date]: positiveIncrease })
-    update["totalTestResultsIncrease"].push({ [date]: totalTestResultsIncrease })
+    update["deltaDeaths"].push({ [date]: deathIncrease })
+    update["deltaHospitalized"].push({ [date]: hospitalizedIncrease })
+    update["deltaNegative"].push({ [date]: negativeIncrease })
+    update["deltaConfirmed"].push({ [date]: positiveIncrease })
+    update["deltaTotalTestResults"].push({ [date]: totalTestResultsIncrease })
 
     ctpTemp[cityStateOrProvinceId] = update
   }
