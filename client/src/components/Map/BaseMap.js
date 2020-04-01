@@ -54,8 +54,8 @@ export class BaseMap extends Component {
         const {
           lat,
           lng,
-          confirmed,
-          deaths,
+          latestConfirmed,
+          latestDeaths,
           countryOrRegion,
           cityStateOrProvince,
           hospitalized,
@@ -66,7 +66,7 @@ export class BaseMap extends Component {
           totalTestResults
         } = entity
 
-        if (!deaths) {
+        if (!latestDeaths) {
           // We are focusing on deaths, don't render markers without deaths for now
           return;
         } else {
@@ -79,19 +79,19 @@ export class BaseMap extends Component {
                 lng: lng
               }}
               label={{
-                text: deaths.toString(),
+                text: latestDeaths.toString(),
                 color: "#002D72",
                 fontSize: "3",
                 fontFamily: "roboto",
                 fontWeight: "bold"
               }}
               icon={{
-                url: this.setIcon(deaths)
+                url: this.setIcon(latestDeaths)
               }}
               location={cityStateOrProvince}
               country={countryOrRegion}
-              confirmed={confirmed}
-              deaths={deaths}
+              latestConfirmed={latestConfirmed}
+              latestDeaths={latestDeaths}
               hospitalized={hospitalized}
               negative={negative}
               pending={pending}
@@ -125,14 +125,22 @@ export class BaseMap extends Component {
   }
 
   render() {
-    let location, country, confirmed,
-      deaths, hospitalized, negative, pending, percapitaPercentage, population, totalTestResults
+    let location,
+      country,
+      latestConfirmed,
+      latestDeaths,
+      hospitalized,
+      negative,
+      pending,
+      percapitaPercentage,
+      population,
+      totalTestResults;
 
     if (this.state.clickedMarkerKey) {
       location = this.state.clickedMarkerKey.location
       country = this.state.clickedMarkerKey.country
-      confirmed = numeral(this.state.clickedMarkerKey.confirmed).format('0,0')
-      deaths = numeral(this.state.clickedMarkerKey.deaths).format('0,0')
+      latestConfirmed = numeral(this.state.clickedMarkerKey.latestConfirmed).format('0,0')
+      latestDeaths = numeral(this.state.clickedMarkerKey.latestDeaths).format("0,0");
     }
     if (this.state.clickedMarkerKey && country === "US") {
       hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0') // n/a gets converted to zero
@@ -176,9 +184,9 @@ export class BaseMap extends Component {
                 </div>
                 <div className="infoWindowDetails">
                   <p>
-                    {deaths} {deaths === 1 ? "Death" : "Deaths"}
+                    {latestDeaths} {latestDeaths === 1 ? "Death" : "Deaths"}
                   </p>
-                  <p>{confirmed} Confirmed</p>
+                  <p>{latestConfirmed} Confirmed</p>
                   {hospitalized === 0 ? (
                     <p>{hospitalized} Hospitalized</p>
                   ) : (
@@ -201,9 +209,9 @@ export class BaseMap extends Component {
                   </div>
                   <div className="infoWindowDetails">
                     <p>
-                      {deaths} {deaths === 1 ? "Death" : "Deaths"}
+                      {latestDeaths} {latestDeaths === 1 ? "Death" : "Deaths"}
                     </p>
-                    <p>{confirmed} Confirmed</p>
+                    <p>{latestConfirmed} Confirmed</p>
                   </div>
                 </div>
               )}

@@ -26,17 +26,6 @@ module.exports = {
     .replace(/[^\w\s]/g, "")
     .replace(/\s/g, "-"),
 
-
-  // getNormalizedName: entity => {
-  //   let concatName = formatName(entity.countryOrRegion)
-  //   if (entity.cityStateOrProvince) {
-  //     concatName += `-${formatName(entity.cityStateOrProvince)}`;
-  //   }
-  //   // Uncomment this if needed - e.g. US county names clash causing duplicate id's
-  //   // cityStateOrProvinceId += `-${this.hashLL(parseFloat(row["Lat"]), parseFloat(row["Long"]))}`
-  //   return formatName(concatName);
-  // },
-
   getDate: rawDate => {
     const d = rawDate.toString()
     return dayjs(`${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}`).format("M/D/YY")

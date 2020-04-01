@@ -17,5 +17,5 @@ export const changeLatLong = (data) => {
 }
 
 export const isBlackList = (data) => {
-  return blackList.indexOf(data.normalizedName) > -1;
+  return blackList.indexOf(data.cityStateOrProvinceId) > -1;
 }
