@@ -172,6 +172,7 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
         update
       );
     }
+    console.log('done setting up summary for ', cityStateOrProvinceId)
   }
   // We return nothing since we are directly mutating the temp objects being passed in
 };
