@@ -5,6 +5,7 @@ import MarkerW from './MarkerW'
 import { isBlackList, changeLatLong } from './BaseMapHelper'
 import { mildIcon, mediumIcon, severeIcon } from './MapIcons'
 import numeral from 'numeral';
+import Graph from '../Graph'
 
 
 export class BaseMap extends Component {
@@ -133,6 +134,7 @@ export class BaseMap extends Component {
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
     const data = this.props.data
+    const firebase = this.props.firebase
 
     return (
       <div className="Map-container">
@@ -159,6 +161,7 @@ export class BaseMap extends Component {
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
+            <Graph firebase={firebase}/>
             {country === "US" ? (
               <div className="infoWindow">
                 <div className="infoWindowTitle">
