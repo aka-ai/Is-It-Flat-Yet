@@ -66,6 +66,12 @@ a {
   color: rgb(27, 90, 167);
   text-decoration: none;
 }
+
+.graph {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .responsive {
   max-width: 50%;
   height: auto;
@@ -98,16 +104,19 @@ a {
 .gm-style .gm-style-iw {
   font-family: roboto;
   font-size: calc(3px + 1vmin);
-  display: block;
-  color: white;
-  background-color: rgb(39, 41, 40);
+  /* display: block; */
+  /* color: white; */
+  /* background-color: rgb(39, 41, 40); */
   font-weight: 400;
   letter-spacing: 0.12vh;
+  /* background-color: transparent; */
 }
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
 .gm-style .gm-style-iw-t::after {
-  background: rgb(39, 41, 40);
+  /* background: rgb(39, 41, 40); */
+  /* background-color: transparent; */
+
 }
 
 .bm-burger-button {
@@ -150,7 +159,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* General sidebar styles */
 .bm-menu {
-  background: #373a47;
+  background: #e1dcdc;
   padding: 2.5em 1.5em 0;
   font-size: 1.15em;
 }
@@ -163,7 +172,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 /* Wrapper for item list */
 .bm-item-list {
   color: #b8b7ad;
-  padding: 0.8em;
+  /* padding: 0.8em; */
 }
 
 /* Individual item */
