@@ -1,20 +1,22 @@
 import React, { Component } from 'react'
 import { reveal as Slide } from 'react-burger-menu'
-import Firebase from './Firebase'
-import { withFirebase } from "./Firebase";
-const firebase = new Firebase()
+import { VictoryChart } from "victory"
+
 class SidePanel extends Component {
-
-  // showSettings(event) {
-  //   event.preventDefault();
-  //   .
-  //   .
-  //   .
-  // }
-
+  
+  constructor(props) {
+    super(props)
+    this.state = {singleHistoryData: null}
+  }
+  
+  async componentDidMount() {
+    const historyData = await this.props.firebase.getHistoryData('us-tx')
+    this.setState({singleHistoryData: historyData})
+    
+  }
+  
   render() {
-console.log(firebase.getData())
-    // SOURCE: https://github.com/negomi/react-burger-menu#styling
+    if (this.state.singleHistoryData) console.log(this.state.singleHistoryData.deltaDeaths)
     return (
       <Slide>
         <p>side bar</p>
@@ -24,3 +26,4 @@ console.log(firebase.getData())
 }
 
 export default SidePanel 
+// SOURCE: https://github.com/negomi/react-burger-menu#styling
