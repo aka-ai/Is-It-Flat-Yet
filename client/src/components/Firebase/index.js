@@ -29,7 +29,10 @@ class Firebase {
         measurementId: "G-FD6RKX0PE2"
       };
     }
-    firebase.initializeApp(config);
+    // firebase.initializeApp(config);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
     firebase.analytics()
     this.db = firebase.firestore()
   }
