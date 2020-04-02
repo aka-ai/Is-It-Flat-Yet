@@ -61,7 +61,8 @@ export class BaseMap extends Component {
           countryOrRegion,
           hospitalized,
           population,
-          totalTestResults
+          totalTestResults,
+          entityId
         } = entity
 
         if (!latestDeaths) {
@@ -93,6 +94,7 @@ export class BaseMap extends Component {
               hospitalized={hospitalized}
               population={population}
               totalTestResults={totalTestResults}
+              entityId={entityId}
             />
           );
         }
@@ -120,13 +122,14 @@ export class BaseMap extends Component {
   }
 
   render() {
-    let displayName, country, latestConfirmed, latestDeaths, hospitalized, population, totalTestResults
+    let displayName, country, latestConfirmed, latestDeaths, hospitalized, population, totalTestResults, entityId
 
     if (this.state.clickedMarkerKey) {
       displayName = this.state.clickedMarkerKey.displayName
       country = this.state.clickedMarkerKey.country
       latestConfirmed = numeral(this.state.clickedMarkerKey.latestConfirmed).format('0,0')
       latestDeaths = numeral(this.state.clickedMarkerKey.latestDeaths).format("0,0");
+      entityId = this.state.clickedMarkerKey.entityId
     }
     if (this.state.clickedMarkerKey && country === "US") {
       hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0') // n/a gets converted to zero
@@ -153,51 +156,22 @@ export class BaseMap extends Component {
           gestureHandling={"greedy"}
           onClick={this.onMapClick}
           onDragend={this.limitVerticalPan}
+          entityId={this.entityId}
         >
           {data.usData && this.renderMarkers(data.usData.states)}
           {data.globalData &&
             this.renderMarkers(data.globalData.countries)}
-          <InfoWindow
+          < InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
-            <Graph firebase={firebase}/>
-            {country === "US" ? (
-              <div className="infoWindow">
-                <div className="infoWindowTitle">
-                  <h3>{displayName}</h3>
-                  <p>{population}</p>
-                </div>
-                <div className="infoWindowDetails">
-                  <p>
-                    {latestDeaths}{" "}
-                    {latestDeaths === 1 ? "Death" : "Deaths"}
-                  </p>
-                  <p>{latestConfirmed} Confirmed</p>
-                  {hospitalized === 0 ? (
-                    <p>{hospitalized} Hospitalized</p>
-                  ) : (
-                    <p></p>
-                  )}
-                  <p>{totalTestResults} Tests</p>
-                  {/* <p>{percapitaPercentage}% Per Capita</p> */}
-                </div>
-              </div>
-            ) : (
-              <div className="infoWindow">
-                <div className="infoWindowTitle">
-                  <h3>{displayName}</h3>
-                </div>
-                <div className="infoWindowDetails">
-                  <p>
-                    {latestDeaths}{" "}
-                    {latestDeaths === 1 ? "Death" : "Deaths"}
-                  </p>
-                  <p>{latestConfirmed} Confirmed</p>
-                </div>
-              </div>
-            )}
-          </InfoWindow>
+            <Graph
+              firebase={firebase}
+              displayName={displayName}
+              entityId={entityId}
+              country={country}
+            />
+          </ InfoWindow>
         </Map>
       </div>
     );
@@ -207,3 +181,47 @@ export class BaseMap extends Component {
 export default GoogleApiWrapper({
   apiKey: "AIzaSyD_K7emGffTR-zuCTIbDjRIfF4P_LwUEOs"
 })(BaseMap)
+
+//   < InfoWindow
+// marker = { this.state.activeMarker }
+// visible = { this.state.showingInfoWindow }
+//   >
+//   <Graph firebase={firebase} displayName={displayName} />
+// {
+//   country === "US" ? (
+//     <div className="infoWindow">
+//       <div className="infoWindowTitle">
+//         <h3>{displayName}</h3>
+//         <p>{population}</p>
+//       </div>
+//       <div className="infoWindowDetails">
+//         <p>
+//           {latestDeaths}{" "}
+//           {latestDeaths === 1 ? "Death" : "Deaths"}
+//         </p>
+//         <p>{latestConfirmed} Confirmed</p>
+//         {hospitalized === 0 ? (
+//           <p>{hospitalized} Hospitalized</p>
+//         ) : (
+//             <p></p>
+//           )}
+//         <p>{totalTestResults} Tests</p>
+//         {/* <p>{percapitaPercentage}% Per Capita</p> */}
+//       </div>
+//     </div>
+//   ) : (
+//       <div className="infoWindow">
+//         <div className="infoWindowTitle">
+//           <h3>{displayName}</h3>
+//         </div>
+//         <div className="infoWindowDetails">
+//           <p>
+//             {latestDeaths}{" "}
+//             {latestDeaths === 1 ? "Death" : "Deaths"}
+//           </p>
+//           <p>{latestConfirmed} Confirmed</p>
+//         </div>
+//       </div>
+//     )
+// }
+//           </InfoWindow >

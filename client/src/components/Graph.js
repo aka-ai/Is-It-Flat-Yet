@@ -6,13 +6,17 @@ class Graph extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { singleHistoryData: '', isLoading: true }
-
+    this.state = { historyData: '', isLoading: true, dataSentFromMap: this.props }
     this.getDayOfYear = this.getDayOfYear.bind(this)
   }
   async componentDidMount() {
-    const historyData = await this.props.firebase.getHistoryData(countryProp)
-    this.setState({ singleHistoryData: historyData, isLoading: false })
+    const { entityId, displayName, country } = this.state.dataSentFromMap
+    console.log(entityId)
+    if (this.state.dataSentFromMap.entityId) {
+      const key = formatName(entityId, displayName, country)
+      const historyData = await this.props.firebase.getHistoryData(key)
+      this.setState({ historyData: historyData, isLoading: false })
+    }
   }
 
   getDayOfYear(date) {
@@ -25,80 +29,79 @@ class Graph extends Component {
   }
 
   renderData() {
-    const data = {}
     const updateDeltaDeathsData = []
     const updateDeltaConfirmedData = []
     const updateConfirmedData = []
     const updateDeathsData = []
-    if (this.state.singleHistoryData) {
-      this.state.singleHistoryData.deltaDeaths.forEach(d => {
+    if (this.state.historyData) {
+      this.state.historyData.deltaDeaths.forEach(d => {
         const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
         let value = Object.values(d)[0] || 0
         updateDeltaDeathsData.push({ x: dayOfYear, y: value })
       })
-      this.state.singleHistoryData.deltaConfirmed.forEach(d => {
+      this.state.historyData.deltaConfirmed.forEach(d => {
         const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
         let value = Object.values(d)[0] || 0
         updateDeltaConfirmedData.push({ x: dayOfYear, y: value })
       })
-      this.state.singleHistoryData.confirmed.forEach(d => {
+      this.state.historyData.confirmed.forEach(d => {
         const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
         let value = Object.values(d)[0] || 0
         updateConfirmedData.push({ x: dayOfYear, y: value })
       })
-      this.state.singleHistoryData.deaths.forEach(d => {
+      this.state.historyData.deaths.forEach(d => {
         const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
         let value = Object.values(d)[0] || 0
         updateDeathsData.push({ x: dayOfYear, y: value })
       })
     }
-    
+
     return { deltaDeaths: updateDeltaDeathsData, deltaConfirmed: updateDeltaConfirmedData, confirmed: updateConfirmedData, deaths: updateDeathsData }
   }
-  
-  
-  render() {
 
+
+  render() {
+    // if (this.props.entityId) this.getData(this.props.entityId, this.props.displayName, this.props.country)
+    console.log(this.state)
     return (
       <div className="graph">
-      <VictoryChart scale={{ x: "linear", y: "sqrt" }} >
-        
-        <VictoryAxis
-          style={{
+        <VictoryChart scale={{ x: "linear", y: "sqrt" }} >
+          <VictoryAxis
+            style={{
               axisLabel: { fontSize: 23, padding: 30 },
               tickLabels: { fontSize: 15, padding: 5 },
-          }}
-            label={`${this.state.singleHistoryData.displayName} Accumulative`}
-        />
-        <VictoryAxis dependentAxis
+            }}
+            label={`${this.state.historyData.displayName} Accumulative`}
+          />
+          <VictoryAxis dependentAxis
 
-          style={{
-            axisLabel: { fontSize: 23, padding: 30 },
-            tickLabels: { fontSize: 15, padding: 5 },
-          }}
-          
-        />
-        <VictoryGroup >
-          <VictoryArea
             style={{
-              data: { fill: "brown", stroke: "brown", strokeWidth: 0, fillOpacity: 0.5 }
+              axisLabel: { fontSize: 23, padding: 30 },
+              tickLabels: { fontSize: 15, padding: 5 },
             }}
-            interpolation={"natural"}
-            data={this.renderData().deaths}
+
           />
-          <VictoryArea
-            style={{
-              data: { fill: "green", stroke: "green", strokeWidth: 0, fillOpacity: 0.5 }
-            }}
-            interpolation={"natural"}
-            data={this.renderData().confirmed}
-          />
-        </VictoryGroup>
-      </VictoryChart  >
+          <VictoryGroup >
+            <VictoryArea
+              style={{
+                data: { fill: "brown", stroke: "brown", strokeWidth: 0, fillOpacity: 0.5 }
+              }}
+              interpolation={"natural"}
+              data={this.renderData().deaths}
+            />
+            <VictoryArea
+              style={{
+                data: { fill: "green", stroke: "green", strokeWidth: 0, fillOpacity: 0.5 }
+              }}
+              interpolation={"natural"}
+              data={this.renderData().confirmed}
+            />
+          </VictoryGroup>
+        </VictoryChart  >
         <VictoryChart scale={{ x: "linear", y: "sqrt" }} >
 
           <VictoryAxis
-            label={`${this.state.singleHistoryData.displayName} delta`}
+            label={`${this.state.historyData.displayName} delta`}
             style={{
               axisLabel: { fontSize: 23, padding: 30 },
               tickLabels: { fontSize: 15, padding: 5 },
@@ -137,6 +140,77 @@ class Graph extends Component {
 
 export default Graph
 // SOURCE: https://github.com/negomi/react-burger-menu#styling
+
+const statesAndPopulation = {
+  "Alabama": ["AL", 4903185],
+  "Alaska": ["AK", 731545],
+  "Arizona": ["AZ", 7278717],
+  "Arkansas": ["AR", 3017804],
+  "California": ["CA", 39512223],
+  "Colorado": ["CO", 5758736],
+  "Connecticut": ["CT", 3565278],
+  "Delaware": ["DE", 973764],
+  "Florida": ["FL", 21477737],
+  "Georgia": ["GA", 10617423],
+  "Hawaii": ["HI", 1415872],
+  "Idaho": ["ID", 1787065],
+  "Illinois": ["IL", 12671821],
+  "Indiana": ["IN", 6732219],
+  "Iowa": ["IA", 3155070],
+  "Kansas": ["KS", 2913314],
+  "Kentucky": ["KY", 4467673],
+  "Louisiana": ["LA", 4648794],
+  "Maine": ["ME", 1344212],
+  "Maryland": ["MD", 6045680],
+  "Massachusetts": ["MA", 6892503],
+  "Michigan": ["MI", 9986857],
+  "Minnesota": ["MN", 5639632],
+  "Mississippi": ["MS", 2976149],
+  "Missouri": ["MO", 6137428],
+  "Montana": ["MT", 1068778],
+  "Nebraska": ["NE", 1934408],
+  "Nevada": ["NV", 3080156],
+  "New Hampshire": ["NH", 1359711],
+  "New Jersey": ["NJ", 8882190],
+  "New Mexico": ["NM", 2096829],
+  "New York": ["NY", 19453561],
+  "North Carolina": ["NC", 10488084],
+  "North Dakota": ["ND", 762062],
+  "Ohio": ["OH", 11689100],
+  "Oklahoma": ["OK", 3956971],
+  "Oregon": ["OR", 4217737],
+  "Pennsylvania": ["PA", 12801989],
+  "Rhode Island": ["RI", 1059361],
+  "South Carolina": ["SC", 5148714],
+  "South Dakota": ["SD", 884659],
+  "Tennessee": ["TN", 6829174],
+  "Texas": ["TX", 28995881],
+  "Utah": ["UT", 3205958],
+  "Vermont": ["VT", 623989],
+  "Virginia": ["VA", 8535519],
+  "Washington": ["WA", 7614893],
+  "West Virginia": ["WV", 1792147],
+  "Wisconsin": ["WI", 5822434],
+  "Wyoming": ["WY", 578759],
+  "District of Columbia": ["DC", 705749],
+  "American Samoa": ["AS", 57400],
+  "Guam": ["GU", 161700],
+  "Northern Mariana Islands": ["MP", 52300],
+  "Puerto Rico": ["PR", 3193694],
+  "U.S.Virgin Island": ["VI", 103700],
+};
+
+//summary entity: ["us-rhode-island", "canada-alberta"], displayName: ["Rhode Island, US", "Alberta, Canada"]
+
+//history entity: ["us-ri", "canada-alberta"] displayName: ["Rhode Island, US", "Alberta, Canada"
+
+const formatName = (entity, displayName, country) => {
+  if (country === "US") {
+    return country.toLowerCase()+"-"+statesAndPopulation[displayName.slice(0,-4)][0].toLowerCase()
+  } else {
+    return entity
+  }
+}
 
 const fd =
   [
