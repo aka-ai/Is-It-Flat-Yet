@@ -17,5 +17,9 @@ export const changeLatLong = (data) => {
 }
 
 export const isBlackList = (data) => {
-  return blackList.indexOf(data.cityStateOrProvinceId) > -1;
+  return (
+    blackList.indexOf(data.cityStateOrProvinceId) > -1 ||
+    (blackList.indexOf(data.countryOrRegion.toLowerCase()) > -1 &&
+    !data.stateOrProvince)
+  );;
 }

@@ -52,16 +52,13 @@ export class BaseMap extends Component {
         if (isBlackList(entity)) return
         changeLatLong(data)
         const {
+          displayName,
           lat,
           lng,
           latestConfirmed,
           latestDeaths,
           countryOrRegion,
-          cityStateOrProvince,
           hospitalized,
-          negative,
-          pending,
-          percapitaPercentage,
           population,
           totalTestResults
         } = entity
@@ -88,14 +85,11 @@ export class BaseMap extends Component {
               icon={{
                 url: this.setIcon(latestDeaths)
               }}
-              location={cityStateOrProvince}
+              displayName={displayName}
               country={countryOrRegion}
               latestConfirmed={latestConfirmed}
               latestDeaths={latestDeaths}
               hospitalized={hospitalized}
-              negative={negative}
-              pending={pending}
-              percapitaPercentage={percapitaPercentage}
               population={population}
               totalTestResults={totalTestResults}
             />
@@ -125,28 +119,16 @@ export class BaseMap extends Component {
   }
 
   render() {
-    let location,
-      country,
-      latestConfirmed,
-      latestDeaths,
-      hospitalized,
-      negative,
-      pending,
-      percapitaPercentage,
-      population,
-      totalTestResults;
+    let displayName, country, latestConfirmed, latestDeaths, hospitalized, population, totalTestResults
 
     if (this.state.clickedMarkerKey) {
-      location = this.state.clickedMarkerKey.location
+      displayName = this.state.clickedMarkerKey.displayName
       country = this.state.clickedMarkerKey.country
       latestConfirmed = numeral(this.state.clickedMarkerKey.latestConfirmed).format('0,0')
       latestDeaths = numeral(this.state.clickedMarkerKey.latestDeaths).format("0,0");
     }
     if (this.state.clickedMarkerKey && country === "US") {
       hospitalized = numeral(this.state.clickedMarkerKey.hospitalized).format('0,0') // n/a gets converted to zero
-      negative = this.state.clickedMarkerKey.negative
-      pending = this.state.clickedMarkerKey.pending
-      percapitaPercentage = Number.parseFloat(this.state.clickedMarkerKey.percapitaPercentage).toFixed(3)
       population = numeral(this.state.clickedMarkerKey.population).format('0.0a')
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
@@ -170,8 +152,9 @@ export class BaseMap extends Component {
           onClick={this.onMapClick}
           onDragend={this.limitVerticalPan}
         >
-          {data.usData && this.renderMarkers(this.props.data.usData.states)}
-          {data.globalData && this.renderMarkers(this.props.data.globalData.countries)}
+          {data.usData && this.renderMarkers(data.usData.states)}
+          {data.globalData &&
+            this.renderMarkers(data.globalData.countries)}
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
@@ -179,42 +162,38 @@ export class BaseMap extends Component {
             {country === "US" ? (
               <div className="infoWindow">
                 <div className="infoWindowTitle">
-                  <h3>{location}</h3>
+                  <h3>{displayName}</h3>
                   <p>{population}</p>
                 </div>
                 <div className="infoWindowDetails">
                   <p>
-                    {latestDeaths} {latestDeaths === 1 ? "Death" : "Deaths"}
+                    {latestDeaths}{" "}
+                    {latestDeaths === 1 ? "Death" : "Deaths"}
                   </p>
                   <p>{latestConfirmed} Confirmed</p>
                   {hospitalized === 0 ? (
                     <p>{hospitalized} Hospitalized</p>
                   ) : (
-                      <p></p>
-                    )}
+                    <p></p>
+                  )}
                   <p>{totalTestResults} Tests</p>
                   {/* <p>{percapitaPercentage}% Per Capita</p> */}
                 </div>
               </div>
             ) : (
-                <div className="infoWindow">
-                  <div className="infoWindowTitle">
-                    {!location ? (
-                      <h3>{country}</h3>
-                    ) : (
-                        <h3>
-                          {location} {country}
-                        </h3>
-                      )}
-                  </div>
-                  <div className="infoWindowDetails">
-                    <p>
-                      {latestDeaths} {latestDeaths === 1 ? "Death" : "Deaths"}
-                    </p>
-                    <p>{latestConfirmed} Confirmed</p>
-                  </div>
+              <div className="infoWindow">
+                <div className="infoWindowTitle">
+                  <h3>{displayName}</h3>
                 </div>
-              )}
+                <div className="infoWindowDetails">
+                  <p>
+                    {latestDeaths}{" "}
+                    {latestDeaths === 1 ? "Death" : "Deaths"}
+                  </p>
+                  <p>{latestConfirmed} Confirmed</p>
+                </div>
+              </div>
+            )}
           </InfoWindow>
         </Map>
       </div>
