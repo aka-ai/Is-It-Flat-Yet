@@ -62,7 +62,7 @@ const fetchDataAndUpdateDB = async () => {
   console.log("Batch committing jhu data")
   const batch = db.batch();
   Object.values(historyTemp).forEach(entity => {
-    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    const ref = historyCollectionRef.doc(entity.entityId)
     batch.set(ref, entity)
   })
   batch.commit()
@@ -102,18 +102,22 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
 
   for (const row of updateData) {
     const countryOrRegion = row["Country/Region"];
-    const cityStateOrProvince = row["Province/State"];
+    const stateOrProvince = row["Province/State"];
+    const displayName = stateOrProvince
+      ? `${stateOrProvince}` + ", " + `${countryOrRegion}`
+      : countryOrRegion;
 
-    let cityStateOrProvinceId = helpers.formatName(countryOrRegion)
-    if (cityStateOrProvince) {
-      cityStateOrProvinceId += `-${helpers.formatName(cityStateOrProvince)}`;
+    let entityId = helpers.formatName(countryOrRegion)
+    if (stateOrProvince) {
+      entityId += `-${helpers.formatName(stateOrProvince)}`;
     }
 
     // Setup the new document attrs to merge in
-    const update = historyTemp[cityStateOrProvinceId] || {
-      cityStateOrProvinceId,
+    const update = historyTemp[entityId] || {
+      entityId,
       countryOrRegion,
-      cityStateOrProvince,
+      stateOrProvince,
+      displayName,
       lat: Math.round(row["Lat"] * 100) / 100,
       lng: Math.round(row["Long"] * 100) / 100,
       confirmed: [],
@@ -127,41 +131,42 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     update[`latest${helpers.capitalize(category)}`] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
-    if (!historyTemp[update.cityStateOrProvinceId]) {
-      historyTemp[update.cityStateOrProvinceId] = JSON.parse(JSON.stringify(update))
+    if (!historyTemp[update.entityId]) {
+      historyTemp[update.entityId] = JSON.parse(JSON.stringify(update))
     } else {
-      historyTemp[update.cityStateOrProvinceId] = Object.assign(
-        historyTemp[update.cityStateOrProvinceId],
+      historyTemp[update.entityId] = Object.assign(
+        historyTemp[update.entityId],
         JSON.parse(JSON.stringify(update))
       );
     }
 
     // Generate historical data and net new curves
+    // eslint-disable-next-line no-loop-func
     Object.keys(row).map(key => {
-      if (key !== "Province/State" &&
-        key !== "Country/Region" &&
-        key !== "Lat" &&
-        key !== "Long"
+      if ([
+      "Province/State", "Country/Region", "Lat", "Long"].indexOf(key) > 1 
+      && helpers.isTempPeriodOver("07-01-2020", "MM-DD-YYYY") 
+      && positiveIncrease !== 0
       ) {
         let yesterday = dayjs(dayjs(key).subtract(1, "days")).format("M/D/YY")
         let delta
         if (row[yesterday]) {
           delta = parseInt(row[key]) - parseInt(row[yesterday])
         }
-        historyTemp[update.cityStateOrProvinceId][category].push(
+        historyTemp[update.entityId][category].push(
           { date: key, val: row[key] }
         )
-        historyTemp[update.cityStateOrProvinceId][`delta${helpers.capitalize(category)}`].push(
+        historyTemp[update.entityId][`delta${helpers.capitalize(category)}`].push(
           { date: key, val: delta || '0' }
         )
       }
     })
 
-    if (!summaryTemp[update.cityStateOrProvinceId]) {
-      summaryTemp[update.cityStateOrProvinceId] = JSON.parse(JSON.stringify(update));
+    if (!summaryTemp[update.entityId]) {
+      summaryTemp[update.entityId] = JSON.parse(JSON.stringify(update));
     } else {
-      summaryTemp[update.cityStateOrProvinceId] = Object.assign(
-        summaryTemp[update.cityStateOrProvinceId],
+      summaryTemp[update.entityId] = Object.assign(
+        summaryTemp[update.entityId],
         JSON.parse(JSON.stringify(update))
       );
     }
@@ -169,7 +174,7 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     // since it gets stuff into a single document
     const toDelete = ['confirmed', 'deltaConfirmed', 'deaths', 'deltaDeaths']
     toDelete.forEach(attr => {
-      delete summaryTemp[cityStateOrProvinceId][attr]
+      delete summaryTemp[entityId][attr]
     })
   }
   // We return nothing since we are directly mutating the temp objects being passed in
@@ -181,15 +186,18 @@ const updateCTPSummaryData = async (data) => {
   data.forEach(st => {
     let obj = {}
     let { state, positive, negative, pending, hospitalized, death, totalTestResults } = st
+    const stateOrProvince = statesAndPopulation[state][0];
     if (!pending) pending = "n/a"
-    if (!death) death = 0
+    // if (!death) death = 0 - we want to skip empty data points
     if (!hospitalized) hospitalized = "n/a"
     if (!negative) negative = "n/a"
 
     obj["latestConfirmed"] = positive
     obj["latestDeaths"] = death
     obj["countryOrRegion"] = "US"
-    obj["cityStateOrProvince"] = statesAndPopulation[state][0]
+    obj["entityId"] = stateOrProvince ? "us-" + helpers.formatName(stateOrProvince) : "us"
+    obj["stateOrProvince"] = stateOrProvince
+    obj["displayName"] = `${stateOrProvince}` + ', US'
     obj["totalTestResults"] = totalTestResults
     obj["pending"] = pending
     obj["hospitalized"] = hospitalized
@@ -211,51 +219,78 @@ const updateCTPHistoryData = (rawData) => {
   const ctpTemp = {}
   for (const row of rawData) {
     const date = helpers.getDate(row["date"])
-    const { state, positive, negative, hospitalized, death, totalTestResults, fips, deathIncrease, hospitalizedIncrease, negativeIncrease, positiveIncrease, totalTestResultsIncrease } = row
-    const countryOrRegion = 'US';
-    const cityStateOrProvince = state;
+    const {
+      state,
+      positive,
+      negative,
+      hospitalized,
+      death,
+      totalTestResults,
+      fips,
+      deathIncrease,
+      hospitalizedIncrease,
+      negativeIncrease,
+      positiveIncrease,
+      totalTestResultsIncrease
+    } = row;
+    // if positiveIncrease is zero, we assume it's a bad datapoint and skip it, but only temporarily
+    if (!helpers.isTempPeriodOver("07-01-2020", "MM-DD-YYYY") && 
+    positiveIncrease) {       
+      const countryOrRegion = "US";
+      const stateOrProvince = state;
+      const displayName = stateOrProvince
+        ? `${statesAndPopulation[stateOrProvince][0]}` +
+          ", " +
+          `${countryOrRegion}`
+        : countryOrRegion;
 
-    let cityStateOrProvinceId = helpers.formatName(countryOrRegion)
-    if (cityStateOrProvince) {
-      cityStateOrProvinceId += `-${helpers.formatName(cityStateOrProvince)}`;
+      let entityId = helpers.formatName(countryOrRegion);
+      if (stateOrProvince) {
+        entityId += `-${helpers.formatName(stateOrProvince)}`;
+      }
+      const update = ctpTemp[entityId] || {
+        entityId,
+        displayName,
+        countryOrRegion,
+        stateOrProvince,
+        lat: statesLatLng[state][0],
+        lng: statesLatLng[state][1],
+        confirmed: [],
+        negative: [],
+        hospitalized: [],
+        deaths: [],
+        totalTestResults: [],
+        fips: [],
+        deltaDeaths: [],
+        deltaHospitalized: [],
+        deltaNegative: [],
+        deltaConfirmed: [],
+        deltaTotalTestResults: []
+      };
+      update["confirmed"].push({ [date]: positive });
+      update["deltaConfirmed"].push({ [date]: positiveIncrease });
+      update["deaths"].push({ [date]: death });
+      update["deltaDeaths"].push({ [date]: deathIncrease });
+      update["deltaHospitalized"].push({ [date]: hospitalizedIncrease });
+      update["deltaNegative"].push({ [date]: negativeIncrease });
+
+      update["negative"].push({ [date]: negative });
+      update["hospitalized"].push({ [date]: hospitalized });
+      update["totalTestResults"].push({ [date]: totalTestResults });
+      update["fips"].push({ [date]: fips });
+
+      update["deltaTotalTestResults"].push({
+        [date]: totalTestResultsIncrease
+      });
+
+      ctpTemp[entityId] = update;
     }
-    const update = ctpTemp[cityStateOrProvinceId] || {
-      cityStateOrProvinceId,
-      countryOrRegion,
-      cityStateOrProvince,
-      lat: statesLatLng[state][0],
-      lng: statesLatLng[state][1],
-      confirmed: [],
-      negative: [],
-      hospitalized: [],
-      deaths: [],
-      totalTestResults: [],
-      fips: [],
-      deltaDeaths: [],
-      deltaHospitalized: [],
-      deltaNegative: [],
-      deltaConfirmed: [],
-      deltaTotalTestResults: []
-    };
-    update["confirmed"].push({ [date]: positive })
-    update["negative"].push({ [date]: negative })
-    update["hospitalized"].push({ [date]: hospitalized })
-    update["deaths"].push({ [date]: death })
-    update["totalTestResults"].push({ [date]: totalTestResults })
-    update["fips"].push({ [date]: fips })
-    update["deltaDeaths"].push({ [date]: deathIncrease })
-    update["deltaHospitalized"].push({ [date]: hospitalizedIncrease })
-    update["deltaNegative"].push({ [date]: negativeIncrease })
-    update["deltaConfirmed"].push({ [date]: positiveIncrease })
-    update["deltaTotalTestResults"].push({ [date]: totalTestResultsIncrease })
-
-    ctpTemp[cityStateOrProvinceId] = update
   }
 
   console.log("Batch writing ctp history data")
   const batch = db.batch();
   Object.values(ctpTemp).forEach(entity => {
-    const ref = historyCollectionRef.doc(entity.cityStateOrProvinceId)
+    const ref = historyCollectionRef.doc(entity.entityId)
     batch.set(ref, entity)
   })
   batch.commit()
