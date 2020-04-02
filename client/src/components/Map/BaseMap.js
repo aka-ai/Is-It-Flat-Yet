@@ -42,8 +42,13 @@ export class BaseMap extends Component {
   }
 
   async onMarkerClick (markerProps, marker, e) {
-// await console.log(markerProps)
-    const data = await markerProps.firebase.getHistoryData(markerProps.entityId)
+    let id
+    if (markerProps.country === "US") {
+      id = (markerProps.country + '-' + markerProps.stateAbbreviation).toLowerCase()
+    } else {
+      id = markerProps.entityId
+    }
+    const data = await markerProps.firebase.getHistoryData(id)
 
     this.setState({
       activeMarker: marker,
@@ -68,7 +73,8 @@ export class BaseMap extends Component {
           hospitalized,
           population,
           totalTestResults,
-          entityId
+          entityId,
+          stateAbbreviation,
         } = entity
 
         if (!latestDeaths) {
@@ -101,6 +107,7 @@ export class BaseMap extends Component {
               population={population}
               totalTestResults={totalTestResults}
               entityId={entityId}
+              stateAbbreviation={stateAbbreviation}
               firebase={this.props.firebase}
             />
           );

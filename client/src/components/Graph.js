@@ -21,9 +21,7 @@ class Graph extends Component {
 
   renderData() {
     let name
-    if(this.props.entityData) {
-
-      console.log('renderData', this.props.entityData.displayName)
+    if (this.props.entityData) {
       name = this.props.entityData.displayName
     }
     const updateDeltaDeathsData = []
@@ -31,33 +29,33 @@ class Graph extends Component {
     const updateConfirmedData = []
     const updateDeathsData = []
     if (this.props.entityData) {
-    this.props.entityData.deltaDeaths.forEach(d => {
-      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-      let value = Object.values(d)[0] || 0
-      updateDeltaDeathsData.push({ x: dayOfYear, y: value })
-    })
-    this.props.entityData.deltaConfirmed.forEach(d => {
-      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-      let value = Object.values(d)[0] || 0
-      updateDeltaConfirmedData.push({ x: dayOfYear, y: value })
-    })
-    this.props.entityData.confirmed.forEach(d => {
-      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-      let value = Object.values(d)[0] || 0
-      updateConfirmedData.push({ x: dayOfYear, y: value })
-    })
-    this.props.entityData.deaths.forEach(d => {
-      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-      let value = Object.values(d)[0] || 0
-      updateDeathsData.push({ x: dayOfYear, y: value })
-    })
+      this.props.entityData.deltaDeaths.forEach(d => {
+        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+        let value = Object.values(d)[0] || 0
+        updateDeltaDeathsData.push({ x: dayOfYear, y: value })
+      })
+      this.props.entityData.deltaConfirmed.forEach(d => {
+        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+        let value = Object.values(d)[0] || 0
+        updateDeltaConfirmedData.push({ x: dayOfYear, y: value })
+      })
+      this.props.entityData.confirmed.forEach(d => {
+        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+        let value = Object.values(d)[0] || 0
+        updateConfirmedData.push({ x: dayOfYear, y: value })
+      })
+      this.props.entityData.deaths.forEach(d => {
+        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+        let value = Object.values(d)[0] || 0
+        updateDeathsData.push({ x: dayOfYear, y: value })
+      })
     }
 
-    return { 
+    return {
       name: name,
-      deltaDeaths: updateDeltaDeathsData, 
-      deltaConfirmed: updateDeltaConfirmedData, 
-      confirmed: updateConfirmedData, 
+      deltaDeaths: updateDeltaDeathsData,
+      deltaConfirmed: updateDeltaConfirmedData,
+      confirmed: updateConfirmedData,
       deaths: updateDeathsData
     }
   }
@@ -67,7 +65,7 @@ class Graph extends Component {
 
   render() {
 
-      const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = this.renderData()
+    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = this.renderData()
 
 
     return (
@@ -91,10 +89,10 @@ class Graph extends Component {
           <VictoryGroup >
             <VictoryArea
               style={{
-                data: { 
-                  fill: "brown", 
-                  stroke: "brown", 
-                  strokeWidth: 0, 
+                data: {
+                  fill: "brown",
+                  stroke: "brown",
+                  strokeWidth: 0,
                   fillOpacity: 0.5
                 }
               }}
@@ -103,11 +101,11 @@ class Graph extends Component {
             />
             <VictoryArea
               style={{
-                data: { 
-                  fill: "green", 
-                  stroke: "green", 
-                  strokeWidth: 0, 
-                  fillOpacity: 0.5 
+                data: {
+                  fill: "green",
+                  stroke: "green",
+                  strokeWidth: 0,
+                  fillOpacity: 0.5
                 }
               }}
               interpolation={"natural"}
