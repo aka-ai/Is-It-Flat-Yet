@@ -6,17 +6,8 @@ class Graph extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { historyData: '', isLoading: true, dataSentFromMap: this.props }
+    this.state = { historyData: '', isLoading: true }
     this.getDayOfYear = this.getDayOfYear.bind(this)
-  }
-  async componentDidMount() {
-    const { entityId, displayName, country } = this.state.dataSentFromMap
-    console.log(entityId)
-    if (this.state.dataSentFromMap.entityId) {
-      const key = formatName(entityId, displayName, country)
-      const historyData = await this.props.firebase.getHistoryData(key)
-      this.setState({ historyData: historyData, isLoading: false })
-    }
   }
 
   getDayOfYear(date) {
@@ -29,40 +20,56 @@ class Graph extends Component {
   }
 
   renderData() {
+    let name
+    if(this.props.entityData) {
+
+      console.log('renderData', this.props.entityData.displayName)
+      name = this.props.entityData.displayName
+    }
     const updateDeltaDeathsData = []
     const updateDeltaConfirmedData = []
     const updateConfirmedData = []
     const updateDeathsData = []
-    if (this.state.historyData) {
-      this.state.historyData.deltaDeaths.forEach(d => {
-        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-        let value = Object.values(d)[0] || 0
-        updateDeltaDeathsData.push({ x: dayOfYear, y: value })
-      })
-      this.state.historyData.deltaConfirmed.forEach(d => {
-        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-        let value = Object.values(d)[0] || 0
-        updateDeltaConfirmedData.push({ x: dayOfYear, y: value })
-      })
-      this.state.historyData.confirmed.forEach(d => {
-        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-        let value = Object.values(d)[0] || 0
-        updateConfirmedData.push({ x: dayOfYear, y: value })
-      })
-      this.state.historyData.deaths.forEach(d => {
-        const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
-        let value = Object.values(d)[0] || 0
-        updateDeathsData.push({ x: dayOfYear, y: value })
-      })
+    if (this.props.entityData) {
+    this.props.entityData.deltaDeaths.forEach(d => {
+      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+      let value = Object.values(d)[0] || 0
+      updateDeltaDeathsData.push({ x: dayOfYear, y: value })
+    })
+    this.props.entityData.deltaConfirmed.forEach(d => {
+      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+      let value = Object.values(d)[0] || 0
+      updateDeltaConfirmedData.push({ x: dayOfYear, y: value })
+    })
+    this.props.entityData.confirmed.forEach(d => {
+      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+      let value = Object.values(d)[0] || 0
+      updateConfirmedData.push({ x: dayOfYear, y: value })
+    })
+    this.props.entityData.deaths.forEach(d => {
+      const dayOfYear = (this.getDayOfYear(Object.keys(d)[0]))
+      let value = Object.values(d)[0] || 0
+      updateDeathsData.push({ x: dayOfYear, y: value })
+    })
     }
 
-    return { deltaDeaths: updateDeltaDeathsData, deltaConfirmed: updateDeltaConfirmedData, confirmed: updateConfirmedData, deaths: updateDeathsData }
+    return { 
+      name: name,
+      deltaDeaths: updateDeltaDeathsData, 
+      deltaConfirmed: updateDeltaConfirmedData, 
+      confirmed: updateConfirmedData, 
+      deaths: updateDeathsData
+    }
   }
 
 
+
+
   render() {
-    // if (this.props.entityId) this.getData(this.props.entityId, this.props.displayName, this.props.country)
-    console.log(this.state)
+
+      const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = this.renderData()
+
+
     return (
       <div className="graph">
         <VictoryChart scale={{ x: "linear", y: "sqrt" }} >
@@ -71,7 +78,7 @@ class Graph extends Component {
               axisLabel: { fontSize: 23, padding: 30 },
               tickLabels: { fontSize: 15, padding: 5 },
             }}
-            label={`${this.state.historyData.displayName} Accumulative`}
+            label={`${name} Accumulative`}
           />
           <VictoryAxis dependentAxis
 
@@ -84,24 +91,34 @@ class Graph extends Component {
           <VictoryGroup >
             <VictoryArea
               style={{
-                data: { fill: "brown", stroke: "brown", strokeWidth: 0, fillOpacity: 0.5 }
+                data: { 
+                  fill: "brown", 
+                  stroke: "brown", 
+                  strokeWidth: 0, 
+                  fillOpacity: 0.5
+                }
               }}
               interpolation={"natural"}
-              data={this.renderData().deaths}
+              data={deaths}
             />
             <VictoryArea
               style={{
-                data: { fill: "green", stroke: "green", strokeWidth: 0, fillOpacity: 0.5 }
+                data: { 
+                  fill: "green", 
+                  stroke: "green", 
+                  strokeWidth: 0, 
+                  fillOpacity: 0.5 
+                }
               }}
               interpolation={"natural"}
-              data={this.renderData().confirmed}
+              data={confirmed}
             />
           </VictoryGroup>
         </VictoryChart  >
         <VictoryChart scale={{ x: "linear", y: "sqrt" }} >
 
           <VictoryAxis
-            label={`${this.state.historyData.displayName} delta`}
+            label={`${name} Delta`}
             style={{
               axisLabel: { fontSize: 23, padding: 30 },
               tickLabels: { fontSize: 15, padding: 5 },
@@ -121,14 +138,14 @@ class Graph extends Component {
                 data: { fill: "magenta", stroke: "magenta", strokeWidth: 0, fillOpacity: 0.5 }
               }}
               interpolation={"natural"}
-              data={this.renderData().deltaConfirmed}
+              data={deltaConfirmed}
             />
             <VictoryArea
               style={{
                 data: { fill: "cyan", stroke: "cyan", strokeWidth: 0, fillOpacity: 0.5 },
               }}
               interpolation={"natural"}
-              data={this.renderData().deltaDeaths}
+              data={deltaDeaths}
             // domain={{ x: [60, 100], y: [0, 5000] }}
             />
           </VictoryGroup>
@@ -204,13 +221,7 @@ const statesAndPopulation = {
 
 //history entity: ["us-ri", "canada-alberta"] displayName: ["Rhode Island, US", "Alberta, Canada"
 
-const formatName = (entity, displayName, country) => {
-  if (country === "US") {
-    return country.toLowerCase()+"-"+statesAndPopulation[displayName.slice(0,-4)][0].toLowerCase()
-  } else {
-    return entity
-  }
-}
+
 
 const fd =
   [

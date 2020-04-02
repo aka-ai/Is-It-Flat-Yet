@@ -16,9 +16,11 @@ export class BaseMap extends Component {
       activeMarker: null,
       clickedMarkerKey: null,
       lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
-      valid: true
+      valid: true,
+      entityData: null
     }
     this.limitVerticalPan = this.limitVerticalPan.bind(this)
+    this.onMarkerClick = this.onMarkerClick.bind(this)
   }
 
   onMapClick = (props) => {
@@ -39,11 +41,15 @@ export class BaseMap extends Component {
     }
   }
 
-  onMarkerClick = (markerProps, marker, e) => {
+  async onMarkerClick (markerProps, marker, e) {
+// await console.log(markerProps)
+    const data = await markerProps.firebase.getHistoryData(markerProps.entityId)
+
     this.setState({
       activeMarker: marker,
       showingInfoWindow: true,
-      clickedMarkerKey: markerProps
+      clickedMarkerKey: markerProps,
+      entityData: data
     })
   }
 
@@ -95,6 +101,7 @@ export class BaseMap extends Component {
               population={population}
               totalTestResults={totalTestResults}
               entityId={entityId}
+              firebase={this.props.firebase}
             />
           );
         }
@@ -166,10 +173,7 @@ export class BaseMap extends Component {
             visible={this.state.showingInfoWindow}
           >
             <Graph
-              firebase={firebase}
-              displayName={displayName}
-              entityId={entityId}
-              country={country}
+              entityData={this.state.entityData}
             />
           </ InfoWindow>
         </Map>

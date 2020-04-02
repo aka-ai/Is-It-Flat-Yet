@@ -30,7 +30,6 @@ class App extends Component {
     if (this.state.data.globalData) lastUpdated = this.state.data.globalData.countries[0]["lastUpdated"]
     return (
       <div className="App">
-        <SidePanel firebase={firebase}/>
         <Header lastUpdated={lastUpdated} />
         <BaseMap
           data={this.state.data}
