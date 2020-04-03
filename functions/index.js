@@ -2,7 +2,11 @@ const axios = require("axios");
 const parse = require("csv-parse/lib/sync");
 const dayjs = require('dayjs');
 
-const { statesLatLng, statesAndPopulation } = require('./constants')
+const {
+  statesLatLng,
+  statesAndPopulation,
+  statesLookup
+} = require("./constants");
 
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
@@ -103,14 +107,9 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
   for (const row of updateData) {
     const countryOrRegion = row["Country/Region"];
     const stateOrProvince = row["Province/State"];
-    const displayName = stateOrProvince
-      ? `${stateOrProvince}` + ", " + `${countryOrRegion}`
-      : countryOrRegion;
-
-    let entityId = helpers.formatName(countryOrRegion)
-    if (stateOrProvince) {
-      entityId += `-${helpers.formatName(stateOrProvince)}`;
-    }
+    const displayName = helpers.getDisplayName(stateOrProvince, countryOrRegion)
+    const entityId = helpers.getEntityId(stateOrProvince, countryOrRegion);
+  
 
     // Setup the new document attrs to merge in
     const update = historyTemp[entityId] || {
@@ -172,6 +171,7 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     }
     // prep update for summary collection; we don't want all the fields
     // since it gets stuff into a single document
+    // also it will also cause item size exceeded error if we don't
     const toDelete = ['confirmed', 'deltaConfirmed', 'deaths', 'deltaDeaths']
     toDelete.forEach(attr => {
       delete summaryTemp[entityId][attr]
@@ -186,7 +186,7 @@ const updateCTPSummaryData = async (data) => {
   data.forEach(st => {
     let obj = {}
     let { state, positive, negative, pending, hospitalized, death, totalTestResults } = st
-    const stateOrProvince = statesAndPopulation[state][0];
+    const stateOrProvince = statesLookup[state];
     if (!pending) pending = "n/a"
     // if (!death) death = 0 - we want to skip empty data points
     if (!hospitalized) hospitalized = "n/a"
@@ -195,7 +195,7 @@ const updateCTPSummaryData = async (data) => {
     obj["latestConfirmed"] = positive
     obj["latestDeaths"] = death
     obj["countryOrRegion"] = "US"
-    obj["entityId"] = stateOrProvince ? "us-" + helpers.formatName(stateOrProvince) : "us"
+    obj["entityId"] = helpers.getEntityId(stateOrProvince, 'US')
     obj["stateOrProvince"] = stateOrProvince
     obj["displayName"] = `${stateOrProvince}` + ', US'
     obj["totalTestResults"] = totalTestResults
@@ -203,8 +203,8 @@ const updateCTPSummaryData = async (data) => {
     obj["hospitalized"] = hospitalized
     obj["negative"] = negative
     obj["stateAbbreviation"] = state
-    obj["population"] = statesAndPopulation[state][1]
-    obj["percapitaPercentage"] = (positive / statesAndPopulation[state][1]) * 100
+    obj["population"] = statesAndPopulation[state]
+    obj["percapitaPercentage"] = (positive / statesAndPopulation[state]) * 100
     obj["lat"] = statesLatLng[state][0]
     obj["lng"] = statesLatLng[state][1]
 
@@ -219,35 +219,15 @@ const updateCTPHistoryData = (rawData) => {
   const ctpTemp = {}
   for (const row of rawData) {
     const date = helpers.getDate(row["date"])
-    const {
-      state,
-      positive,
-      negative,
-      hospitalized,
-      death,
-      totalTestResults,
-      fips,
-      deathIncrease,
-      hospitalizedIncrease,
-      negativeIncrease,
-      positiveIncrease,
-      totalTestResultsIncrease
-    } = row;
+    const { state, positiveIncrease } = row;
     // if positiveIncrease is zero, we assume it's a bad datapoint and skip it, but only temporarily
     if (!helpers.isTempPeriodOver("07-01-2020", "MM-DD-YYYY") && 
     positiveIncrease) {       
       const countryOrRegion = "US";
       const stateOrProvince = state;
-      const displayName = stateOrProvince
-        ? `${statesAndPopulation[stateOrProvince][0]}` +
-          ", " +
-          `${countryOrRegion}`
-        : countryOrRegion;
-
-      let entityId = helpers.formatName(countryOrRegion);
-      if (stateOrProvince) {
-        entityId += `-${helpers.formatName(stateOrProvince)}`;
-      }
+      const displayName = helpers.getDisplayName(stateOrProvince, countryOrRegion); 
+      const entityId = helpers.getEntityId(stateOrProvince, countryOrRegion);
+      
       const update = ctpTemp[entityId] || {
         entityId,
         displayName,
@@ -267,21 +247,23 @@ const updateCTPHistoryData = (rawData) => {
         deltaConfirmed: [],
         deltaTotalTestResults: []
       };
-      update["confirmed"].push({ [date]: positive });
-      update["deltaConfirmed"].push({ [date]: positiveIncrease });
-      update["deaths"].push({ [date]: death });
-      update["deltaDeaths"].push({ [date]: deathIncrease });
-      update["deltaHospitalized"].push({ [date]: hospitalizedIncrease });
-      update["deltaNegative"].push({ [date]: negativeIncrease });
-
-      update["negative"].push({ [date]: negative });
-      update["hospitalized"].push({ [date]: hospitalized });
-      update["totalTestResults"].push({ [date]: totalTestResults });
-      update["fips"].push({ [date]: fips });
-
-      update["deltaTotalTestResults"].push({
-        [date]: totalTestResultsIncrease
-      });
+      const attrMap = {
+        "positive": "confirmed",
+        "positiveIncrease": "deltaConfirmed",
+        "death": "deaths",
+        "deathIncrease": "deltaDeaths",
+        "hospitalizedIncrease": "deltaHospitalized",
+        "negativeIncrease": "deltaNegative",
+        "totalTestResultsIncrease": "deltaTotalTestResults",
+        "negative": "negative", 
+        "hospitalized": "hospitalized",
+        "totalTestResults": "totalTestResults",
+        "fips": "fips"
+      }
+      // push if there's a value
+      for (let attr in attrMap) {
+        if (row[attr]) update[attrMap[attr]].push({ [date]: row[attr] });
+      }
 
       ctpTemp[entityId] = update;
     }
