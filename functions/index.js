@@ -131,42 +131,42 @@ const updateJH = async (summaryTemp, historyTemp, category, jhuData) => {
     update[`latest${helpers.capitalize(category)}`] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
-    if (!historyTemp[update.entityId]) {
-      historyTemp[update.entityId] = JSON.parse(JSON.stringify(update))
+    if (!historyTemp[entityId]) {
+      historyTemp[entityId] = JSON.parse(JSON.stringify(update))
     } else {
-      historyTemp[update.entityId] = Object.assign(
-        historyTemp[update.entityId],
+      historyTemp[entityId] = Object.assign(
+        historyTemp[entityId],
         JSON.parse(JSON.stringify(update))
       );
     }
 
     // Generate historical data and net new curves
     // eslint-disable-next-line no-loop-func
-    Object.keys(row).map(key => {
+    Object.keys(row).map(date => {
       if ([
-      "Province/State", "Country/Region", "Lat", "Long"].indexOf(key) > 1 
-      && helpers.isTempPeriodOver("07-01-2020", "MM-DD-YYYY") 
-      && positiveIncrease !== 0
+      "Province/State", "Country/Region", "Lat", "Long"].indexOf(date) === -1 
       ) {
-        let yesterday = dayjs(dayjs(key).subtract(1, "days")).format("M/D/YY")
-        let delta
-        if (row[yesterday]) {
-          delta = parseInt(row[key]) - parseInt(row[yesterday])
+        let priorDay = dayjs(dayjs(date).subtract(1, "days")).format("M/D/YY")
+        // JHU provides cumulative data so row[date] should always have a value, 
+        // but we check anyway to be safe, i.e. if they forget to put a value in
+        // in which case we skip
+        if (row[priorDay] && row[date]) {
+          const delta = parseInt(row[date]) - parseInt(row[priorDay])
+          historyTemp[entityId][`delta${helpers.capitalize(category)}`].push(
+            { date: date, val: delta }
+          )
         }
-        historyTemp[update.entityId][category].push(
-          { date: key, val: row[key] }
-        )
-        historyTemp[update.entityId][`delta${helpers.capitalize(category)}`].push(
-          { date: key, val: delta || '0' }
-        )
+        if (row[date]) {
+          historyTemp[entityId][category].push({ date: date, val: row[date] });
+        }
       }
     })
 
-    if (!summaryTemp[update.entityId]) {
-      summaryTemp[update.entityId] = JSON.parse(JSON.stringify(update));
+    if (!summaryTemp[entityId]) {
+      summaryTemp[entityId] = JSON.parse(JSON.stringify(update));
     } else {
-      summaryTemp[update.entityId] = Object.assign(
-        summaryTemp[update.entityId],
+      summaryTemp[entityId] = Object.assign(
+        summaryTemp[entityId],
         JSON.parse(JSON.stringify(update))
       );
     }
