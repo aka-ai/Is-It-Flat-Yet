@@ -25,8 +25,8 @@ export const isBlackList = (data) => {
 }
 
 export const renderHistoricData = (input ) => {
-  if (!input.entityId) {
-    return {}
+  if (JSON.stringify(input) === '{}') {
+    return {name: '', deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: []}
   }
   const name = input.displayName
   const mapKeys = { deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: [] }
