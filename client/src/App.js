@@ -4,8 +4,8 @@ import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
 import Footer from './components/Footer'
-import SidePanel from './components/SidePanel'
-import Graph from './components/Graph'
+// import SidePanel from './components/SidePanel'
+// import Graph from './components/Graph'
 
 const firebase = new Firebase()
 

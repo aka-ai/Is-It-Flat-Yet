@@ -41,14 +41,9 @@ export class BaseMap extends Component {
     }
   }
 
-  async onMarkerClick (markerProps, marker, e) {
-    let id
-    if (markerProps.country === "US") {
-      id = (markerProps.country + '-' + markerProps.stateAbbreviation).toLowerCase()
-    } else {
-      id = markerProps.entityId
-    }
-    const data = await markerProps.firebase.getHistoryData(id)
+  async onMarkerClick(markerProps, marker, e) {
+
+    const data = await markerProps.firebase.getHistoryData(markerProps.entityId)
 
     this.setState({
       activeMarker: marker,
@@ -151,8 +146,6 @@ export class BaseMap extends Component {
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
     const data = this.props.data
-    const firebase = this.props.firebase
-
     return (
       <div className="Map-container">
         <Map
@@ -170,7 +163,7 @@ export class BaseMap extends Component {
           gestureHandling={"greedy"}
           onClick={this.onMapClick}
           onDragend={this.limitVerticalPan}
-          entityId={this.entityId}
+          entityId={entityId}
         >
           {data.usData && this.renderMarkers(data.usData.states)}
           {data.globalData &&
@@ -179,9 +172,9 @@ export class BaseMap extends Component {
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
-            <Graph
-              entityData={this.state.entityData}
-            />
+              <Graph
+                entityData={this.state.entityData}
+              />
           </ InfoWindow>
         </Map>
       </div>
