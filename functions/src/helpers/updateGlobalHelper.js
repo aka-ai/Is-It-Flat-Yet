@@ -1,53 +1,13 @@
-const axios = require("axios");
 const parse = require("csv-parse/lib/sync");
 const dayjs = require("dayjs");
-const helpers = require("./helpers");
-const firebase = require("./firebase")
+const helpers = require("./utils");
 
-const summaryCollectionRef = firebase.db.collection("Summary");
-const historyCollectionRef = firebase.db.collection("History");
-
-const CATEGORIES = {
-  CONFIRMED: "confirmed",
-  DEATHS: "deaths"
-};
-
-module.exports = {
-  // get jhu data
-  // the two api calls to GitHub race,
-  // so we put the results in a temp map
-  // before converting to a list of entities
-  run: async () => {
-    const httpOptions = {};
-    console.log("getting jhu data");
-    const summaryTemp = {};
-    const historyTemp = {};
-    for (const category of Object.values(CATEGORIES)) {
-      httpOptions.url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${category}_global.csv`;
-      const githubResponse = await axios(httpOptions);
-      if (githubResponse.status !== 200 || githubResponse.data === "") {
-        console.error("Error or Empty response from Github!: ", githubResponse);
-        throw new Error("Error calling GitHub API for JHU data");
-      } else {
-        const jhuData = githubResponse.data;
-        await updateGlobalSummaryAndHistory(summaryTemp, historyTemp, category, jhuData);
-      }
-    }
-    // Write temp data to db in the format we want it
-    const countries = Object.values(summaryTemp);
-    await summaryCollectionRef.doc("jhu").set({ countries: countries });
-
-    console.log("Batch committing jhu data");
-    const batch = firebase.db.batch();
-    Object.values(historyTemp).forEach(entity => {
-      const ref = historyCollectionRef.doc(entity.entityId);
-      batch.set(ref, entity);
-    });
-    batch.commit();
-  }
-};
-
-const updateGlobalSummaryAndHistory = async (summaryTemp, historyTemp, category, jhuData) => {
+module.exports.updateGlobalHelper = async (
+  summaryTemp,
+  historyTemp,
+  category,
+  jhuData
+) => {
   console.log("Setting temp data for category: ", category);
   const updateData = parse(jhuData, {
     columns: true,
@@ -132,4 +92,3 @@ const updateGlobalSummaryAndHistory = async (summaryTemp, historyTemp, category,
   }
   // We return nothing since we are directly mutating the temp objects being passed in
 };
-
