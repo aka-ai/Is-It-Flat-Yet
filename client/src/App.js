@@ -16,13 +16,16 @@ class App extends Component {
       showingInfoWindow: false,
       selectedPlace: {},
       activeMarker: {},
-      data: {}
+      data: {},
+      usCountryData: {},
     }
   }
 
   async componentDidMount() {
     const data = await firebase.getData()
-    this.setState({ data: data })
+    const usCountryData = await firebase.getHistoryData("us")
+    this.setState({ data: data, usCountryData })
+    console.log('from App', this.state.usCountryData)
   }
 
   render() {
@@ -34,6 +37,7 @@ class App extends Component {
         <BaseMap
           data={this.state.data}
           firebase={firebase}
+          usCountryData={this.state.usCountryData}
         />
         <Footer className="footer" />
       </div>

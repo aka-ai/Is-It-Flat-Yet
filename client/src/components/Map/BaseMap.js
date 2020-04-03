@@ -49,7 +49,7 @@ export class BaseMap extends Component {
       activeMarker: marker,
       showingInfoWindow: true,
       clickedMarkerKey: markerProps,
-      entityData: data
+      entityData: data,
     })
   }
 
@@ -150,6 +150,7 @@ export class BaseMap extends Component {
       <div className="dataContainer">
         <Graph
           entityData={this.state.entityData}
+          usCountryData={this.props.usCountryData}
         />
         <div className="map">
         <Map

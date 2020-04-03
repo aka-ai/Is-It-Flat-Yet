@@ -23,3 +23,32 @@ export const isBlackList = (data) => {
     !data.stateOrProvince)
   );;
 }
+
+export const renderHistoricData = (input ) => {
+  if (!input.entityId) {
+    return {}
+  }
+  const name = input.displayName
+  const mapKeys = { deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: [] }
+  Object.keys(mapKeys).forEach(category => {
+      let dayOfYear, value
+      input[category].forEach(d => {
+        if (input.countryOrRegion === "US" && input.entityId !== 'us') {
+          dayOfYear = new Date(Object.keys(d)[0])
+          value = Object.values(d)[0] || 0
+        } else {
+          dayOfYear = new Date(d.date)
+          value = parseInt(d.val)
+        }
+        mapKeys[category].push({ x: dayOfYear, y: value })
+      })
+    })
+
+  return {
+    name: name,
+    deltaDeaths: mapKeys.deltaDeaths,
+    deltaConfirmed: mapKeys.deltaConfirmed,
+    confirmed: mapKeys.confirmed,
+    deaths: mapKeys.deaths,
+  }
+}
