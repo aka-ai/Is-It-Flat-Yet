@@ -4,10 +4,8 @@ import { renderHistoricData } from './Map/BaseMapHelper'
 class Graph extends Component {
   constructor(props) {
     super(props)
-    this.state = { historyData: '', isLoading: true }
   }
 
- 
   render() {
     let data
     if (this.props.entityData) {
@@ -15,8 +13,7 @@ class Graph extends Component {
     } else {
       data = renderHistoricData(this.props.usCountryData)
     }
-    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths, usCountryData } = data
-    console.log('usCountryData', this.props)
+    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = data
     const axisStyle = {
       axisLabel: { fontSize: 8, padding: 10 },
       tickLabels: { fontSize: 6, padding: 3 },
@@ -26,8 +23,9 @@ class Graph extends Component {
       ["Delta", [deltaConfirmed, deltaDeaths]]
     ]
     //list of color names: https://www.w3schools.com/colors/colors_names.asp
-    const colors = [['darkcyan', 'thistle'], ['gold', 'darkslateblue']]
+    const colors = [['plum', 'darkcyan'], ['orange', 'darkslateblue']]
     return (
+
       <div className="graph-container">
         <h1>Graph</h1>
         {typesOfGraph.map((category, categoryIdx) => {

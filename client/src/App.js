@@ -25,7 +25,6 @@ class App extends Component {
     const data = await firebase.getData()
     const usCountryData = await firebase.getHistoryData("us")
     this.setState({ data: data, usCountryData })
-    console.log('from App', this.state.usCountryData)
   }
 
   render() {
