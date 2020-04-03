@@ -50,10 +50,11 @@ class Graph extends Component {
     const colors = [['darkcyan', 'thistle'], ['gold', 'darkslateblue']]
 
     return (
-      <div className="graph">
+      <div className="graph-container">
         {typesOfGraph.map((category, categoryIdx) => {
 
           return (
+            <div className="graph">
             <VictoryChart scale={{ x: "time", y: "sqrt" }} width={300} height={300} key={categoryIdx} >
 
               <VictoryAxis
@@ -82,7 +83,8 @@ class Graph extends Component {
                   )
                 })}
               </VictoryGroup>
-            </VictoryChart  >)
+            </VictoryChart  >
+            </div>)
         })}
       </div>
     )
