@@ -147,7 +147,11 @@ export class BaseMap extends Component {
     }
     const data = this.props.data
     return (
-      <div className="Map-container">
+      <div className="dataContainer">
+        <Graph
+          entityData={this.state.entityData}
+        />
+        <div className="map">
         <Map
           google={this.props.google}
           initialCenter={USLocation}
@@ -172,11 +176,50 @@ export class BaseMap extends Component {
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
           >
-              <Graph
+            {/* <Graph
                 entityData={this.state.entityData}
-              />
+              /> */}
+            {
+              country === "US" ? (
+                <div className="infoWindow">
+                  <div className="infoWindowTitle">
+                    <h3>{displayName}</h3>
+                    <p>{population}</p>
+                  </div>
+                  <div className="infoWindowDetails">
+                    <p>
+                      {latestDeaths}{" "}
+                      {latestDeaths === 1 ? "Death" : "Deaths"}
+                    </p>
+                    <p>{latestConfirmed} Confirmed</p>
+                    {hospitalized === 0 ? (
+                      <p>{hospitalized} Hospitalized</p>
+                    ) : (
+                        <p></p>
+                      )}
+                    <p>{totalTestResults} Tests</p>
+                    {/* <p>{percapitaPercentage}% Per Capita</p> */}
+                  </div>
+                </div>
+              ) : (
+                  <div className="infoWindow">
+                    <div className="infoWindowTitle">
+                      <h3>{displayName}</h3>
+                    </div>
+                    <div className="infoWindowDetails">
+                      <p>
+                        {latestDeaths}{" "}
+                        {latestDeaths === 1 ? "Death" : "Deaths"}
+                      </p>
+                      <p>{latestConfirmed} Confirmed</p>
+                    </div>
+                  </div>
+                )
+            }
+
           </ InfoWindow>
         </Map>
+        </div>
       </div>
     );
   }

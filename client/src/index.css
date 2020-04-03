@@ -1,12 +1,12 @@
 body {
   font-family: Domine;
-  background-color: #a0c0c4;
+  background-color: #f0eded;
   margin: 0;
   padding: 0;
 }
 
 .header {
-  background-color: #e1dcdc;
+  background-color: #f0eded;
   z-index: 2;
   position: relative;
   top: 0;
@@ -35,15 +35,31 @@ body {
   align-items: center;
 }
 
-.Map-container {
+.dataContainer {
+  display: flex;
+  flex-direction: row;
+}
+.map {
+  position: absolute;
+  width: 79vw;
   height: 80vh;
-  width: auto;
-  position: relative;
+  top: 15vh;
+  left: 20vw;
+  margin: 0;
+  padding: 0;
+}
+
+.graph-container {
+  background-color: #f0eded;
+  height: 80vh;
+  width: 20vw;
+  margin: 0;
+  padding: 0;
 }
 .footer {
-  background-color: #a0c0c4;
+  background-color: #f0eded;
   z-index: 2;
-  position: relative;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -55,6 +71,7 @@ body {
   font-size: calc(1.5vh);
   color: #22162e;
   padding-top: 0.7vh;
+  top: 96vh;
 }
 
 .innerFooter {
@@ -67,11 +84,6 @@ a {
   text-decoration: none;
 }
 
-.graph {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 .responsive {
   max-width: 50%;
   height: auto;
@@ -117,7 +129,6 @@ a {
 .gm-style .gm-style-iw-t::after {
   /* background: rgb(39, 41, 40); */
   /* background-color: transparent; */
-
 }
 
 .bm-burger-button {
