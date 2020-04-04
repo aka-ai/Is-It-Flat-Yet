@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { VictoryChart, VictoryArea, VictoryGroup, VictoryAxis } from "victory"
+import { VictoryChart, VictoryArea, VictoryGroup, VictoryAxis, VictoryLabel } from "victory"
 import { renderHistoricData } from './Map/BaseMapHelper'
 class Graph extends Component {
-  constructor(props) {
-    super(props)
+
+  getLastDataPoint(dataSet) {
+    return dataSet[dataSet.length - 1]
   }
 
   render() {
@@ -15,45 +16,59 @@ class Graph extends Component {
     }
     const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = data
     const axisStyle = {
-      axisLabel: { fontSize: 8, padding: 10 },
-      tickLabels: { fontSize: 6, padding: 3 },
+      axisLabel: { fontSize: 20, padding: 18 },
+      tickLabels: { fontSize: 10, padding: 3 },
     }
-    const typesOfGraph = [
-      ["Accumulative", [confirmed, deaths]],
-      ["Delta", [deltaConfirmed, deltaDeaths]]
-    ]
+    const graphData = {
+      "Cumulative": {
+        confirmed: confirmed,
+        deaths: deaths
+      },
+      "Non-Cumulative": {
+        confirmed: deltaConfirmed,
+        deaths: deltaDeaths
+      }
+    }
+
     //list of color names: https://www.w3schools.com/colors/colors_names.asp
     const colors = [['plum', 'darkcyan'], ['orange', 'darkslateblue']]
+    // let idx = 0
+    // let innerIdx = -1
     return (
 
       <div className="graph-container">
-        <h1>Graph</h1>
-        {typesOfGraph.map((category, categoryIdx) => {
-
+        <h3>Graph</h3>
+        {Object.entries(graphData).map((statPair, idx) => {
           return (
-            <div className="graph" key={categoryIdx} >
-              <VictoryChart scale={{ x: "time", y: "sqrt" }} width={300} height={300} >
+            <div className="graph" key={idx} >
+              <VictoryChart scale={{ x: "time", y: "sqrt" }} width={400} height={400}  >
+                <VictoryLabel text={`${name}`} x={225} y={30} textAnchor="middle" />
+                <VictoryLabel text={`(${statPair[0]})`} x={225} y={45} textAnchor="middle" />
 
                 <VictoryAxis
                   style={axisStyle}
-                  label={`${name} ${category[0]}`}
+                // label="days since 100 confirmed" //TODO
                 />
                 <VictoryAxis dependentAxis
                   style={axisStyle}
                 />
                 <VictoryGroup >
-                  {category[1].map((dataType, dataTypeIdx) => {
+                  {Object.entries(statPair[1]).map((dataSetPair, innerIdx) => {
                     return (
-                      <VictoryArea
-                        style={{
-                          data: {
-                            fill: colors[categoryIdx][dataTypeIdx],
-                          }
-                        }}
-                        interpolation={"natural"}
-                        data={dataType}
-                        key={dataTypeIdx}
-                      />
+                      <VictoryGroup key={innerIdx}>
+                        <VictoryArea
+                          style={{
+                            data: {
+                              fill: innerIdx % 2 === 0 ? colors[idx][innerIdx] : colors[idx][innerIdx]
+                            }
+                          }}
+                          interpolation={"natural"}
+                          data={dataSetPair[1]}
+                        />
+                        <VictoryLabel
+                          text={dataSetPair[0]}
+                          datum={this.getLastDataPoint(dataSetPair[1])} textAnchor="start" />
+                      </VictoryGroup>
                     )
                   })}
                 </VictoryGroup>
