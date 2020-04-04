@@ -32,8 +32,7 @@ class Graph extends Component {
 
     //list of color names: https://www.w3schools.com/colors/colors_names.asp
     const colors = [['plum', 'darkcyan'], ['orange', 'darkslateblue']]
-    // let idx = 0
-    // let innerIdx = -1
+
     return (
 
       <div className="graph-container">
@@ -67,7 +66,8 @@ class Graph extends Component {
                         />
                         <VictoryLabel
                           text={dataSetPair[0]}
-                          datum={this.getLastDataPoint(dataSetPair[1])} textAnchor="start" />
+                          datum={this.getLastDataPoint(dataSetPair[1])} textAnchor="end" 
+                          />
                       </VictoryGroup>
                     )
                   })}
