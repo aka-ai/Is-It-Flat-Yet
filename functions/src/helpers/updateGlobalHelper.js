@@ -1,6 +1,6 @@
 const parse = require("csv-parse/lib/sync");
 const dayjs = require("dayjs");
-const helpers = require("./utils");
+const utils = require("./utils");
 
 module.exports.updateGlobalHelper = async (
   summaryTemp,
@@ -17,11 +17,11 @@ module.exports.updateGlobalHelper = async (
   for (const row of updateData) {
     const countryOrRegion = row["Country/Region"];
     const stateOrProvince = row["Province/State"];
-    const displayName = helpers.getDisplayName(
+    const displayName = utils.getDisplayName(
       stateOrProvince,
       countryOrRegion
     );
-    const entityId = helpers.getEntityId(stateOrProvince, countryOrRegion);
+    const entityId = utils.getEntityId(stateOrProvince, countryOrRegion);
 
     // Setup the new document attrs to merge in
     const update = historyTemp[entityId] || {
@@ -37,9 +37,9 @@ module.exports.updateGlobalHelper = async (
       deltaDeaths: []
     };
 
-    const { mostRecent, lastUpdated } = helpers.getStats(row);
+    const { mostRecent, lastUpdated } = utils.getStats(row);
 
-    update[`latest${helpers.capitalize(category)}`] = parseInt(mostRecent);
+    update[`latest${utils.capitalize(category)}`] = parseInt(mostRecent);
     update.lastUpdated = lastUpdated;
 
     if (!historyTemp[entityId]) {
@@ -63,13 +63,16 @@ module.exports.updateGlobalHelper = async (
         // in which case we skip
         if (row[priorDay] && row[date]) {
           const delta = parseInt(row[date]) - parseInt(row[priorDay]);
-          historyTemp[entityId][`delta${helpers.capitalize(category)}`].push({
+          historyTemp[entityId][`delta${utils.capitalize(category)}`].push({
             date: date,
             val: delta
           });
         }
         if (row[date]) {
-          historyTemp[entityId][category].push({ date: date, val: row[date] });
+          historyTemp[entityId][category].push({ 
+            date: date, 
+            val: parseInt(row[date])
+          });
         }
       }
     });

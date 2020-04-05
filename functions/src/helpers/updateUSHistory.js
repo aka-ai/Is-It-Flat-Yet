@@ -8,12 +8,10 @@ module.exports.updateUSHistory = rawData => {
   const ctpTemp = {};
   for (const row of rawData) {
     const date = helpers.getDate(row["date"]);
-    const { state, positiveIncrease } = row;
-    // if positiveIncrease is zero, we assume it's a bad datapoint and skip it, but only temporarily
-    if (
-      !helpers.isTempPeriodOver("07-01-2020", "MM-DD-YYYY") &&
-      positiveIncrease
-    ) {
+    const { state, positive } = row;
+    // if positive is zero, we assume it's a bad datapoint and skip it
+    // we can revert later when there is a lot of data
+    if (positive) {
       const countryOrRegion = "US";
       const stateOrProvince = state;
       const displayName = helpers.getDisplayName(
@@ -29,6 +27,8 @@ module.exports.updateUSHistory = rawData => {
         stateOrProvince,
         lat: statesLatLng[state][0],
         lng: statesLatLng[state][1],
+        latestConfirmed: 0,
+        latestDeaths: 0,
         confirmed: [],
         negative: [],
         hospitalized: [],
@@ -56,8 +56,13 @@ module.exports.updateUSHistory = rawData => {
       };
       // push if there's a value
       for (let attr in attrMap) {
-        if (row[attr]) update[attrMap[attr]].push({ [date]: row[attr] });
+        if (row[attr]) update[attrMap[attr]].push({
+          date,
+          val: row[attr]
+        });
       }
+      if (row.positive > update.latestConfirmed) update.latestConfirmed = row.positive
+      if (row.death > update.latestDeaths) update.latestDeaths = row.death;
 
       ctpTemp[entityId] = update;
     }

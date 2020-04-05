@@ -33,7 +33,7 @@ const run = async () => {
   }
 
   //get ctp history data for US States
-  httpOptions.url = "https://covidtracking.com/api/states/daily";
+  httpOptions.url = "https://covidtracking.com/api/v1/states/daily.json";
   const covidTrackingResponse = await axios(httpOptions);
 
   if (
