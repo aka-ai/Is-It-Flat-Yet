@@ -58,10 +58,12 @@ class Graph extends Component {
 
                 <VictoryAxis
                   style={axisStyle}
+                  fixLabelOverlap={true}
                 // label="days since 100 confirmed" //TODO
                 />
                 <VictoryAxis dependentAxis
                   style={axisStyle}
+                  fixLabelOverlap={true}
                 />
                 <VictoryGroup >
                   {Object.entries(statPair[1]).map((dataSetPair, innerIdx) => {
