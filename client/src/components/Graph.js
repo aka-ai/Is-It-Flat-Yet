@@ -26,7 +26,7 @@ class Graph extends Component {
     } else {
       data = renderHistoricData(this.props.usCountryData)
     }
-    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths, latestConfirmed, latestDeaths, lastUpdated } = data
+    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths} = data
     const axisStyle = {
       axisLabel: { fontSize: 20, padding: 18 },
       tickLabels: { fontSize: 13, padding: 20 },
@@ -82,10 +82,7 @@ class Graph extends Component {
                   })}
                   
                 </VictoryGroup>
-                <VictoryLegend x={125} y={50}
-                  // title="Legend"
-                  // centerTitle
-
+                <VictoryLegend 
                   orientation="vertical"
                   x={400}
                   y={80}
