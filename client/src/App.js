@@ -4,7 +4,6 @@ import Firebase from './components/Firebase';
 import Header from './components/header'
 import BaseMap from './components/Map/BaseMap'
 import Footer from './components/Footer'
-import Graph from './components/Graph'
 
 const firebase = new Firebase()
 
@@ -35,16 +34,9 @@ class App extends Component {
 
     let lastUpdated
     if (this.state.data.globalData) lastUpdated = this.state.data.globalData.countries[0]["lastUpdated"]
-
-    console.log('rendering')
     return (
       <div className="App">
         <Header lastUpdated={lastUpdated} />
-        {/* <Graph 
-          entityData={this.state.historicData}
-          usCountryData={this.props.usCountryData}
-          className="globalGraph"
-          /> */}
           <div className="cushion"></div>
         <BaseMap
           data={this.state.data}
