@@ -1,4 +1,4 @@
-import {blackList} from './BaseMapConstants'
+import { blackList } from './BaseMapConstants'
 
 export const changeLatLong = (data) => {
   const { countryOrRegion } = data
@@ -20,35 +20,35 @@ export const isBlackList = (data) => {
   return (
     blackList.indexOf(data.cityStateOrProvinceId) > -1 ||
     (blackList.indexOf(data.countryOrRegion.toLowerCase()) > -1 &&
-    !data.stateOrProvince)
-  );;
+      !data.stateOrProvince)
+  );
 }
 
-export const renderHistoricData = (input ) => {
+export const renderHistoricData = (input) => {
   if (JSON.stringify(input) === '{}') {
-    return {name: '', deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: []}
+    return { name: '', deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: [] }
   }
-  const name = input.displayName
   const mapKeys = { deltaDeaths: [], deltaConfirmed: [], confirmed: [], deaths: [] }
   Object.keys(mapKeys).forEach(category => {
-      let dayOfYear, value
-      input[category].forEach(d => {
-        if (input.countryOrRegion === "US" && input.entityId !== 'us') {
-          dayOfYear = new Date(Object.keys(d)[0])
-          value = Object.values(d)[0] || 0
-        } else {
-          dayOfYear = new Date(d.date)
-          value = parseInt(d.val)
-        }
-        mapKeys[category].push({ x: dayOfYear, y: value })
-      })
+    let dayOfYear, value
+    input[category].forEach(d => {
+
+      dayOfYear = new Date(d.date)
+      value = parseInt(d.val)
+      mapKeys[category].push({ x: dayOfYear, y: value })
     })
+  })
+
 
   return {
-    name: name,
     deltaDeaths: mapKeys.deltaDeaths,
     deltaConfirmed: mapKeys.deltaConfirmed,
     confirmed: mapKeys.confirmed,
     deaths: mapKeys.deaths,
+    name: input.displayName,
+    latestConfirmed: input.latestConfirmed,
+    latestDeaths: input.latestDeaths,
+    lastUpdated: input.lastUpdated,
+
   }
 }

@@ -129,8 +129,8 @@ export class BaseMap extends Component {
       })
     }
   }
-
   render() {
+    
     let displayName, country, latestConfirmed, latestDeaths, hospitalized, population, totalTestResults, entityId
 
     if (this.state.clickedMarkerKey) {
@@ -146,11 +146,15 @@ export class BaseMap extends Component {
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
     const data = this.props.data
+    console.log(this.props.data)
     return (
       <div className="dataContainer">
         <Graph
           entityData={this.state.entityData}
           usCountryData={this.props.usCountryData}
+          latestConfirmed={latestConfirmed}
+          isLoading={this.props.isLoading}
+
         />
         <div className="map">
         <Map
