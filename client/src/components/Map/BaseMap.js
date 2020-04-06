@@ -57,11 +57,8 @@ export class BaseMap extends Component {
     if (data) {
       return data.map((entity, idx) => {
         if (isBlackList(entity)) return
-        changeLatLong(data)
         const {
           displayName,
-          lat,
-          lng,
           latestConfirmed,
           latestDeaths,
           countryOrRegion,
@@ -71,6 +68,7 @@ export class BaseMap extends Component {
           entityId,
           stateAbbreviation,
         } = entity
+        const { lat, lng } = changeLatLong(entity)
 
         if (!latestDeaths) {
           // We are focusing on deaths, don't render markers without deaths for now
@@ -146,7 +144,6 @@ export class BaseMap extends Component {
       totalTestResults = numeral(this.state.clickedMarkerKey.totalTestResults).format('0,0')
     }
     const data = this.props.data
-    console.log(this.props.data)
     return (
       <div className="dataContainer">
         <Graph
@@ -161,7 +158,7 @@ export class BaseMap extends Component {
           google={this.props.google}
           initialCenter={USLocation}
           zoom={4}
-          maxZoom={7}
+          maxZoom={8}
           minZoom={2.5}
           streetViewControl={false}
           mapTypeControl={false}

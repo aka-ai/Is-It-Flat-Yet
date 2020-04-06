@@ -1,19 +1,24 @@
 import { blackList } from './BaseMapConstants'
 
 export const changeLatLong = (data) => {
-  const { countryOrRegion } = data
-  if (countryOrRegion === 'Belize') {
-    data.lat = 17.1899
-    data.lon = -88.4976
+  const { entityId } = data
+  if (entityId === 'belize') {
+    return { lat: 17.1899, lng: -88.4976}
   }
-  if (countryOrRegion === 'Barbados') {
-    data.lat = 13.1939
-    data.lon = -59.5432
+  if (entityId === 'barbados') {
+    return { lat: 13.1939, lng: -59.5432}
   }
-  if (countryOrRegion === 'Malaysia') {
-    data.lat = 4.2105
-    data.lon = 101.9758
+  if (entityId === 'malaysia') {
+    return { lat: 3.1390, lng: 101.6869 }
   }
+  if (entityId === 'france-st-martin') {
+    return { lat: 18.1218, lng: - 63.0357}
+  }
+  if (entityId === "sint-maarten-netherlands") {
+    return { lat: 18.0255, lng: -63.0548 }
+  }
+
+  return {lat: data.lat, lng: data.lng }
 }
 
 export const isBlackList = (data) => {
