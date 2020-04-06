@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const helpers = require("./utils");
 const { statesLatLng } = require("./constants");
 
@@ -8,10 +9,10 @@ module.exports.updateUSHistory = rawData => {
   const ctpTemp = {};
   for (const row of rawData) {
     const date = helpers.getDate(row["date"]);
-    const { state, positive } = row;
-    // if positive is zero, we assume it's a bad datapoint and skip it
+    const { state, positive, positiveIncrease } = row;
+    // if positive or positiveIncrease is zero, we assume it's a bad datapoint and skip it
     // we can revert later when there is a lot of data
-    if (positive) {
+    if (positive && positiveIncrease > 0) {
       const countryOrRegion = "US";
       const stateOrProvince = state;
       const displayName = helpers.getDisplayName(
@@ -29,6 +30,7 @@ module.exports.updateUSHistory = rawData => {
         lng: statesLatLng[state][1],
         latestConfirmed: 0,
         latestDeaths: 0,
+        firstDayWith100Confirmed: null,
         confirmed: [],
         negative: [],
         hospitalized: [],
@@ -54,16 +56,26 @@ module.exports.updateUSHistory = rawData => {
         totalTestResults: "totalTestResults",
         fips: "fips"
       };
-      // push if there's a value
       for (let attr in attrMap) {
+        // push if there's a value
         if (row[attr]) update[attrMap[attr]].push({
           date,
           val: row[attr]
         });
+
+        // calculate first day w 100 confirmed
+        if (attr === 'positive' && parseInt(row[attr]) >= 100) {
+          if (!update.firstDayWith100Confirmed) {
+            update.firstDayWith100Confirmed = date
+          } else {
+            if (dayjs(date) < dayjs(update.firstDayWith100Confirmed)) {
+              update.firstDayWith100Confirmed = date;
+            }
+          }
+        }
       }
       if (row.positive > update.latestConfirmed) update.latestConfirmed = row.positive
       if (row.death > update.latestDeaths) update.latestDeaths = row.death;
-
       ctpTemp[entityId] = update;
     }
   }

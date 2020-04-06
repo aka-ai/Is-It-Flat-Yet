@@ -55,25 +55,37 @@ module.exports.updateGlobalHelper = async (
     // eslint-disable-next-line no-loop-func
     Object.keys(row).map(date => {
       if (
-        ["Province/State", "Country/Region", "Lat", "Long"].indexOf(date) === -1
+        ["Province/State", "Country/Region", "Lat", "Long"].indexOf(date) ===
+          -1 &&
+        row[date] &&
+        parseInt(row[date]) > 0
       ) {
+        // get first day w 100 confirmed
+        if (category === 'confirmed' && parseInt(row[date]) >= 100) {
+          if (!historyTemp[entityId].firstDayWith100Confirmed) {
+            historyTemp[entityId].firstDayWith100Confirmed = date;
+          } else {
+            if (dayjs(date) < dayjs(historyTemp[entityId].firstDayWith100Confirmed)) {
+              historyTemp[entityId].firstDayWith100Confirmed = date;
+            }
+          }
+        }
+
+        // get deltas
         let priorDay = dayjs(dayjs(date).subtract(1, "days")).format("M/D/YY");
-        // JHU provides cumulative data so row[date] should always have a value,
-        // but we check anyway to be safe, i.e. if they forget to put a value in
-        // in which case we skip
-        if (row[priorDay] && row[date]) {
+        if (row[priorDay] && parseInt(row[date]) >= parseInt(row[priorDay])) {
           const delta = parseInt(row[date]) - parseInt(row[priorDay]);
           historyTemp[entityId][`delta${utils.capitalize(category)}`].push({
             date: date,
             val: delta
           });
         }
-        if (row[date]) {
-          historyTemp[entityId][category].push({ 
-            date: date, 
-            val: parseInt(row[date])
-          });
-        }
+
+        // get history
+        historyTemp[entityId][category].push({
+          date: date,
+          val: parseInt(row[date])
+        });
       }
     });
 
