@@ -2,6 +2,10 @@ export const USLocation = {
   lat: 39.0119,
   lng: -98.4842
 };
+export const PortugalLocation = {
+  lat: 39.3999,
+  lng: -8.2245
+}
 
 export const blackList = [
          "us",
