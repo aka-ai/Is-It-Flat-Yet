@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
-import { mapStyle, USLocation, PortugalLocation } from "./BaseMapConstants";
+import { Map, GoogleApiWrapper } from 'google-maps-react';
+import { mapStyle, USLocation } from "./BaseMapConstants";
 import MarkerW from './MarkerW'
 import { isBlackList, changeLatLong } from './BaseMapHelper'
 import { mildIcon, mediumIcon, severeIcon } from './MapIcons'
+import InfoWindowW from './InfoWindowW'
 import numeral from 'numeral';
 import Graph from '../Graph'
 
@@ -15,12 +16,20 @@ export class BaseMap extends Component {
       showingInfoWindow: false,
       activeMarker: null,
       clickedMarkerKey: null,
-      lastValidPan: { lat: PortugalLocation.lat, lng: PortugalLocation.lng },
+      lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
       valid: true,
-      entityData: null
+      entityData: null,
+      graphType: "Cumulative"
     }
     this.limitVerticalPan = this.limitVerticalPan.bind(this)
     this.onMarkerClick = this.onMarkerClick.bind(this)
+    this.onGraphClick = this.onGraphClick.bind(this)
+  }
+
+  onGraphClick() {
+    console.log('clicked')
+    const type = this.state.graphType === 'Cumulative' ? 'Non-Cumulative' : 'Cumulative'
+    this.setState({ graphType: type })
   }
 
   onMapClick = (props) => {
@@ -53,7 +62,7 @@ export class BaseMap extends Component {
     })
   }
 
-  renderMarkers = (data) => {
+  renderMarkers(data) {
     if (data) {
       return data.map((entity, idx) => {
         if (isBlackList(entity)) return
@@ -147,83 +156,66 @@ export class BaseMap extends Component {
     return (
       <React.Fragment>
         <div className="dataContainer">
-        <div className="map">
-          <Map
-            google={this.props.google}
-            initialCenter={PortugalLocation}
-            zoom={2}
-            maxZoom={8}
-            minZoom={2.5}
-            streetViewControl={false}
-            mapTypeControl={false}
-            zoomControl={false}
-            backgroundColor={"black"}
-            fullscreenControl={false}
-            containerStyle={{
-              position: 'relative',
-              width: '100vw',
-              height: '50vh'
-            }}
-            styles={mapStyle}
-            gestureHandling={"greedy"}
-            onClick={this.onMapClick}
-            onDragend={this.limitVerticalPan}
-            entityId={entityId}
-          >
-            {data.usData && this.renderMarkers(data.usData.states)}
-            {data.globalData &&
-              this.renderMarkers(data.globalData.countries)}
-            < InfoWindow
-              marker={this.state.activeMarker}
-              visible={this.state.showingInfoWindow}
+          <div className="map">
+            <Map
+              google={this.props.google}
+              initialCenter={USLocation}
+              zoom={4}
+              maxZoom={8}
+              minZoom={2.5}
+              streetViewControl={false}
+              mapTypeControl={false}
+              zoomControl={false}
+              backgroundColor={"black"}
+              fullscreenControl={false}
+              containerStyle={{
+                position: 'relative',
+                width: '100vw',
+                height: '80vh'
+              }}
+              styles={mapStyle}
+              gestureHandling={"greedy"}
+              onClick={this.onMapClick}
+              onDragend={this.limitVerticalPan}
+              entityId={entityId}
             >
-              {
-                country === "US" ? (
-                  <div className="infoWindow">
-                    <div className="infoWindowTitle">
-                      <h3>{displayName}</h3>
-                      <p>{population}</p>
-                    </div>
-                    <div className="infoWindowDetails">
-                      <p>
-                        {latestDeaths}{" "}
-                        {latestDeaths === 1 ? "Death" : "Deaths"}
-                      </p>
-                      <p>{latestConfirmed} Confirmed</p>
-                      {hospitalized === 0 ? (
-                        <p>{hospitalized} Hospitalized</p>
-                      ) : (
-                          <p></p>
-                        )}
-                      <p>{totalTestResults} Tests</p>
-                    </div>
+              {data.usData && this.renderMarkers(data.usData.states)}
+              {data.globalData &&
+                this.renderMarkers(data.globalData.countries)}
+              < InfoWindowW
+                marker={this.state.activeMarker}
+                visible={this.state.showingInfoWindow}
+              >
+                <div className="infoWindow">
+                  <div className="infoWindowTitle">
+                    <h3>{displayName}</h3>
+                    {population ? (<p>Population {population}</p>) : <p></p>}
                   </div>
-                ) : (
-                    <div className="infoWindow">
-                      <div className="infoWindowTitle">
-                        <h3>{displayName}</h3>
-                      </div>
-                      <div className="infoWindowDetails">
-                        <p>
-                          {latestDeaths}{" "}
-                          {latestDeaths === 1 ? "Death" : "Deaths"}
-                        </p>
-                        <p>{latestConfirmed} Confirmed</p>
-                      </div>
-                    </div>
-                  )
-              }
+                  <button onClick={this.onGraphClick}>Show {this.state.graphType === 'Cumulative' ? "Non-Cumulative" : "Cumulative"} Graph </button>
+                  <Graph
+                    entityData={this.state.entityData}
+                    usCountryData={this.props.usCountryData}
+                    latestConfirmed={latestConfirmed}
+                    isLoading={this.props.isLoading}
+                    graphType={this.state.graphType}
 
-            </ InfoWindow>
-          </Map>
-        </div>
-        <Graph
-          entityData={this.state.entityData}
-          usCountryData={this.props.usCountryData}
-          latestConfirmed={latestConfirmed}
-          isLoading={this.props.isLoading}
+                  />
+                  <div className="infoWindowDetails">
+                    <p>
+                      {latestDeaths}{" "}
+                      {latestDeaths === 1 ? "Death" : "Deaths"}
+                    </p>
+                    <p>{latestConfirmed} Confirmed</p>
+                    {hospitalized && hospitalized !== "0" ? (
+                      <p>{hospitalized} Hospitalized</p>
+                    ) : <p></p>}
+                    {totalTestResults ? (<p>{totalTestResults} Tests</p>) : <p></p>}
+                  </div>
+                </div>
+              </ InfoWindowW>
+            </Map>
+          </div>
 
-        />
         </div>
       </React.Fragment>
     );
@@ -233,47 +225,3 @@ export class BaseMap extends Component {
 export default GoogleApiWrapper({
   apiKey: "AIzaSyD_K7emGffTR-zuCTIbDjRIfF4P_LwUEOs"
 })(BaseMap)
-
-//   < InfoWindow
-// marker = { this.state.activeMarker }
-// visible = { this.state.showingInfoWindow }
-//   >
-//   <Graph firebase={firebase} displayName={displayName} />
-// {
-//   country === "US" ? (
-//     <div className="infoWindow">
-//       <div className="infoWindowTitle">
-//         <h3>{displayName}</h3>
-//         <p>{population}</p>
-//       </div>
-//       <div className="infoWindowDetails">
-//         <p>
-//           {latestDeaths}{" "}
-//           {latestDeaths === 1 ? "Death" : "Deaths"}
-//         </p>
-//         <p>{latestConfirmed} Confirmed</p>
-//         {hospitalized === 0 ? (
-//           <p>{hospitalized} Hospitalized</p>
-//         ) : (
-//             <p></p>
-//           )}
-//         <p>{totalTestResults} Tests</p>
-//         {/* <p>{percapitaPercentage}% Per Capita</p> */}
-//       </div>
-//     </div>
-//   ) : (
-//       <div className="infoWindow">
-//         <div className="infoWindowTitle">
-//           <h3>{displayName}</h3>
-//         </div>
-//         <div className="infoWindowDetails">
-//           <p>
-//             {latestDeaths}{" "}
-//             {latestDeaths === 1 ? "Death" : "Deaths"}
-//           </p>
-//           <p>{latestConfirmed} Confirmed</p>
-//         </div>
-//       </div>
-//     )
-// }
-//           </InfoWindow >
