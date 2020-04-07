@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
-import { mapStyle, USLocation } from "./BaseMapConstants";
+import { mapStyle, USLocation, PortugalLocation } from "./BaseMapConstants";
 import MarkerW from './MarkerW'
 import { isBlackList, changeLatLong } from './BaseMapHelper'
 import { mildIcon, mediumIcon, severeIcon } from './MapIcons'
@@ -15,7 +15,7 @@ export class BaseMap extends Component {
       showingInfoWindow: false,
       activeMarker: null,
       clickedMarkerKey: null,
-      lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
+      lastValidPan: { lat: PortugalLocation.lat, lng: PortugalLocation.lng },
       valid: true,
       entityData: null
     }
@@ -128,7 +128,7 @@ export class BaseMap extends Component {
     }
   }
   render() {
-    
+
     let displayName, country, latestConfirmed, latestDeaths, hospitalized, population, totalTestResults, entityId
 
     if (this.state.clickedMarkerKey) {
@@ -145,68 +145,44 @@ export class BaseMap extends Component {
     }
     const data = this.props.data
     return (
-      <div className="dataContainer">
-        <Graph
-          entityData={this.state.entityData}
-          usCountryData={this.props.usCountryData}
-          latestConfirmed={latestConfirmed}
-          isLoading={this.props.isLoading}
-
-        />
+      <React.Fragment>
+        <div className="dataContainer">
         <div className="map">
-        <Map
-          google={this.props.google}
-          initialCenter={USLocation}
-          zoom={4}
-          maxZoom={8}
-          minZoom={2.5}
-          streetViewControl={false}
-          mapTypeControl={false}
-          zoomControl={false}
-          backgroundColor={"black"}
-          fullscreenControl={false}
-          styles={mapStyle}
-          gestureHandling={"greedy"}
-          onClick={this.onMapClick}
-          onDragend={this.limitVerticalPan}
-          entityId={entityId}
-        >
-          {data.usData && this.renderMarkers(data.usData.states)}
-          {data.globalData &&
-            this.renderMarkers(data.globalData.countries)}
-          < InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
+          <Map
+            google={this.props.google}
+            initialCenter={PortugalLocation}
+            zoom={2}
+            maxZoom={8}
+            minZoom={2.5}
+            streetViewControl={false}
+            mapTypeControl={false}
+            zoomControl={false}
+            backgroundColor={"black"}
+            fullscreenControl={false}
+            containerStyle={{
+              position: 'relative',
+              width: '100vw',
+              height: '50vh'
+            }}
+            styles={mapStyle}
+            gestureHandling={"greedy"}
+            onClick={this.onMapClick}
+            onDragend={this.limitVerticalPan}
+            entityId={entityId}
           >
-            {/* <Graph
-                entityData={this.state.entityData}
-              /> */}
-            {
-              country === "US" ? (
-                <div className="infoWindow">
-                  <div className="infoWindowTitle">
-                    <h3>{displayName}</h3>
-                    <p>{population}</p>
-                  </div>
-                  <div className="infoWindowDetails">
-                    <p>
-                      {latestDeaths}{" "}
-                      {latestDeaths === 1 ? "Death" : "Deaths"}
-                    </p>
-                    <p>{latestConfirmed} Confirmed</p>
-                    {hospitalized === 0 ? (
-                      <p>{hospitalized} Hospitalized</p>
-                    ) : (
-                        <p></p>
-                      )}
-                    <p>{totalTestResults} Tests</p>
-                    {/* <p>{percapitaPercentage}% Per Capita</p> */}
-                  </div>
-                </div>
-              ) : (
+            {data.usData && this.renderMarkers(data.usData.states)}
+            {data.globalData &&
+              this.renderMarkers(data.globalData.countries)}
+            < InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}
+            >
+              {
+                country === "US" ? (
                   <div className="infoWindow">
                     <div className="infoWindowTitle">
                       <h3>{displayName}</h3>
+                      <p>{population}</p>
                     </div>
                     <div className="infoWindowDetails">
                       <p>
@@ -214,15 +190,42 @@ export class BaseMap extends Component {
                         {latestDeaths === 1 ? "Death" : "Deaths"}
                       </p>
                       <p>{latestConfirmed} Confirmed</p>
+                      {hospitalized === 0 ? (
+                        <p>{hospitalized} Hospitalized</p>
+                      ) : (
+                          <p></p>
+                        )}
+                      <p>{totalTestResults} Tests</p>
                     </div>
                   </div>
-                )
-            }
+                ) : (
+                    <div className="infoWindow">
+                      <div className="infoWindowTitle">
+                        <h3>{displayName}</h3>
+                      </div>
+                      <div className="infoWindowDetails">
+                        <p>
+                          {latestDeaths}{" "}
+                          {latestDeaths === 1 ? "Death" : "Deaths"}
+                        </p>
+                        <p>{latestConfirmed} Confirmed</p>
+                      </div>
+                    </div>
+                  )
+              }
 
-          </ InfoWindow>
-        </Map>
+            </ InfoWindow>
+          </Map>
         </div>
-      </div>
+        <Graph
+          entityData={this.state.entityData}
+          usCountryData={this.props.usCountryData}
+          latestConfirmed={latestConfirmed}
+          isLoading={this.props.isLoading}
+
+        />
+        </div>
+      </React.Fragment>
     );
   }
 }
