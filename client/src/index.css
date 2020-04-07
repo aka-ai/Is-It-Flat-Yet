@@ -100,7 +100,6 @@ a {
 }
 @media screen and (max-width: 992px){
   .infoWindow {
-  /* width: 50vw; */
   max-height: 70vw;
   min-width: 40vw;
   }
@@ -121,7 +120,7 @@ a {
 .infoWindowDetails {
   text-align: right;
   margin-right: 3.2vw;
-  font-weight: 400;
+  font-weight: 420;
 }
 
 .Data {

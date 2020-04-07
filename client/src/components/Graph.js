@@ -52,7 +52,7 @@ class Graph extends Component {
       <div className="graph-container">
         <div className="graph"  >
           <VictoryChart scale={{ x: "time", y: "sqrt" }} width={400} height={300} >
-            <VictoryLabel text={`(${this.props.graphType})`} x={200} y={28} textAnchor="middle" />
+            <VictoryLabel text={`(${this.props.graphType})`} x={200} y={28} textAnchor="middle" style={{ fill: 'darkslategray'}} />
 
             <VictoryAxis
               style={axisStyle}
@@ -90,8 +90,6 @@ class Graph extends Component {
             />
           </VictoryChart  >
         </div>
-        {/* ) */}
-        {/* })} */}
       </div>
     )
   }
