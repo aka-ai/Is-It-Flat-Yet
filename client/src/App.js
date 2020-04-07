@@ -37,7 +37,6 @@ class App extends Component {
     return (
       <div className="App">
         <Header lastUpdated={lastUpdated} />
-          <div className="cushion"></div>
         <BaseMap
           data={this.state.data}
           firebase={firebase}
