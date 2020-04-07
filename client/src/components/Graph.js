@@ -12,13 +12,12 @@ class Graph extends Component {
         maxY = set.y
       }
     }
-    // console.log(new Date(lastUpdated), maxY )
     return { x: new Date(), y: maxY }
   }
 
   render() {
     if (this.props.isLoading) {
-      return <div>Loading</div>
+      return <div style={{ height: 304}}>Loading</div>
     }
     let data
     if (this.props.entityData) {
@@ -28,8 +27,8 @@ class Graph extends Component {
     }
     const { name, deltaDeaths, deltaConfirmed, confirmed, deaths} = data
     const axisStyle = {
-      axisLabel: { fontSize: 20, padding: 18 },
-      tickLabels: { fontSize: 13, padding: 20 },
+      axisLabel: { fontSize: 12, padding: 12 },
+      tickLabels: { fontSize: 12, padding: 10 },
 
     }
     const graphData = {
@@ -52,9 +51,9 @@ class Graph extends Component {
         {Object.entries(graphData).map((statPair, idx) => {
           return (
             <div className="graph" key={idx} >
-              <VictoryChart scale={{ x: "time", y: "sqrt" }} width={500} height={400} padding={100}  >
-                <VictoryLabel text={`${name}`} x={250} y={60} textAnchor="middle" />
-                <VictoryLabel text={`(${statPair[0]})`} x={250} y={80} textAnchor="middle" />
+              <VictoryChart scale={{ x: "time", y: "sqrt" }} width={400} height={300}  >
+                <VictoryLabel text={`${name}`} x={200} y={20} textAnchor="middle" />
+                <VictoryLabel text={`(${statPair[0]})`} x={200} y={35} textAnchor="middle" />
 
                 <VictoryAxis
                   style={axisStyle}
@@ -84,9 +83,9 @@ class Graph extends Component {
                 </VictoryGroup>
                 <VictoryLegend 
                   orientation="vertical"
-                  x={400}
-                  y={80}
-                  style={{ title: { fontSize: 3 } }}
+                  x={60}
+                  y={50}
+                  style={{ title: { fontSize: 3 }}}
                   data={[
                     { name: "Confirmed", symbol: { fill: colors[idx][0] } },
                     { name: "Deaths", symbol: { fill: colors[idx][1] } }
