@@ -24,8 +24,14 @@ class Graph extends Component {
     }
     const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = data
     const axisStyle = {
-      axisLabel: { fontSize: 12, padding: 12 },
-      tickLabels: { fontSize: 12, padding: 10 },
+      axisLabel: { fontSize: 12, padding: 12, stroke: "darkslategray", fontWeight: 300 },
+      tickLabels: { fontSize: 12, padding: 10, stroke: "darkslategray", fontWeight: 300},
+      ticks: {
+        stroke: "darkslategray"
+      },
+      axis: {
+        stroke: "darkslategray"
+      }
 
     }
 
@@ -41,7 +47,7 @@ class Graph extends Component {
     }
 
     //list of color names: https://www.w3schools.com/colors/colors_names.asp
-    const colors = [['plum', 'darkcyan'], ['orange', 'darkslateblue']]
+    const colors = [['plum', 'darkcyan'], ['orange', 'darkslateblue'], ['cadetblue', 'goldenrod']]
     return (
       <div className="graph-container">
         <div className="graph"  >
@@ -62,7 +68,7 @@ class Graph extends Component {
                   <VictoryArea
                     style={{
                       data: {
-                        fill: idx % 2 === 0 ? colors[0][idx] : colors[0][idx],
+                        fill: idx % 2 === 0 ? colors[2][idx] : colors[2][idx],
                       },
                     }}
                     interpolation={"natural"}
@@ -76,10 +82,10 @@ class Graph extends Component {
               orientation="vertical"
               x={60}
               y={50}
-              style={{ title: { fontSize: 3 } }}
+              style={{ labels: { fill: "darkslategray" }, title: { fill: "darkslategray" } }}
               data={[
-                { name: "Confirmed", symbol: { fill: colors[0][0] } },
-                { name: "Deaths", symbol: { fill: colors[1][1] } }
+                { name: "Confirmed", symbol: { fill: colors[2][0] } },
+                { name: "Deaths", symbol: { fill: colors[2][1] } }
               ]}
             />
           </VictoryChart  >

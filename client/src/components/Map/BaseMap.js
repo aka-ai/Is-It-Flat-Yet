@@ -96,7 +96,7 @@ export class BaseMap extends Component {
                 color: "#002D72",
                 fontSize: "3",
                 fontFamily: "roboto",
-                fontWeight: "bold"
+                fontWeight: "bold",
               }}
               icon={{
                 url: this.setIcon(latestDeaths)

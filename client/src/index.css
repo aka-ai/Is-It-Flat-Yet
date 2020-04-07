@@ -17,9 +17,6 @@ body {
 .header {
   background-color: #f0eded;
   position: relative;
-  /* height: 9vh; */
-  /* padding-top: calc(2.5vw + 0vh); */
-  /* padding-bottom: calc(1.5vw + 0.7vh); */
   margin-top: 2%;
   margin-bottom: 0.5%;
   display: flex;
@@ -42,10 +39,6 @@ body {
   align-items: center;
 }
 
-/* .dataContainer {
-  display: flex;
-  flex-direction: row;
-} */
 .map {
   position: relative;
   width: 100%;
@@ -58,20 +51,13 @@ body {
   border-radius: 15px;
   margin-top: 0.2%;
   margin-bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* z-index: 10; */
-  /* position: fixed; */
-  /* top: 25vh; */
-  /* left: 5vw; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  overflow: visible;
+
 }
 
- /* .graph {
-   width: 500;
-   height: 400;
-   padding: 100;
- } */
 
 .footer {
   background-color: #f0eded;
@@ -107,14 +93,25 @@ a {
 .infoWindow {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  background-color: #f0eded;
+  width: 25vw;
+  color: darkslategray;
+  overflow: visible;
 }
-
+@media screen and (max-width: 992px){
+  .infoWindow {
+  /* width: 50vw; */
+  max-height: 70vw;
+  min-width: 40vw;
+  }
+}
 .infoWindowTitle {
   text-align: center;
-  color: darkcyan;
-  line-height: 50%;
-  margin-bottom: 2em;
+  /* color: darkcyan; */
+  color: darkslategray;
+  /* line-height: 50%; */
+  margin: 0;
+  /* margin-bottom: 2em; */
 }
 
 .infoWindowTitle p {
@@ -122,8 +119,9 @@ a {
 }
 
 .infoWindowDetails {
-  margin-left: 1em;
-  margin-right: 1em;
+  text-align: right;
+  margin-right: 3.2vw;
+  font-weight: 400;
 }
 
 .Data {
@@ -146,19 +144,16 @@ transition: all 0.3s ease 0s;
 .gm-style .gm-style-iw {
   font-family: roboto;
   font-size: calc(3px + 1vmin);
-  /* display: block; */
-  /* color: white; */
-  /* background-color: rgb(39, 41, 40); */
-  font-weight: 400;
+  color: black;
+  font-weight: 450;
   letter-spacing: 0.12vh;
-  /* height: 20vh; */
-  /* background-color: transparent; */
+  background-color: #f0eded;
 }
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
 .gm-style .gm-style-iw-t::after {
-  /* background: rgb(39, 41, 40); */
-  /* background-color: transparent; */
+  background: #f0eded; 
+  background-color: #f0eded;
 }
 
 .bm-burger-button {
