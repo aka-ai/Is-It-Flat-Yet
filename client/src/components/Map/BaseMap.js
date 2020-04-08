@@ -36,6 +36,7 @@ export class BaseMap extends Component {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
+        graphType: "Cumulative"
       })
     }
   }
@@ -59,6 +60,7 @@ export class BaseMap extends Component {
       showingInfoWindow: true,
       clickedMarkerKey: markerProps,
       entityData: data,
+      graphType: "Cumulative"
     })
   }
 
