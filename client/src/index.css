@@ -42,7 +42,7 @@ body {
 .map {
   position: relative;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   z-index: 1;
 }
 
@@ -51,38 +51,42 @@ body {
   border-radius: 15px;
   margin-top: 0.2%;
   margin-bottom: 0;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: center; */
   overflow: visible;
-
 }
-
 
 .graphButton {
-	box-shadow:inset 0px 1px 0px 0px #ffffff;
-	background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
-	background-color:#ededed;
-	border-radius:6px;
-	border:1px solid #dcdcdc;
-	display:inline-block;
-	cursor:pointer;
-	color:#777777;
-	font-family: roboto;
-	font-size:13px;
-	/* font-weight:bold; */
-	padding:6px 24px;
-	text-decoration:none;
-  text-shadow:0px 1px 0px #ffffff;
+  box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+  background-color: #ededed;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  display: inline-block;
+  cursor: pointer;
+  color: darkslategray;
+  font-family: roboto;
+  font-size: 11px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #ffffff;
   outline: 0;
+  width: fit-content;
+  align-self: flex-end;
+  font-weight: 400;
+  margin-right: 1.6vw;
+
 }
 .graphButton:hover {
-	background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
-	background-color:#dfdfdf;
+  background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+  background-color: #dfdfdf;
 }
 .graphButton:active {
-	position:relative;
-  /* top:1px; */
+  position: relative;
+}
+
+@media screen and (max-width: 992px) {
+  .graphButton {
+    font-size: 8px;
+    margin-right: 4vw;
+  }
 }
 
 .footer {
@@ -120,23 +124,32 @@ a {
   display: flex;
   flex-direction: column;
   background-color: #f0eded;
-  width: 25vw;
+  width: 15vw;
   color: darkslategray;
   overflow: visible;
 }
-@media screen and (max-width: 992px){
+@media screen and (max-width: 992px) {
   .infoWindow {
-  max-height: 70vw;
-  min-width: 40vw;
+    height: fit-content;
+    width: fit-content;
+    max-width: 40vw;
+
+  }
+}
+@media screen and (max-width: 600) {
+ .infoWindow {
+    height: fit-content;
+    width: fit-content;
+    max-width: 40vw;
+
+
   }
 }
 .infoWindowTitle {
   text-align: center;
-  /* color: darkcyan; */
   color: darkslategray;
-  /* line-height: 50%; */
   margin: 0;
-  /* margin-bottom: 2em; */
+  line-height: 0.5vh;
 }
 
 .infoWindowTitle p {
@@ -145,26 +158,29 @@ a {
 
 .infoWindowDetails {
   text-align: right;
-  margin-right: 3.2vw;
+  margin-right: 1.8vw;
   font-weight: 420;
+}
+
+@media screen and (max-width: 992px) {
+  .infoWindowDetails {
+    margin-right: 4.5vw;
+  }
 }
 
 .Data {
   overflow: hidden;
 }
 
-button {
-border: none;
-background: #f0eded;
-color: rgb(41, 41, 41);
-/* font-weight: 100; */
-padding: 10px;
-/* text-transform: uppercase; */
-border-radius: 6px;
-display: inline-block;
-transition: all 0.3s ease 0s;
-
-}
+/* button {
+  border: none;
+  background: #f0eded;
+  color: rgb(41, 41, 41);
+  padding: 10px;
+  border-radius: 6px;
+  display: inline-block;
+  transition: all 0.3s ease 0s;
+} */
 
 .gm-style .gm-style-iw {
   font-family: roboto;
@@ -177,9 +193,29 @@ transition: all 0.3s ease 0s;
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
 .gm-style .gm-style-iw-t::after {
-  background: #f0eded; 
+  background: #f0eded;
   background-color: #f0eded;
 }
+
+/* .dot {
+  height: 1vh;
+  width: 1vh;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+  border: 1px solid #dcdcdc;
+  cursor: pointer;
+  margin: 5px;
+
+}
+
+.dot:hover {
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 1px 1px 1px 1px #a0bac5;
+  /* box-shadow: 0 5px 15px rgba(145, 92, 182, .4); */
+/* } */ 
 
 .bm-burger-button {
   position: fixed;

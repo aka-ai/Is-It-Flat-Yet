@@ -8,7 +8,6 @@ import InfoWindowW from './InfoWindowW'
 import numeral from 'numeral';
 import Graph from '../Graph'
 
-
 export class BaseMap extends Component {
   constructor(props) {
     super(props)
@@ -27,7 +26,6 @@ export class BaseMap extends Component {
   }
 
   onGraphClick() {
-    console.log('clicked')
     const type = this.state.graphType === 'Cumulative' ? 'Non-Cumulative' : 'Cumulative'
     this.setState({ graphType: type })
   }
