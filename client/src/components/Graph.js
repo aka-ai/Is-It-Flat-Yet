@@ -22,7 +22,7 @@ class Graph extends Component {
     } else {
       data = renderHistoricData(this.props.usCountryData)
     }
-    const { name, deltaDeaths, deltaConfirmed, confirmed, deaths } = data
+    const { deltaDeaths, deltaConfirmed, confirmed, deaths } = data
     const axisStyle = {
       axisLabel: { fontSize: 12, padding: 12, stroke: "darkslategray", fontWeight: 300 },
       tickLabels: { fontSize: 12, padding: 10, stroke: "darkslategray", fontWeight: 300},
