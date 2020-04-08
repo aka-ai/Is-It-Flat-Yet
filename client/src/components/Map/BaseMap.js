@@ -191,15 +191,14 @@ export class BaseMap extends Component {
                     <h3>{displayName}</h3>
                     {population ? (<p>Population {population}</p>) : <p></p>}
                   </div>
-                  <button onClick={this.onGraphClick}>Show {this.state.graphType === 'Cumulative' ? "Non-Cumulative" : "Cumulative"} Graph </button>
                   <Graph
                     entityData={this.state.entityData}
                     usCountryData={this.props.usCountryData}
                     latestConfirmed={latestConfirmed}
                     isLoading={this.props.isLoading}
                     graphType={this.state.graphType}
-
                   />
+                  <button onClick={this.onGraphClick} className="graphButton">Show {this.state.graphType === 'Cumulative' ? "Non-Cumulative" : "Cumulative"} Graph </button>
                   <div className="infoWindowDetails">
                     <p>
                       {latestDeaths}{" "}
