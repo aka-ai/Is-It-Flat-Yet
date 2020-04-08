@@ -1,15 +1,13 @@
 import React, { Component } from "react"
-// import redPin from '../mapIcons/red.png'
 import { mildIcon, mediumIcon, severeIcon } from "./Map/MapIcons";
-// import orangePin from '../mapIcons/orange.png'
-// import yellowPin from '../mapIcons/yellow.png'
+import dayjs from 'dayjs'
 
 class Header extends Component {
   render() {
-    // console.log('icons: ', mildIcon, mediumIcon, severeIcon)
+
     return (
       <div className="header">
-        <h1>Coronavirus Confirmed Deaths</h1>
+        <h2>Is It Flat Yet?</h2>
         <div className="headerInfo">
           <img className="responsive" alt="yellowPin" src={mildIcon} />
           <p>{"< 100 deaths"}</p>
@@ -18,7 +16,7 @@ class Header extends Component {
           <img className="responsive" alt="redPin" src={severeIcon} />
           <p>{"> 1,000 deaths"}</p>
         </div>
-        <p>Last Updated: {this.props.lastUpdated}</p>
+        <p>Last Updated: {dayjs(new Date()).format("M/D/YY")}</p>
       </div>
     )
   }
