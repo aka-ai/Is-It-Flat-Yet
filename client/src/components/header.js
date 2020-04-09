@@ -7,15 +7,8 @@ class Header extends Component {
 
     return (
       <div className="header">
-        <h2>Is It Flat Yet?</h2>
-        <div className="headerInfo">
-          <img className="responsive" alt="yellowPin" src={mildIcon} />
-          <p>{"< 100 deaths"}</p>
-          <img className="responsive" alt="orangePin" src={mediumIcon} />
-          <p>100 - 1,000 deaths</p>
-          <img className="responsive" alt="redPin" src={severeIcon} />
-          <p>{"> 1,000 deaths"}</p>
-        </div>
+        <h1>CORONAVIRUS</h1> <h2>- Is It Flat Yet -</h2>
+        <h3 style={{color:"#6c6b6b"}}>click a marker to see its curve</h3>
         <p>Last Updated: {dayjs(new Date()).format("M/D/YY")}</p>
       </div>
     )
