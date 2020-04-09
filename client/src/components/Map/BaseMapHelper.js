@@ -17,13 +17,19 @@ export const changeLatLong = (data) => {
   if (entityId === "sint-maarten-netherlands") {
     return { lat: 18.0255, lng: -63.0548 }
   }
+  if (entityId === "congo-kinshasa") {
+    return { lat: -4.441889, lng: 15.266306 }
+  }
+  if (entityId === "congo-brazzaville") {
+    return { lat: -4.2634, lng: 15.2429}
+  }
 
   return {lat: data.lat, lng: data.lng }
 }
 
 export const isBlackList = (data) => {
   return (
-    blackList.indexOf(data.cityStateOrProvinceId) > -1 ||
+    blackList.indexOf(data.entityId) > -1 ||
     (blackList.indexOf(data.countryOrRegion.toLowerCase()) > -1 &&
       !data.stateOrProvince)
   );
