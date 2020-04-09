@@ -1,9 +1,10 @@
 body {
-  font-family: Domine;
+  font-family: oranienbaum;
   background-color: #f0eded;
   margin: 0;
   padding: 0;
-  /* overflow: hidden; */
+  overflow: hidden;
+  color: #6c6b6b
 }
 
 .App {
@@ -17,15 +18,15 @@ body {
 .header {
   background-color: #f0eded;
   position: relative;
-  margin-top: 2%;
-  margin-bottom: 0.5%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(3px + 0.5vw);
-  color: rgb(41, 41, 41);
-  line-height: 60%;
+  color: rgb(38, 62, 62);
+  line-height: 30%;
+  padding-top: 2vh;
+  letter-spacing: 0.2vw;
 }
 
 .header h1 {
@@ -63,7 +64,7 @@ body {
   display: inline-block;
   cursor: pointer;
   color: darkslategray;
-  font-family: roboto;
+  font-family: oranienbaum;
   font-size: 11px;
   text-decoration: none;
   text-shadow: 0px 1px 0px #ffffff;
@@ -91,14 +92,14 @@ body {
 
 .footer {
   background-color: #f0eded;
-  height: 1vh;
-  padding-bottom: 1.5vh;
+  /* height: 1vh; */
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: calc(1.5vh);
   color: #22162e;
+  /* padding-bottom: 1vh; */
 }
 
 .innerFooter {
@@ -124,7 +125,7 @@ a {
   display: flex;
   flex-direction: column;
   background-color: #f0eded;
-  width: 15vw;
+  width: 20vw;
   color: darkslategray;
   overflow: visible;
 }
@@ -136,20 +137,18 @@ a {
 
   }
 }
-@media screen and (max-width: 600) {
+@media screen and (max-width: 600px) {
  .infoWindow {
     height: fit-content;
     width: fit-content;
-    max-width: 40vw;
-
-
+    max-width: 60vw;
   }
 }
 .infoWindowTitle {
   text-align: center;
-  color: darkslategray;
+  color: #2f4f4f;
   margin: 0;
-  line-height: 0.5vh;
+  line-height: 1.5vh;
 }
 
 .infoWindowTitle p {
@@ -183,7 +182,7 @@ a {
 } */
 
 .gm-style .gm-style-iw {
-  font-family: roboto;
+  font-family: oranienbaum;
   font-size: calc(3px + 1vmin);
   color: black;
   font-weight: 450;
