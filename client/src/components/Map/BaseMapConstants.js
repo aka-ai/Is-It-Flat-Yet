@@ -19,7 +19,8 @@ export const blackList = [
          "republic-of-the-congo",
          "congo-brazzaville",
          "canada-grand-princess",
-         "canada-diamond-princess"
+         "canada-diamond-princess",
+         "ms-zaandam"
        ];
 
 //source: https://mapstyle.withgoogle.com/
