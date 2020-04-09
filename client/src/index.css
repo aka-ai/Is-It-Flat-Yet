@@ -3,7 +3,7 @@ body {
   background-color: #f0eded;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   color: #6c6b6b
 }
 
@@ -24,21 +24,30 @@ body {
   justify-content: center;
   font-size: calc(3px + 0.5vw);
   color: rgb(38, 62, 62);
-  line-height: 30%;
+  line-height: 0.2vh;
   padding-top: 2vh;
-  letter-spacing: 0.2vw;
 }
 
 .header h1 {
+  letter-spacing: 0.3vw;
   font-size: calc(0.75vw + 1.5vh);
 }
+.header h3 {
+  font-size: calc(0.4vw + 0.8vh);
+  color: #6c6b6b;
+  letter-spacing: 0.12vw;
+}
+.header p {
+  font-size: calc(0.4vw + 0.8vh);
+  letter-spacing: 0.05vw;
+}
 
-.headerInfo {
-  font-size: calc(7px + 0.3vw);
+/* .headerInfo {
+  font-size: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
 .map {
   position: relative;
