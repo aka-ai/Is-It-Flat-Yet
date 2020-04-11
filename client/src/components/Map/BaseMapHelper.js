@@ -1,30 +1,44 @@
 import { blackList } from './BaseMapConstants'
 
-export const changeLatLong = (data) => {
-  const { entityId } = data
-  if (entityId === 'belize') {
-    return { lat: 17.1899, lng: -88.4976}
-  }
-  if (entityId === 'barbados') {
-    return { lat: 13.1939, lng: -59.5432}
-  }
-  if (entityId === 'malaysia') {
-    return { lat: 3.1390, lng: 101.6869 }
-  }
-  if (entityId === 'france-st-martin') {
-    return { lat: 18.1218, lng: - 63.0357}
-  }
-  if (entityId === "sint-maarten-netherlands") {
-    return { lat: 18.0255, lng: -63.0548 }
-  }
-  if (entityId === "congo-kinshasa") {
-    return { lat: -4.441889, lng: 15.266306 }
-  }
-  if (entityId === "congo-brazzaville") {
-    return { lat: -4.2634, lng: 15.2429}
+export const sanitize = (entity) => {
+  // const { entityId } = data
+  switch (entity.entityId) {
+    case 'belize':
+      entity.lat = 17.1899
+      entity.lng = -88.4976
+      break
+    case 'barbados':
+      entity.lat = 13.1939
+      entity.lng = -59.5432
+      break
+    case 'malaysia':
+      entity.lat = 3.1390
+      entity.lng = 101.6869 
+      break
+    case 'france-st-martin':
+      entity.lat = 18.1218
+      entity.lng = - 63.0357
+      break
+    case "sint-maarten-netherlands":
+      entity.lat = 18.0255
+      entity.lng = -63.0548 
+      break
+    case "congo-kinshasa":
+      entity.lat = -4.441889
+      entity.lng = 15.266306 
+      break
+    case "congo-brazzaville":
+      entity.lat = -4.2634
+      entity.lng = 15.2429
+      break
+    case "china-hong-kong":
+      entity.displayName = "Hong Kong"
+      break
+    case "taiwan":
+      entity.displayName = "Taiwan"
   }
 
-  return {lat: data.lat, lng: data.lng }
+  return entity
 }
 
 export const isBlackList = (data) => {

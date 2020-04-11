@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import { mapStyle, USLocation } from "./BaseMapConstants";
 import MarkerW from './MarkerW'
-import { isBlackList, changeLatLong } from './BaseMapHelper'
+import { isBlackList, sanitize } from "./BaseMapHelper";
 import { mildIcon, mediumIcon, severeIcon } from './MapIcons'
 import InfoWindowW from './InfoWindowW'
 import numeral from 'numeral';
@@ -77,7 +77,8 @@ export class BaseMap extends Component {
           entityId,
           stateAbbreviation,
         } = entity
-        const { lat, lng } = changeLatLong(entity)
+        // const { lat, lng } = changeLatLong(entity)
+        entity = sanitize(entity)
 
         if (!latestDeaths) {
           // We are focusing on deaths, don't render markers without deaths for now
@@ -88,8 +89,8 @@ export class BaseMap extends Component {
               key={idx}
               onClick={this.onMarkerClick}
               position={{
-                lat: lat,
-                lng: lng
+                lat: entity.lat,
+                lng: entity.lng
               }}
               label={{
                 text: latestDeaths.toString(),
