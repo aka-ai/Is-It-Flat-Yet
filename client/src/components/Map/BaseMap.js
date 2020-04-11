@@ -18,7 +18,7 @@ export class BaseMap extends Component {
       lastValidPan: { lat: USLocation.lat, lng: USLocation.lng },
       valid: true,
       entityData: null,
-      graphType: "Cumulative"
+      graphType: "Non-Cumulative"
     }
     this.limitVerticalPan = this.limitVerticalPan.bind(this)
     this.onMarkerClick = this.onMarkerClick.bind(this)
