@@ -9,7 +9,6 @@ class Header extends Component {
       <div className="header">
         <h1>CORONAVIRUS</h1> <h2>- Is It Flat Yet -</h2>
         <h3>click a marker to see its curve</h3>
-        <p>Last Updated: {dayjs(new Date()).format("M/D/YY")}</p>
       </div>
     )
   }
