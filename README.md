@@ -1,9 +1,10 @@
+# www.isitflatyet.org
+![screen shot](https://user-images.githubusercontent.com/49176764/149648833-59f42951-39c1-475a-97e7-a49f80397c2a.png)
 ## Development + Deployment
 ### Frontend Development
 - `npm start` from `client/` for local development + hot reloading
 - `npm run serve` to test locally
   - builds and uses `firebase serve` to serve locally
-
 ### Frontend Deployment
 - `npm run deploy:staging` from `client/` 
   - builds and deploys your code to staging (staging.coronavirus.show)
