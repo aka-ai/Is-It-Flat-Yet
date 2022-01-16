@@ -40,9 +40,9 @@ export class BaseMap extends Component {
   }
 
   setIcon = deaths => {
-    if (deaths >= 1000) {
+    if (deaths >= 10000) {
       return severeIcon
-    } else if (deaths < 100) {
+    } else if (deaths < 1000) {
       return mildIcon
     } else {
       return mediumIcon
